@@ -90,7 +90,7 @@
                                 <td><?php echo $rec_mismatch_report['Department']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Line']; ?></td>
                                 <td><?php
-                                    echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']));
+                                    echo date('d-m-Y H:i:s', strtotime('+6 hours',strtotime($rec_mismatch_report['InTime'])));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>

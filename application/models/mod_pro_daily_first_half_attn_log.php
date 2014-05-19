@@ -36,9 +36,8 @@ class Mod_pro_daily_first_half_attn_log extends CI_Model {
         return $query->result_array();
     }
     public function access_log_previous_date($startdate, $enddate){
-        $query = $this->db->query("SELECT raw.CardNo, raw.DateTime as InTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.DateTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
-        return $query->result_array();
-        
+        $query = $this->db->query("SELECT raw.CardNo, Min(raw.DateTime) as InTime,Max(raw.DateTime) as OutTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.DateTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
+        return $query->result_array();        
     }
 
     public function get_line_by_name($building, $floor, $Department) {
