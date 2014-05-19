@@ -27,10 +27,14 @@
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন"/>
+                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php if ($tbl_first_half_log_report)                            
+                                    echo date('m-d-Y',strtotime($tbl_first_half_log_report[0]['InTime']));
+                              else
+                                  echo date('m-d-Y',now());
+                            ?>"/>
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
-                    <?php echo form_close(); ?>
+<?php echo form_close(); ?>
                 </div>
             </div>
         </section>
@@ -42,16 +46,21 @@
             <div class="text-center">
                 <h5><strong> দৈনিক প্রথম অর্ধেকের রিপোর্ট  বের করার জন্য বাটনটি চাপুন</strong></h5>
                 <?php
-                    $attributes = array(
-                        'class' => 'form-inline',
-                        'role' => 'form',
-                        'id' => 'excelExport'
-                    );
-                    echo form_open('con_pro_first_half_attendance_log/search', $attributes);
-                    ?>
+                $attributes = array(
+                    'class' => 'form-inline',
+                    'role' => 'form',
+                    'id' => 'excelExport'
+                );
+                echo form_open('con_pro_first_half_attendance_log/excelExport', $attributes);
+                ?>
+                <input type="hidden" name="hDate" value="<?php if ($tbl_first_half_log_report)                            
+                                    echo date('m-d-Y',strtotime($tbl_first_half_log_report[0]['InTime']));
+                              else
+                                  echo date('m-d-Y',now());
+                            ?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php
-                    echo form_close();
+                echo form_close();
                 ?>
             </div><hr/>
             <div class="panel-primary" > 
@@ -65,37 +74,28 @@
                         <tr>                   
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> নাম</th>
-                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th> 
-                            <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
+                            <th><i class="glyphicon glyphicon-time"></i> প্রবেশের সময়সূচী</th>
+                            <th><i class="glyphicon glyphicon-time"></i> বাহিরের সময়সূচী</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr style="font-size: 18px;">
-                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                                               
-                        </tr>
-                    </tfoot>
+                    
                     <tbody>
-                        <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
+<?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr>
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
-                                <td><?php echo $rec_mismatch_report['BuildingName']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Floor']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Department']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Line']; ?></td>
                                 <td><?php
-                                    echo date('d-m-Y H:i:s', strtotime('+6 hours',strtotime($rec_mismatch_report['InTime'])));
+                                    echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['InTime'])));
+                                    //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
+                                    ?>
+                                </td>
+                                <td><?php
+                                    echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['OutTime'])));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>
                             </tr>
-                        <?php } ?>
+<?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -117,10 +117,10 @@
             var select = $('<select><option value=""></option></select>')
                     .appendTo($(this).empty())
                     .on('change', function() {
-                        table.column(i)
-                                .search($(this).val())
-                                .draw();
-                    });
+                table.column(i)
+                        .search($(this).val())
+                        .draw();
+            });
 
             table.column(i).data().unique().sort().each(function(d, j) {
                 select.append('<option value="' + d + '">' + d + '</option>')

@@ -24,7 +24,7 @@ class Mod_pro_daily_first_half_attn_log extends CI_Model {
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
         $this->db->where('Floor', $floor);
-        $this->db->where('Department', $department);        
+        $this->db->where('Deaccess_logpartment', $department);        
         $this->db->where('Line', $line);
         $query = $this->db->get();
         return $query->result();
@@ -32,11 +32,11 @@ class Mod_pro_daily_first_half_attn_log extends CI_Model {
 
     
     public function access_log($startdate, $enddate) {
-        $query = $this->db->query("SELECT raw.CardNo, raw.InTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log_raw as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.InTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
+        $query = $this->db->query("SELECT raw.CardNo, raw.InTime,raw.InTime as OutTime, prof.Name FROM tbl_access_log_raw as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.InTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo order by raw.CardNo");
         return $query->result_array();
     }
     public function access_log_previous_date($startdate, $enddate){
-        $query = $this->db->query("SELECT raw.CardNo, Min(raw.DateTime) as InTime,Max(raw.DateTime) as OutTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.DateTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
+        $query = $this->db->query("SELECT raw.CardNo, Min(raw.DateTime) as InTime,Max(raw.DateTime) as OutTime, prof.Name FROM tbl_access_log as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.DateTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
         return $query->result_array();        
     }
 
