@@ -39,44 +39,48 @@
 <div class="row"> 
     <div class="col-lg-12">
         <section class="panel panel-body">
+            <div class="text-center">
+                <h5><strong> দৈনিক প্রথম অর্ধেকের রিপোর্ট  বের করার জন্য বাটনটি চাপুন</strong></h5>
+                <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> EXCEL EXPORT</button>
+            </div><br/>
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4>
-                        দৈনিক প্রথম অর্ধেক উপস্থিতির তালিকা 
-                        <button class="btn btn-default" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> Excel Export</button>
+                        দৈনিক প্রথম অর্ধেক উপস্থিতির তালিকা
                     </h4>                
                 </header> 
-                <table class="table table-striped border-top" id="daily_log" border="1" style="font-size: 10px;">
+                <table class="table table-striped border-top" id="daily_log" >
                     <thead>
-                        <tr style="font-size: 18px;">
+                        <tr>
                             <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
                             <th><i class="glyphicon glyphicon-time"></i> নাম</th>
-							<th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
+                            <?php if(date) ?>
+                            <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
                         </tr>
                     </thead>
-                    <tfoot>
+<!--                    <tfoot>
                         <tr style="font-size: 18px;">
                             <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                                               
                         </tr>
-                    </tfoot>
+                    </tfoot>-->
                     <tbody>
                         <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr style="font-size: 15px;">
                                 <td><?php echo $rec_mismatch_report['BuildingName']; ?></td>
-				<td><?php echo $rec_mismatch_report['Floor']; ?></td>
+                                <td><?php echo $rec_mismatch_report['Floor']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Department']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Line']; ?></td>
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
                                 <td><?php
-                                echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']));
+                                    echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>                            
@@ -89,8 +93,8 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.dataTables.css"/>
-<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url();   ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url();   ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {
@@ -110,4 +114,4 @@
             });
         });
     });
-</script>
+</script>-->
