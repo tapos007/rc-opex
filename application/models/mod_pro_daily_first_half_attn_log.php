@@ -31,19 +31,15 @@ class Mod_pro_daily_first_half_attn_log extends CI_Model {
     }
 
     
-    //SELECT cardno, Intime FROM `tbl_access_log_raw_backup` WHERE intime BETWEEN '2014-03-03 00:00:01' AND '2014-03-03 11:59:59' GROUP BY cardno
-//    public function incorrect_access_log($startdate, $enddate) {
-//        $query = $this->db->query("SELECT CardNo, InTime FROM tbl_access_log_raw_backup WHERE InTime BETWEEN '" . $startdate . "' and '" . $enddate . "' GROUP BY CardNo");
-//        return $query->result();
-//    }
-    
     public function access_log($startdate, $enddate) {
         $query = $this->db->query("SELECT CardNo, InTime FROM `tbl_access_log_raw` WHERE InTime BETWEEN '" . $startdate . "' and '" . $enddate . "' GROUP BY CardNo");
-//        echo '<pre>';
-//        print_r($query->result_array());
-//        echo '</pre>';
-//        exit();
         return $query->result();
+    }
+    public function access_log_previous_date($startdate, $enddate){
+        $query = $this->db->query("SELECT CardNo, DateTime FROM `tbl_access_log` WHERE DateTime BETWEEN '" . $startdate . "' and '" . $enddate . "' Order BY CardNo");
+        
+        return $query->result();
+        
     }
 
     public function get_line_by_name($building, $floor, $Department) {

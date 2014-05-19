@@ -23,7 +23,7 @@
                         'role' => 'form',
                         'id' => 'validateSearchForm'
                     );
-                    echo form_open('con_pro_first_half_attendance_log/', $attributes);
+                    echo form_open('con_pro_first_half_attendance_log/search', $attributes);
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>

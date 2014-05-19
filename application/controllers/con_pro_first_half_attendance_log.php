@@ -16,6 +16,7 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
         $Floor = $this->session->userdata('Floor');
         $data['floor'] = $Floor;
         $Department = $this->session->userdata('Department');
+
         if ($this->session->userdata('Role') == 'Admin') {
             $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
         } else {
@@ -23,18 +24,13 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
         }
 
         date_default_timezone_set('Asia/Dacca');
-         if ($this->input->post('Date')) {
-            $mydate = $this->input->post('Date');
-            $now = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
-        } else {
-            $now = date('Y-m-d', now());
-        }
-       
+
+
+        $now = date('Y-m-d', now());
         $StartDate = $now . ' 00:00:01';
         $EndDate = $now . ' 10:59:59';
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-
         $access_log = $this->mod_pro_daily_first_half_attn_log->access_log($StartDate, $EndDate);
 
         $access_log_detail = array();
@@ -78,41 +74,50 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
     }
 
     public function search() {
-        $BuildingName = $this->input->post('Building');
-        $Floor = $this->input->post('Floor');
-        $DepartmentName = $this->input->post('DepartmentSection');
-        $Line = $this->input->post('LineUnit');
-        $Date = $this->input->post('Date');
-        $employee_details = $this->mod_pro_daily_first_half_attn_log->specific_employee_information_report($BuildingName, $Floor, $DepartmentName, $Line);
-        $now = date('Y-m-d', strtotime($Date));
+        $BuildingName = $this->session->userdata('BuildingName');
+        $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
+        $Floor = $this->session->userdata('Floor');
+        $data['floor'] = $Floor;
+        $Department = $this->session->userdata('Department');
 
-        $StartDate = $now . ' 00:00:01';
-        $EndDate = $now . ' 10:59:59';
-        $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
-        $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-
-        $access_log = $this->mod_pro_daily_first_half_attn_log->access_log($StartDate, $EndDate);
-
-        $access_log_detail = array();
-        $first_half_access_report = array();
-        //$access_log_detail = $incorrect_access_log;
-
-        foreach ($access_log as $an_access_log) {
-            $access_log_detail['CardNo'] = $an_access_log->CardNo;
-            $access_log_detail['InTime'] = $an_access_log->InTime;
-            $data12 = $this->retrieve_employee_information($an_access_log->CardNo, $employee_details);
-            if ($data12 != NULL) {
-                $access_log_detail['Name'] = $data12['Name'];
-                $access_log_detail['Department'] = $data12['Department'];
-                $access_log_detail['Line'] = $data12['Line'];
-                array_push($first_half_access_report, $access_log_detail);
-            }
+        if ($this->session->userdata('Role') == 'Admin') {
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
+        } else {
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
         }
 
+
+        $mydate = $this->input->post('Date');
+        $now = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
+        $StartDate = $now . ' 00:00:01';
+        $EndDate = $now . ' 23:59:59';
+        $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
+        $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
+        $access_log = $this->mod_pro_daily_first_half_attn_log->access_log_previous_date($StartDate, $EndDate);
+//        echo '<pre>';
+//        print_r($access_log);
+//        echo '</pre>';
+//        exit();
+        $access_log_detail = array();
+        $first_half_access_report = array();
+
+        foreach ($access_log as $an_access_log) {
+            foreach ($employee_details as $an_employee_details) {
+                if ($an_access_log->CardNo == $an_employee_details->CardNo) {
+                    $access_log_detail['CardNo'] = $an_access_log->CardNo;
+                    $access_log_detail['InTime'] = $an_access_log->DateTime;
+                    $access_log_detail['Name'] = $an_employee_details->Name;
+                    $access_log_detail['BuildingName'] = $an_employee_details->BuildingName;
+                    $access_log_detail['Floor'] = $an_employee_details->Floor;
+                    $access_log_detail['Department'] = $an_employee_details->Department;
+                    $access_log_detail['Line'] = $an_employee_details->Line;
+                    array_push($first_half_access_report, $access_log_detail);
+                }
+            }
+        }
         $data['tbl_first_half_log_report'] = $first_half_access_report;
         $data['container'] = 'temp/daily_attendance_log_report/first_half_attendence_log_view';
         $this->load->view('main_page', $data);
-        //redirect('con_pro_attn_mismatch_report/index', 'refresh');
     }
 
     public function retrieve_employee_information($card_no, $myvalue) {
