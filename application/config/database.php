@@ -49,8 +49,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'calla2z_sdl1';
-$db['default']['password'] = 'rcis12345..';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '';
 $db['default']['database'] = 'calla2z_sdl1';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
