@@ -94,10 +94,7 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
         $access_log = $this->mod_pro_daily_first_half_attn_log->access_log_previous_date($StartDate, $EndDate);
-//        echo '<pre>';
-//        print_r($access_log);
-//        echo '</pre>';
-//        exit();
+
         $access_log_detail = array();
         $first_half_access_report = array();
 
