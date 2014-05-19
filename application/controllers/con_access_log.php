@@ -7,6 +7,7 @@ class Con_access_log extends CI_Controller {
         $this->load->model('mod_access_log');
         $this->load->helper('alert');
         $this->load->helper('date');
+        echo 'good';
     }
 
     public function view() {
