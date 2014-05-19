@@ -53,14 +53,16 @@
                     <thead>
                         <tr>                   
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> নাম</th>
+                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>
                             <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th> 
-                            <?php if (!date('d-m-Y H:i:s', now())) { ?>
-                                <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
-                            <?php } ?>
+                            <?php //if (!date('d-m-Y H:i:s', now())) { ?>
+<!--                                <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>-->
+                            <?php //} ?>               
+                            <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>                    
+                            <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th> 
                         </tr>
                     </thead>
 <!--                    <tfoot>
