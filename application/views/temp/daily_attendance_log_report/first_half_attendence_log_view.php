@@ -41,7 +41,18 @@
         <section class="panel panel-body">
             <div class="text-center">
                 <h5><strong> দৈনিক প্রথম অর্ধেকের রিপোর্ট  বের করার জন্য বাটনটি চাপুন</strong></h5>
+                <?php
+                    $attributes = array(
+                        'class' => 'form-inline',
+                        'role' => 'form',
+                        'id' => 'excelExport'
+                    );
+                    echo form_open('con_pro_first_half_attendance_log/search', $attributes);
+                    ?>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
+                <?php
+                    echo form_close();
+                ?>
             </div><hr/>
             <div class="panel-primary" > 
                 <header class="panel-heading">
