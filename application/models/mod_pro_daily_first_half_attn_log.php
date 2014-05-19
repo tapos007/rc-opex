@@ -32,13 +32,12 @@ class Mod_pro_daily_first_half_attn_log extends CI_Model {
 
     
     public function access_log($startdate, $enddate) {
-        $query = $this->db->query("SELECT CardNo, InTime FROM `tbl_access_log_raw` WHERE InTime BETWEEN '" . $startdate . "' and '" . $enddate . "' GROUP BY CardNo");
-        return $query->result();
+        $query = $this->db->query("SELECT raw.CardNo, raw.InTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log_raw as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.InTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
+        return $query->result_array();
     }
     public function access_log_previous_date($startdate, $enddate){
-        $query = $this->db->query("SELECT CardNo, DateTime FROM `tbl_access_log` WHERE DateTime BETWEEN '" . $startdate . "' and '" . $enddate . "' Order BY CardNo");
-        
-        return $query->result();
+        $query = $this->db->query("SELECT raw.CardNo, raw.DateTime as InTime, prof.Name,prof.BuildingName,prof.Floor,prof.Department,prof.Line FROM tbl_access_log as raw Inner Join tbl_employee_profile as prof ON raw.CardNo = prof.CardNo where raw.DateTime between '".$startdate."' and '".$enddate."' Group By raw.CardNo  order by raw.CardNo");
+        return $query->result_array();
         
     }
 

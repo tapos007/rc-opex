@@ -61,14 +61,14 @@
                             <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
                         </tr>
                     </thead>
-<!--                    <tfoot>
+                    <tfoot>
                         <tr style="font-size: 18px;">
                             <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                                               
                         </tr>
-                    </tfoot>-->
+                    </tfoot>
                     <tbody>
                         <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr>
@@ -92,13 +92,16 @@
     </div>
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();     ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();     ?>js/jquery.dataTables1.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.dataTables.css"/>
+<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {
-        var table = $('#daily_log').DataTable();
-
+        var table = $('#daily_log').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "<?php echo base_url(); ?>con_pro_first_half_attendance_log/server_processing.php"
+        });
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')
                     .appendTo($(this).empty())
@@ -113,4 +116,4 @@
             });
         });
     });
-</script>-->
+</script>
