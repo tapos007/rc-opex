@@ -20,6 +20,7 @@ class Con_proc_daily_report_generate extends CI_Controller {
         $this->load->helper('alert');
         $this->load->helper('date');
     }
+    //Hello vai Dhongso hoiye gelam
 //tapos
 //    public function getInOutTimeFromTblAccessLog($date, $card_specific_tbl_access_log) {
 ////        echo $date;
