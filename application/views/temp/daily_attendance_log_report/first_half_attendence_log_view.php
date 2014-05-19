@@ -58,11 +58,7 @@
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th> 
-                            <?php //if (!date('d-m-Y H:i:s', now())) { ?>
-<!--                                <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>-->
-                            <?php //} ?>               
-                            <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th> 
+                            <th><i class="glyphicon glyphicon-time"></i> সময়সূচী</th>
                         </tr>
                     </thead>
 <!--                    <tfoot>
@@ -82,13 +78,11 @@
                                 <td><?php echo $rec_mismatch_report['Floor']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Department']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Line']; ?></td>
-                                <?php if (date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']) != date('d-m-Y H:i:s', now()))) { ?>
-                                    <td><?php
-                                        echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']));
-                                        //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
-                                        ?>
-                                    </td>
-                                <?php } ?>
+                                <td><?php
+                                    echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime']));
+                                    //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
+                                    ?>
+                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -98,8 +92,8 @@
     </div>
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();    ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();    ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url();     ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url();     ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {

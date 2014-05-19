@@ -24,8 +24,6 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
         }
 
         date_default_timezone_set('Asia/Dacca');
-
-
         $now = date('Y-m-d', now());
         $StartDate = $now . ' 00:00:01';
         $EndDate = $now . ' 10:59:59';
@@ -40,8 +38,6 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
         foreach ($access_log as $an_access_log) {
             foreach ($employee_details as $an_employee_details) {
                 if ($an_access_log->CardNo == $an_employee_details->CardNo) {
-
-
                     $access_log_detail['CardNo'] = $an_access_log->CardNo;
                     $access_log_detail['InTime'] = $an_access_log->InTime;
                     $access_log_detail['Name'] = $an_employee_details->Name;
@@ -112,6 +108,38 @@ class Con_pro_first_half_attendance_log extends CI_Controller {
                 }
             }
         }
+
+        //Pagination section start
+
+        $total_rows = count($first_half_access_report);
+        $per_page = 15;
+        $config['base_url'] = 'http://localhost/gurugreeho_localhost1/con_set_category/index';
+        $config['total_rows'] = $this->mod_set_category->number_of_categories();
+        $config['per_page'] = 10;
+        $config['num_links'] = 10;
+        $config['prev_link'] = '&laquo;';
+        $config['next_link'] = '&raquo;';
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = ' </ul>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_open'] = '</li>';
+        $config['last_link'] = FALSE;
+        $config['first_link'] = FALSE;
+        $this->pagination->initialize($config);
+        if ($this->mod_set_category->number_of_categories() > 0) {
+            $data['tbl_category'] = $this->mod_set_category->view_for_list($config['per_page'], $this->uri->segment(3));
+        }
+
+        //Pagination section end
+
         $data['tbl_first_half_log_report'] = $first_half_access_report;
         $data['container'] = 'temp/daily_attendance_log_report/first_half_attendence_log_view';
         $this->load->view('main_page', $data);
