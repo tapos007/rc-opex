@@ -75,7 +75,7 @@
                     </tfoot>-->
                     <tbody>
                         <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
-                            <tr style="font-size: 15px;">
+                            <tr>
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
                                 <td><?php echo $rec_mismatch_report['BuildingName']; ?></td>
