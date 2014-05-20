@@ -8,6 +8,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $this->load->model('mod_pro_daily_first_half_attn_log');
         $this->load->model('mod_monthly_wages_detail');
         $this->load->model('mod_access_log_raw');
+        $this->load->model('mod_access_log');
         $this->load->model('mod_buil_sec_other');
         $this->load->model('mod_pro_attn_mismatch_report');
     }
@@ -24,20 +25,15 @@ class Con_pro_daily_absent_report extends CI_Controller {
             $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
         }
         //714
-//        echo '<pre>';
-//        print_r($employee_details);
-//        echo '</pre>';
-//        exit();
+
         date_default_timezone_set('Asia/Dacca');
         $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));
-        //echo $StartDate;
-        //exit();
-        //$CurrentMonth = '2014-03'; //date('Y-m', strtotime(now()));
-        //$PreviousMonth = '2014-02'; //date('Y-m', (strtotime(now())));
-        //$EndDate = date('Y-m-d H:i:s', strtotime('-1 day', now()));
-        //$regular_employee_cardno_list = $this->mod_set_employee_info_detail->regular_employee_cardno_list($CurrentMonth,$PreviousMonth );
-        $attendance_list = $this->mod_access_log_raw->getDateSpecificLongData($StartDate);
 
+        $attendance_list = $this->mod_access_log->getDateSpecificLongData($StartDate);
+        echo '<pre>';
+        print_r($attendance_list);
+        echo '</pre>';
+        exit();
         $limit1 = count($employee_details) - 1;
         $absent_employee_list = array();
         foreach ($employee_details as $an_employee_details) {
@@ -167,17 +163,17 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
         $data['container'] = 'temp/daily_absent_report/edit';
         $this->load->view('main_page', $data);
-       
     }
-    public function InsertAbsentEmployee(){
+
+    public function InsertAbsentEmployee() {
         //$accessLogRawData = array();
         $accessLogRawData['CardNo'] = $this->input->post('CardNo');
         $inTime = $this->input->post('InTime');
         $accessLogRawData['Ip'] = $this->session->userdata('Email');
         date_default_timezone_get('Asia/Dacca');
-        $date = date('Y-m-d',now());
-        $inTime = $date.' '.$inTime;
-        $accessLogRawData['InTime'] = date('Y-m-d H:i:s',  strtotime($inTime));
+        $date = date('Y-m-d', now());
+        $inTime = $date . ' ' . $inTime;
+        $accessLogRawData['InTime'] = date('Y-m-d H:i:s', strtotime($inTime));
         $this->mod_access_log_raw->insert($accessLogRawData);
         redirect('con_pro_daily_absent_report/');
 //        echo '<pre>';
