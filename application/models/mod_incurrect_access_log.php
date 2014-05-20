@@ -78,5 +78,9 @@ class Mod_incurrect_access_log extends CI_Model {
         return $query->result_array();
        
     }
+    public function getGruoupedData(){
+        $query = $this->db->query("SELECT * FROM `tbl_incurrect_access_log` where DelStatus = 'ACT' group by Cardno,DateTime");
+        return $query->result_array();
+    }
 
 }

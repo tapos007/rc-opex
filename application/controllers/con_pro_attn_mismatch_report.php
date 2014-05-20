@@ -6,6 +6,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         parent::__construct();
         $this->load->model('mod_pro_attn_mismatch_report');
         $this->load->model('mod_access_log');
+        $this->load->model('mod_incurrect_access_log');
         $this->load->model('mod_monthly_wages_detail');
         $this->load->model('mod_buil_sec_other');
     }
@@ -57,7 +58,8 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 
         redirect('con_pro_attn_mismatch_report/edit');
     }
-     public function insert1() {
+
+    public function insert1() {
         date_default_timezone_set('Asia/Dacca');
         $cardno = $this->input->post("CardNo");
         $InTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
@@ -102,7 +104,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->mod_access_log->insert($Indata);
         $this->mod_access_log->insert($Outdata);
 
-        redirect('con_pro_attn_mismatch_report/edit1/'.$cardno);
+        redirect('con_pro_attn_mismatch_report/edit1/' . $cardno);
     }
 
     public function index() {
@@ -245,18 +247,59 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $data['container'] = 'temp/prev_attn_mismatch_report/edit';
         $this->load->view('main_page', $data);
     }
-    
+
     public function edit1() {
         $cardNo = $this->uri->segment(3);
-    //   echo $cardNo;
+        //   echo $cardNo;
         //echo $cardNo.'<br/>'.$time;
         //exit();
         $data['mismatch'] = $this->mod_pro_attn_mismatch_report->view_by_CardNo1($cardNo);
-      //  echo '<pre>';
-      //  print_r($data['mismatch']);
-      //  echo '</pre>';
+        //  echo '<pre>';
+        //  print_r($data['mismatch']);
+        //  echo '</pre>';
         $data['container'] = 'temp/prev_attn_mismatch_report/edit';
         $this->load->view('main_page', $data);
+    }
+
+    public function systemGeneratedCurrection() {
+        $email = $this->session->userdata('Email');
+        $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData();
+        $all_currect_data = array();
+        $limit = count($all_mismacthes) - 1;
+        $currect_data_index = 0;
+        for ($index = 0; $index <= $limit; $index++) {
+            $all_currect_data[$currect_data_index]['CardNo'] = $all_mismacthes[$index]['CardNo'];
+            $all_currect_data[$currect_data_index]['CreatedBy'] = $email;
+            $all_currect_data[$currect_data_index]['DelStatus'] = 'ACT';
+
+            $all_currect_data[$currect_data_index + 1]['CardNo'] = $all_mismacthes[$index]['CardNo'];
+            $all_currect_data[$currect_data_index + 1]['CreatedBy'] = $email;
+            $all_currect_data[$currect_data_index + 1]['DelStatus'] = 'ACT';
+            if (date('H:i:s', strtotime($all_mismacthes[$index]['DateTime'])) >= date('H:i:s', strtotime('06:00:00'))) {
+                //echo 'OUT<br/>';
+                $all_currect_data[$currect_data_index]['Status'] = 'IN';
+                $all_currect_data[$currect_data_index + 1]['Status'] = 'OUT';
+                $all_currect_data[$currect_data_index]['DateTime'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d', strtotime($all_mismacthes[$index]['DateTime'])) . ' 02:15:00'));
+                $all_currect_data[$currect_data_index + 1]['DateTime'] = $all_mismacthes[$index]['DateTime'];
+            } else {
+                //echo 'IN<br/>';
+                $all_currect_data[$currect_data_index]['Status'] = 'IN';
+                $all_currect_data[$currect_data_index + 1]['Status'] = 'OUT';
+                $all_currect_data[$currect_data_index]['DateTime'] = $all_mismacthes[$index]['DateTime'];
+                $all_currect_data[$currect_data_index + 1]['DateTime'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d', strtotime($all_mismacthes[$index]['DateTime'])) . ' 11:15:00'));
+            }
+            $currect_data_index+=2;
+        }
+       
+        echo '<pre>';
+        print_r(count($all_currect_data));
+        echo '</pre>';
+        exit();
+        $this->mod_access_log->insert_batch_random_data($all_currect_data);
+        $this->mod_pro_attn_mismatch_report->UpdateIncurrenctAccessLog($cardno, $InTime);
+        
+        
+        exit();
     }
 
 }
