@@ -1,3 +1,4 @@
+<script src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <style>
     label.error{
         color: red;
@@ -6,8 +7,8 @@
 </style>
 <script>
     $(document).ready(function() {
-        $(document).delegate(".Date", "click", function() {
-            $(this).datepicker({'format': 'yyyy/mm/dd'});
+        $("body").on("focus", ".datepicker", function(){
+            $(this).datepicker();
         });
         
         $('#leaveApprovalForm').validate({
@@ -57,7 +58,7 @@
                         $('#Floor').text('ফ্লোর : ' + data[0].Floor);
                         $('#Department').text('বিভাগ  : ' + data[0].Department);
                         var empStatus = $('#employeeLeaveStatus');
-                        empStatus.append('<thead> <tr><th>ShortForm</th><th>Days</th><th>Year</th></tr></thead><tbody>');
+                        empStatus.append('<thead> <tr><th>সংক্ষিপ্ত নাম</th><th>দিন</th><th>বছর</th></tr></thead><tbody>');
                         $.each(data, function(v, k) {
                             empStatus.append("<tr><td>" + k.ShortForm + "</td><td>" + k.Days + "</td><td>" + k.Year + "</td></tr>");
                         });
@@ -74,9 +75,9 @@
             if (days != 0) {
                 while (counter <= days) {
                     var datepicker_textbox = '<div class="form-group">';
-                    datepicker_textbox += '<label for="Date" class="col-sm-3 control-label" >Date</label>';
+                    datepicker_textbox += '<label for="Date" class="col-sm-3 control-label" >তারিখ</label>';
                     datepicker_textbox += '<div class="col-sm-8">';
-                    datepicker_textbox += '<input type="text" name="mydate[]"  class="form-control Date" id="Date"  placeholder="Enter Date">';
+                    datepicker_textbox += '<input type="text" name="mydate[]"  class="form-control datepicker" id="Date"  placeholder="তারিখ টাইপ করুন">';
                     datepicker_textbox += '</div>';
                     datepicker_textbox += '</div>';
                     $('#genaratedDatepicker').append(datepicker_textbox);

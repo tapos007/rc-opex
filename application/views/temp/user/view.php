@@ -10,36 +10,30 @@
         <?php
     }
     ?>
-
-    <div class='col-lg-1'></div>
-    <div class='col-lg-10'>
-        <div class="text-center">
-            <h3><i class="icon icon-user"></i> ইউজার এর বিস্তারিত তথ্য</h3>
+    <div class="text-center">
+        <h3><i class="icon icon-user"></i> ইউজার এর বিস্তারিত তথ্য</h3>
+    </div>
+    <?php if ($this->session->flashdata('msg')) { ?>
+        <div class="alert alert-success alert-block fade in">
+            <button class="close close-sm" type="button" data-dismiss="alert">
+                <i class="icon-remove"></i>
+            </button>
+            <h4>
+                <i class="icon-ok-sign"></i>
+                Success!
+            </h4>
+            <p><?php echo $this->session->flashdata('msg'); ?></p>
         </div>
-        <hr/>
-        <?php if ($this->session->flashdata('msg')) { ?>
-            <div class="alert alert-success alert-block fade in">
-                <button class="close close-sm" type="button" data-dismiss="alert">
-                    <i class="icon-remove"></i>
-                </button>
-                <h4>
-                    <i class="icon-ok-sign"></i>
-                    Success!
-                </h4>
-                <p><?php echo $this->session->flashdata('msg'); ?></p>
-            </div>
-        <?php } ?>
-
-        <section>
+    <?php } ?>
+    <div class='col-lg-12'>
+        <section class="panel panel-body">
             <div class="panel panel-primary">
-                <div class="panel panel-heading">
+                <header class="panel-heading">
                     <h4>ইউজার এর বিস্তারিত তথ্যসমূহ</h4>
-                </div>
-                <div class="panel panel-body">
-                    <a href="<?php echo site_url('con_set_user/create'); ?>">
-                        <button class="btn btn-info btn-sm"><i class="icon icon-plus"></i> নতুন ইউজার তৈরি করুন</button>
-                    </a><br/>
-                    <table class="table table-bordered table-condensed table-hover">
+                </header>
+                <a href="<?php echo site_url('con_set_user/create'); ?>" class="btn btn-info btn-sm" name="create" id="create"><i class="icon icon-plus"></i> নতুন ইউজার তৈরি করুন</a>
+                <div class="panel-body">
+                    <table class="table table-bordered table-condensed table-striped">
                         <thead> 
                             <tr class="active">
                                 <th><i class="icon icon-picture"></i> ছবি</th>
@@ -67,13 +61,13 @@
                                     ?>
                                     <tr>
                                         <td class="hidden-phone"><?php echo img($image_properties); ?></td>
-                                        <td><?php echo $rec_user->FirstName." ".$rec_user->MiddleName." ".$rec_user->LastName; ?> </td> 
+                                        <td><?php echo $rec_user->FirstName . " " . $rec_user->MiddleName . " " . $rec_user->LastName; ?> </td> 
                                         <td><?php echo $rec_user->UserName; ?> </td>                        
                                         <td><?php echo $rec_user->Email; ?> </td>
                                         <td><?php echo $rec_user->Role; ?> </td> 
                                         <td>
-                                            <a href="<?php echo base_url(); ?>con_set_user/edit/<?php echo $rec_user->ID; ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i></a>
-                                            <a href="<?php echo base_url(); ?>con_set_user/delete/<?php echo $rec_user->ID; ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i></a>
+                                            <a href="<?php echo base_url(); ?>con_set_user/edit/<?php echo $rec_user->ID; ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>
+                                            <a href="<?php echo base_url(); ?>con_set_user/delete/<?php echo $rec_user->ID; ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i> মুছুন</a>
                                         </td>
                                     </tr> 
                                     <?php
@@ -85,7 +79,5 @@
                 </div>
             </div>
         </section>
-
     </div>
-    <div class='col-lg-1'></div>
 </div>
