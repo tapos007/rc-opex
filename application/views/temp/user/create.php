@@ -93,7 +93,7 @@
 
         <div class="bio-graph-heading">
             <div class="text-center">
-                <h3><i class="icon icon-plus"></i> নতুন ইউজার প্রোফাইল তৈরি করুন</h3>
+                <h3><i class="icon icon-user"></i> নতুন ইউজার প্রোফাইল তৈরি করুন</h3>
             </div>
         </div>
 

@@ -82,17 +82,19 @@
                     </thead>
 
                     <tbody>
-                        <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
+                        <?php 
+                        $bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
+                        foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr>
-                                <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
+                                <td><?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report['CardNo']); ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
                                 <td><?php
-                                    echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['InTime'])));
+                                    echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['InTime']))));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>
                                 <td><?php
-                                    echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['OutTime'])));
+                                    echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['OutTime']))));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>

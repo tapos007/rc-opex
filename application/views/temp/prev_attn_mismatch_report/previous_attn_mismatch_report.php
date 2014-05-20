@@ -88,9 +88,11 @@
                         </tr>
                     </tfoot>-->
                     <tbody>                        
-                        <?php foreach ($tbl_mismatch_report as $rec_mismatch_report) { ?>
+                        <?php 
+                        $bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
+                        foreach ($tbl_mismatch_report as $rec_mismatch_report) { ?>
                             <tr>  
-                                <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
+                                <td><?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report['CardNo']); ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>   
 <!--                                <td><?php //echo $rec_mismatch_report['BuildingName']; ?></td>
                                 <td><?php //echo $rec_mismatch_report['Floor']; ?></td>-->
@@ -101,7 +103,7 @@
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
-                                        echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime']));
+                                        echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
                                     }
                                     ?>
                                 </td> 
@@ -110,7 +112,7 @@
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
-                                        echo date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime']));
+                                        echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
                                     }
                                     ?>
                                 </td> 
