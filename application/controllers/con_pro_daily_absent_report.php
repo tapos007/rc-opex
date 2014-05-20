@@ -24,16 +24,12 @@ class Con_pro_daily_absent_report extends CI_Controller {
         } else {
             $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
         }
-        //714
-
+        //714        
         date_default_timezone_set('Asia/Dacca');
-        $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));
+        $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));   
+        $StartDate = date('Y-m-d', strtotime('-1 day', strtotime($StartDate)));
+        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
 
-        $attendance_list = $this->mod_access_log->getDateSpecificLongData($StartDate);
-        echo '<pre>';
-        print_r($attendance_list);
-        echo '</pre>';
-        exit();
         $limit1 = count($employee_details) - 1;
         $absent_employee_list = array();
         foreach ($employee_details as $an_employee_details) {
@@ -47,6 +43,43 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 array_push($absent_employee_list, $absent_employee);
             }
         }
+        $data['showDate'] = date('d-m-Y', strtotime('-1 day', now()));
+        $data['tbl_absent_report'] = $absent_employee_list;
+        $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
+        $this->load->view('main_page', $data);
+    }
+
+    public function Search() {
+        $mydate = $this->input->post('Date');
+        $StartDate = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
+        $BuildingName = $this->session->userdata('BuildingName');
+        $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
+        $Floor = $this->session->userdata('Floor');
+        $data['floor'] = $Floor;
+        $Department = $this->session->userdata('Department');
+        if ($this->session->userdata('Role') == 'Admin') {
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
+        } else {
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
+        }
+
+        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
+
+        $limit1 = count($employee_details) - 1;
+        $absent_employee_list = array();
+        foreach ($employee_details as $an_employee_details) {
+            $absent_employee['CardNo'] = $an_employee_details->CardNo;
+            $absent_employee['Name'] = $an_employee_details->Name;
+            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
+            $absent_employee['Floor'] = $an_employee_details->Floor;
+            $absent_employee['Department'] = $an_employee_details->Department;
+            $absent_employee['Line'] = $an_employee_details->Line;
+            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
+                array_push($absent_employee_list, $absent_employee);
+            }
+        }
+
+        $data['showDate'] = date('d-m-Y', strtotime($StartDate));
 
         $data['tbl_absent_report'] = $absent_employee_list;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
@@ -62,89 +95,88 @@ class Con_pro_daily_absent_report extends CI_Controller {
         return FALSE;
     }
 
-    public function search() {
+    public function excelExport() {
+        date_default_timezone_set('Asia/Dacca');
+        $now = date('Y-m-d', strtotime($this->input->post('hDate')));
+        $BuildingName = $this->session->userdata('BuildingName');
+        $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
+        $Floor = $this->session->userdata('Floor');
+        $data['floor'] = $Floor;
+        $Department = $this->session->userdata('Department');
         if ($this->session->userdata('Role') == 'Admin') {
-            $employee_details = $this->mod_pro_daily_first_half_attn_log->SuperAdminEmployeeInfo();
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
         } else {
-            //if ($this->session->userdata('Floor') == $this->input->post('Floor')) {
-            $BuildingName = $this->input->post('Building');
-            $Floor = $this->input->post('Floor');
-            $DepartmentName = $this->input->post('DepartmentSection');
-            $Line = $this->input->post('LineUnit');
-            $Date = $this->input->post('Date');
-            $employee_details = $this->mod_set_employee_info_detail->specific_employee_info_array($BuildingName, $Floor, $DepartmentName, $Line);
-//                echo '<pre>';
-//                print_r($employee_details);                
-//                echo '<pre>';
-//                exit();
-            // }
+            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
         }
-        $StartDate = date('Y-m-d', strtotime($Date));
-
-//        echo $StartDate;
-//        exit();
-        $attendance_list = $this->mod_access_log_raw->getDateSpecificLongData($StartDate);
-//                echo '<pre>';
-//        print_r($attendance_list);
-//        echo '</pre>';
-//        exit();
+        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($now);
         $limit1 = count($employee_details) - 1;
         $absent_employee_list = array();
-        for ($index1 = 0; $index1 <= $limit1; $index1++) {
-            $absent_employee['CardNo'] = $employee_details[$index1]['CardNo'];
-            $absent_employee['Name'] = $employee_details[$index1]['Name'];
-            $absent_employee['BuildingName'] = $employee_details[$index1]['BuildingName'];
-            $absent_employee['Floor'] = $employee_details[$index1]['Floor'];
-            $absent_employee['Department'] = $employee_details[$index1]['Department'];
-            $absent_employee['Line'] = $employee_details[$index1]['Line'];
-            if (!($this->CheckAttendance($employee_details[$index1]['CardNo'], $attendance_list))) {
+        foreach ($employee_details as $an_employee_details) {
+            $absent_employee['CardNo'] = $an_employee_details->CardNo;
+            $absent_employee['Name'] = $an_employee_details->Name;
+            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
+            $absent_employee['Floor'] = $an_employee_details->Floor;
+            $absent_employee['Department'] = $an_employee_details->Department;
+            $absent_employee['Line'] = $an_employee_details->Line;
+            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
                 array_push($absent_employee_list, $absent_employee);
             }
         }
+        $this->PopulateSalarySheet($absent_employee_list);
+    }
 
+    public function PopulateSalarySheet($first_half_attendance) {
+        
+        $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+        require_once APPPATH . "/third_party/PHPExcel.php";
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("RCIS")
+                ->setLastModifiedBy("RCIS")
+                ->setTitle("Absent Report")
+                ->setSubject("CopyRight RCIS")
+                ->setDescription("Absent Report")
+                ->setKeywords("Absent Report")
+                ->setCategory("Absent Report");
+// Add some data
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A1', 'ক্রমিক নং')
+                ->setCellValue('B1', 'কার্ড নং')
+                ->setCellValue('C1', 'নাম')
+                ->setCellValue('D1', 'বিভাগ');
 
-//        $StartDate = '2014-03-04'; //date('Y-m-d', strtotime(now()));
-//        $CurrentMonth = '2014-03'; //date('Y-m', strtotime(now()));
-//        $PreviousMonth = '2014-02'; //date('Y-m', (strtotime(now())));
-        //$EndDate = date('Y-m-d H:i:s', strtotime('-1 day', now()));
-        //$regular_employee_cardno_list = $this->mod_set_employee_info_detail->regular_employee_cardno_list($CurrentMonth, $PreviousMonth);
-        //$attendance_list = $this->mod_set_employee_info_detail->attendance_log($StartDate);
-//        $att_list = array();
-//        $att_list_all = array();
-//        foreach ($attendance_list as $att) {
-//            $att_list['CardNo'] = $att->CardNo;
-//            array_push($att_list_all, $att_list);
-//        }
-//        $absent_list = array();
-//        $absent_array = array();
-//        foreach ($regular_employee_cardno_list as $cardno_list) {
-//            if ($this->check_array($cardno_list->CardNo, $att_list_all) == FALSE) {
-//                $absent_list['CardNo'] = $cardno_list->CardNo;
-//                $absent_list['Name'] = $cardno_list->Name;
-//                $absent_list['Floor'] = $cardno_list->Floor;
-//                $absent_list['Department'] = $cardno_list->Department;
-//                $absent_list['Line'] = $cardno_list->Line;
-//                $absent_list['DateTime'] = $cardno_list->DateTime;
-//
-//                array_push($absent_array, $absent_list);
-//            }
-//        }
-//        echo '<pre>';
-//        print_r($this->input->post());
-//        print_r($employee_details);
-//        echo '</pre>';
-//        exit();
+        $limit = count($first_half_attendance) - 1;
+        for ($index = 0; $index <= $limit; $index++) {
 
-        if ($this->session->userdata('Role') == 'Admin') {
-            $data['tbl_absent_report'] = $absent_employee_list;
-            $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui_admin';
-            $this->load->view('main_page', $data);
-        } else {
-            $data['tbl_absent_report'] = $absent_employee_list;
-            $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
-            $this->load->view('main_page', $data);
+            $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $index + 1))
+                    ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
+                    ->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Name'])
+                    ->setCellValue('D' . ($index + 2), $first_half_attendance[$index]['Department']);
         }
-//redirect('con_pro_attn_mismatch_report/index', 'refresh');
+
+
+        $objPHPExcel->setActiveSheetIndex(0);
+
+
+// Redirect output to a client’s web browser (Excel5)
+        date_default_timezone_set('Asia/Dacca');
+        header('Content-Type: application/vnd.ms-excel');
+        $fileName = date('d-m-Y_g:i_a', now());
+
+        header("Content-Disposition: attachment;filename=Absent_Report_" . $fileName . ".xls ");
+        header('Cache-Control: max-age=0');
+// If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+// If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
     }
 
     public function check_array($CardNo, $att_list_all) {

@@ -23,19 +23,14 @@
                         'role' => 'form',
                         'id' => 'validateSearchForm'
                     );
-                    echo form_open('', $attributes);
+                    echo form_open('con_pro_daily_absent_report/Search', $attributes);
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php
-//                        if ($tbl_first_half_log_report)
-//                            echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
-//                        else
-//                            echo date('m-d-Y', now());
-                        ?>"/>
+                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo $showDate;?>"/>
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
-                    <?php echo form_close(); ?>
+<?php echo form_close(); ?>
                 </div>
             </div>
         </section>
@@ -53,14 +48,9 @@
                     'role' => 'form',
                     'id' => 'excelExport'
                 );
-                echo form_open('', $attributes);
+                echo form_open('con_pro_daily_absent_report/excelExport', $attributes);
                 ?>
-                <input type="hidden" name="hDate" value="<?php
-//                if ($tbl_first_half_log_report)
-//                    echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
-//                else
-//                    echo date('m-d-Y', now());
-                ?>"/>
+                <input type="hidden" name="hDate" value="<?php echo $showDate;?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php
                 echo form_close();
@@ -95,19 +85,19 @@
                         </tr>
                     </tfoot>-->
                     <tbody>
-                        <?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
+<?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
                             <tr>         
                                 <td><?php echo $rec_absent_report['CardNo']; ?></td>
                                 <td><?php echo $rec_absent_report['Name']; ?></td>
-    <!--                                    <td><?php //echo $rec_absent_report['BuildingName'];  ?></td>
-                                <td><?php //echo $rec_absent_report['Floor'];  ?></td>-->
+    <!--                                    <td><?php //echo $rec_absent_report['BuildingName'];   ?></td>
+                                <td><?php //echo $rec_absent_report['Floor'];   ?></td>-->
                                 <td><?php echo $rec_absent_report['Department']; ?></td>
-    <!--                                    <td><?php //echo $rec_absent_report['Line'];  ?></td> -->
+    <!--                                    <td><?php //echo $rec_absent_report['Line'];   ?></td> -->
                                 <td>
                                     <a href="<?php echo base_url(); ?>con_pro_daily_absent_report/attendanceRectifaction/<?php echo $rec_absent_report['CardNo']; ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
                                 </td>
                             </tr>
-                        <?php } ?>
+<?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -115,8 +105,8 @@
     </div>    
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();   ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();   ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url();    ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url();    ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {

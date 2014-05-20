@@ -22,6 +22,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
+        $this->db->order_by('CardNo asc');
         $query = $this->db->get();
         return $query->result();
     }  
@@ -30,6 +31,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
         $this->db->where('Floor', $floor);
+        $this->db->order_by('CardNo asc');
         $query = $this->db->get();
         return $query->result();
     }  
