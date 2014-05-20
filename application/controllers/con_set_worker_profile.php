@@ -217,14 +217,16 @@ class Con_set_worker_profile extends CI_Controller {
     }
 
     public function insert() {
+        $engNumber = array(1,2,3,4,5,6,7,8,9,0);
+        $bangNumber = array('১','২','৩','৪','৫','৬','৭','৮','৯','০');
         $this->mod_set_worker_profile->Name = $this->input->post('Name');
         $this->mod_set_worker_profile->Designation = $this->input->post('Designation');
         $this->mod_set_worker_profile->Grade = $this->input->post('Grade');
-        $this->mod_set_worker_profile->CardNo = $this->input->post('CardNo');
+        $this->mod_set_worker_profile->CardNo = str_replace($bangNumber, $engNumber, $this->input->post('CardNo'));
         $this->mod_set_worker_profile->JoiningDate = date('Y-m-d', strtotime($this->input->post('JoiningDate')));
-        $this->mod_set_worker_profile->GrossSalary = $this->input->post('GrossSalary');
+        $this->mod_set_worker_profile->GrossSalary = str_replace($bangNumber, $engNumber,$this->input->post('GrossSalary'));
         $this->mod_set_worker_profile->LastIncrementDate = date('Y-m-d', strtotime($this->input->post('LastIncrementDate')));
-        $this->mod_set_worker_profile->LastIncrementMoney = $this->input->post('LastIncrementMoney');
+        $this->mod_set_worker_profile->LastIncrementMoney = str_replace($bangNumber, $engNumber,$this->input->post('LastIncrementMoney'));
         $this->mod_set_worker_profile->ContactNo = $this->input->post('ContactNo');
         $this->mod_set_worker_profile->NID = $this->input->post('NID');
         $this->mod_set_worker_profile->PromotionDate = date('Y-m-d', strtotime($this->input->post('PromotionDate')));
@@ -248,6 +250,10 @@ class Con_set_worker_profile extends CI_Controller {
         $this->mod_set_worker_profile->Department = $this->input->post('Department');
         $this->mod_set_worker_profile->Line = $this->input->post('Line');
         $this->mod_set_worker_profile->Parameter5 = $this->input->post('Parameter5');
+        $this->mod_set_worker_profile->OT = $this->input->post('OT');
+        $this->mod_set_worker_profile->AttendanceBonus = str_replace($bangNumber, $engNumber,$this->input->post('AttendanceBonus'));
+        $this->mod_set_worker_profile->OtherAllowance = str_replace($bangNumber, $engNumber,$this->input->post('OtherAllowance'));
+        $this->mod_set_worker_profile->OthAllowCal = $this->input->post('OthAllowCal');
         $this->upload_image('insert');
         $this->mod_set_worker_profile->insert();
 

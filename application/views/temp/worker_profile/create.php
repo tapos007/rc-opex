@@ -407,23 +407,53 @@
                             </div>                        
                         </div>
                         <div class="form-group">
-                            <label for="LastIncrementDate" class="col-sm-2 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
+                            <label for="OT" class="col-sm-2 control-label" >ওভার টাইম</label>
                             <div class="col-sm-4">
-                                <input type="text" name="LastIncrementDate"  class="form-control" id="LastIncrementDate" placeholder="সর্বশেষ বর্ধিত তারিখ টাইপ করুন">
+<!--                                <input type="text" name="OT"  class="form-control" id="OT" placeholder="ওভার টাইম টাইপ করুন">-->
+                                <select name="OT"  class="form-control" id="OT">
+                                    <option value="">--ওভার টাইম নির্বাচন করুন--</option>
+                                    <option value="1">হ্যাঁ</option>
+                                    <option value="0">না</option>
+                                </select>
                             </div>
+                            <label for="AttendanceBonus" class="col-sm-2 control-label" >উপস্থিতি বোনাস</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="AttendanceBonus"  class="form-control" id="AttendanceBonus" placeholder="উপস্থিতি বোনাস টাইপ করুন">
+                            </div>                        
+                        </div>
+                        <div class="form-group">
+                            <label for="OtherAllowance" class="col-sm-2 control-label" >অন্যান্য ভাতা</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="OtherAllowance"  class="form-control" id="OtherAllowance" placeholder="অন্যান্য ভাতা টাইপ করুন">
+                            </div>
+                            <label for="OthAllowCal" class="col-sm-2 control-label" >অন্যান্য ভাতা হিসাব</label>
+                            <div class="col-sm-4">
+                                <!--<input type="text" name="OthAllowCal"  class="form-control" id="OthAllowCal" placeholder="মূল বেতন টাইপ করুন">-->
+                                <select name="OthAllowCal"  class="form-control" id="OthAllowCal" readonly>
+                                    <!--<option value="">--অন্যান্য ভাতা নির্বাচন করুন--</option>-->
+                                    <option value="F">নির্দিষ্ট</option>
+                                    <!--<option value="M">মাসিক</option>-->
+                                </select>
+                            </div>                        
+                        </div>
+                        <div class="form-group">
                             <label for="LastIncrementMoney" class="col-sm-2 control-label" >সর্বশেষ বর্ধিত টাকা</label>
                             <div class="col-sm-4">
                                 <input type="text" name="LastIncrementMoney"  class="form-control" id="id_LastIncrementMoney" placeholder="সর্বশেষ বর্ধিত টাকা টাইপ করুন">
                             </div>
+                            <label for="LastIncrementDate" class="col-sm-2 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="LastIncrementDate"  class="form-control" id="LastIncrementDate" placeholder="সর্বশেষ বর্ধিত তারিখ নির্বাচন করুন">
+                            </div>                            
                         </div>                    
                         <div class="form-group">
                             <label for="JoiningDate" class="col-sm-2 control-label" >যোগদানের তারিখ</label>
                             <div class="col-sm-4">
-                                <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" placeholder="যোগদানের তারিখ টাইপ করুন">
+                                <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" placeholder="যোগদানের তারিখ নির্বাচন করুন">
                             </div>
                             <label for="PromotionDate" class="col-sm-2 control-label" >পদোন্নতির তারিখ</label>
                             <div class="col-sm-4">
-                                <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" placeholder="পদোন্নতির তারিখ টাইপ করুন">
+                                <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" placeholder="পদোন্নতির তারিখ নির্বাচন করুন">
                             </div>
                         </div>
                     </div>

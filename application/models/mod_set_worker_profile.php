@@ -34,6 +34,10 @@ class Mod_set_worker_profile extends CI_Model {
     public $Department;
     public $Line;
     public $Parameter5;
+    public $OT;
+    public $AttendanceBonus;
+    public $OtherAllowance;
+    public $OthAllowCal;
 
     //Insert Query for Course================================================================
     public function insert() {
@@ -68,7 +72,11 @@ class Mod_set_worker_profile extends CI_Model {
             'Floor' => $this->Floor,
             'Department' => $this->Department,
             'Line' => $this->Line,
-            'Parameter5' => $this->Parameter5
+            'Parameter5' => $this->Parameter5,
+            'OT' => $this->OT,
+            'AttendanceBonus' => $this->AttendanceBonus,
+            'OtherAllowance' => $this->OtherAllowance,
+            'OthAllowCal' => $this->OthAllowCal
         );
         $this->db->insert('tbl_employee_profile', $data);
     }
@@ -150,7 +158,11 @@ class Mod_set_worker_profile extends CI_Model {
             'Floor' => $this->Floor,
             'Department' => $this->Department,
             'Line' => $this->Line,
-            'Parameter5' => $this->Parameter5
+            'Parameter5' => $this->Parameter5,
+            'OT' => $this->OT,
+            'AttendanceBonus' => $this->AttendanceBonus,
+            'OtherAllowance' => $this->OtherAllowance,
+            'OthAllowCal' => $this->OthAllowCal
         );
         $this->db->where('CardNo', $this->CardNo);
         if ($this->db->update('tbl_employee_profile', $data)) {
