@@ -13,7 +13,7 @@
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4> 
-                        বিভাগ দ্বারা অনুসন্ধান  করুন                    
+                        সময়সূচী দ্বারা অনুসন্ধান  করুন                    
                     </h4>                
                 </header> 
                 <div class="panel-body">
@@ -35,7 +35,7 @@
                         ?>"/>
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
-<?php echo form_close(); ?>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </section>
@@ -82,7 +82,7 @@
                     </thead>
 
                     <tbody>
-                    <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
+                        <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr>
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
@@ -97,7 +97,7 @@
                                     ?>
                                 </td>
                             </tr>
-<?php } ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -105,15 +105,15 @@
     </div>
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();  ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();  ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url();   ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url();   ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {
         var table = $('#daily_log').DataTable({
             "processing": true,
             "serverSide": true,
-            "ajax": "<?php //echo base_url();  ?>con_pro_first_half_attendance_log/server_processing.php"
+            "ajax": "<?php //echo base_url();   ?>con_pro_first_half_attendance_log/server_processing.php"
         });
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')

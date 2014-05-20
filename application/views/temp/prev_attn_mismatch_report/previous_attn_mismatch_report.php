@@ -13,7 +13,7 @@
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4> 
-                        বিভাগ দ্বারা  অনুসন্ধান  করুন                    
+                        সময়সূচী দ্বারা  অনুসন্ধান  করুন                    
                     </h4>                
                 </header> 
                 <div class="panel-body">
@@ -28,7 +28,7 @@
                         <label for="Date"></label>
                         <input type="text" name="Date" id="Date" value="<?php if ($this->input->post('Date')) echo date('d-m-Y', strtotime(str_replace('-', '/', $this->input->post('Date')))); ?>" class="form-control" placeholder="তারিখ নির্বাচন  করুন"/>
                     </div>                 
-                    <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> Search</button>                                    
+                    <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
                     <?php echo form_close(); ?>
                 </div>
             </div>
@@ -38,45 +38,64 @@
 <div class="row"> 
     <div class="col-lg-12">
         <section class="panel panel-body">
+            <div class="text-center">
+                <h5><strong>  পূর্ববর্তী উপস্থিতির রিপোর্ট  বের করার জন্য বাটনটি চাপুন</strong></h5>
+                <?php
+                $attributes = array(
+                    'class' => 'form-inline',
+                    'role' => 'form',
+                    'id' => 'excelExport'
+                );
+                echo form_open('', $attributes);
+                ?>
+                <input type="hidden" name="hDate" value="<?php
+//                if ($tbl_first_half_log_report)
+//                    echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
+//                else
+//                    echo date('m-d-Y', now());
+                ?>"/>
+                <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
+                <?php
+                echo form_close();
+                ?>
+            </div><hr/>
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4>
-                        পূর্ববর্তী উপস্থিতি অমিলের প্রতিবেদন তালিকা 
-                       
-                        <button class="btn btn-default" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> Excel Export</button>
+                        পূর্ববর্তী উপস্থিতি অমিলের প্রতিবেদন তালিকা                         
                     </h4>                
-                </header> 
-                <table class="table table-striped border-top display" id="daily_log" border="1" style="font-size: 10px;">
+                </header>
+                <table class="table table-striped table-advance table-condensed table-bordered" id="daily_log" style="margin-top: 5px;">
                     <thead>                        
-                        <tr style="font-size: 15px;">
-                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                    
+                        <tr>                   
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> নাম</th>               
+                            <th><i class="glyphicon glyphicon-time"></i> নাম</th>     
+<!--                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
+                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    -->
+                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
+<!--                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>           -->
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> সংশোধন</th>
                         </tr>
                     </thead>
-                    <tfoot>
+<!--                    <tfoot>
                         <tr>
 							<th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>
                         </tr>
-                    </tfoot>
+                    </tfoot>-->
                     <tbody>                        
                         <?php foreach ($tbl_mismatch_report as $rec_mismatch_report) { ?>
-                            <tr style="font-size: 15px;">
-                                <td><?php echo $rec_mismatch_report['BuildingName']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Floor']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Department']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Line']; ?></td>     
+                            <tr>  
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Name']; ?></td>                                                          
+                                <td><?php echo $rec_mismatch_report['Name']; ?></td>   
+<!--                                <td><?php //echo $rec_mismatch_report['BuildingName']; ?></td>
+                                <td><?php //echo $rec_mismatch_report['Floor']; ?></td>-->
+                                <td><?php echo $rec_mismatch_report['Department']; ?></td>
+<!--                                <td><?php //echo $rec_mismatch_report['Line']; ?></td>                                                          -->
                                 <td>
                                     <?php
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
@@ -99,7 +118,7 @@
                                     <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
                                     <input type="hidden" name="CardNo" value="<?php echo $rec_mismatch_report['CardNo']; ?>"/>
                                     <input type="hidden" name="Date" value="<?php echo $rec_mismatch_report['DateTime']; ?>"/>
-                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i></button>
+                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
                                         <?php echo form_close(); ?>
                                 </td>
                             </tr>
@@ -110,8 +129,8 @@
         </section>
     </div>
 </div>
-<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.dataTables.css"/>
-<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url(); ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url(); ?>js/jquery.dataTables1.js"></script>
 <script>
     $(document).ready(function() {
         var table = $('#daily_log').DataTable();
@@ -130,4 +149,4 @@
             });
         });
     });
-</script>
+</script>-->
