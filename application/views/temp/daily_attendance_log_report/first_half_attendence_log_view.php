@@ -13,7 +13,7 @@
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4> 
-                        বিভাগ দ্বারা অনুসন্ধান  করুন                    
+                        সময়সূচী দ্বারা অনুসন্ধান  করুন                    
                     </h4>                
                 </header> 
                 <div class="panel-body">
@@ -27,14 +27,15 @@
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php if ($tbl_first_half_log_report)                            
-                                    echo date('m-d-Y',strtotime($tbl_first_half_log_report[0]['InTime']));
-                              else
-                                  echo date('m-d-Y',now());
-                            ?>"/>
+                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php
+                        if ($tbl_first_half_log_report)
+                            echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
+                        else
+                            echo date('m-d-Y', now());
+                        ?>"/>
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
-<?php echo form_close(); ?>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </section>
@@ -53,11 +54,12 @@
                 );
                 echo form_open('con_pro_first_half_attendance_log/excelExport', $attributes);
                 ?>
-                <input type="hidden" name="hDate" value="<?php if ($tbl_first_half_log_report)                            
-                                    echo date('m-d-Y',strtotime($tbl_first_half_log_report[0]['InTime']));
-                              else
-                                  echo date('m-d-Y',now());
-                            ?>"/>
+                <input type="hidden" name="hDate" value="<?php
+                if ($tbl_first_half_log_report)
+                    echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
+                else
+                    echo date('m-d-Y', now());
+                ?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php
                 echo form_close();
@@ -78,9 +80,9 @@
                             <th><i class="glyphicon glyphicon-time"></i> বাহিরের সময়সূচী</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody>
-<?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
+                        <?php foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
                             <tr>
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
@@ -95,7 +97,7 @@
                                     ?>
                                 </td>
                             </tr>
-<?php } ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -103,15 +105,15 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.dataTables.css"/>
-<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<!--<link rel="stylesheet" href="<?php //echo base_url();   ?>css/jquery.dataTables.css"/>
+<script src="<?php //echo base_url();   ?>js/jquery.dataTables1.js"></script>
 <script>
 
     $(document).ready(function() {
         var table = $('#daily_log').DataTable({
             "processing": true,
             "serverSide": true,
-            "ajax": "<?php echo base_url(); ?>con_pro_first_half_attendance_log/server_processing.php"
+            "ajax": "<?php //echo base_url();   ?>con_pro_first_half_attendance_log/server_processing.php"
         });
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')
@@ -127,4 +129,4 @@
             });
         });
     });
-</script>
+</script>-->
