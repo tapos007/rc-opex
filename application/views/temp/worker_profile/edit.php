@@ -227,6 +227,7 @@
                 শ্রমিক এবং কর্মচারীগণের নিবন্ধন 
             </div>          
             <?php
+            $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
             $attr = array(
                 'class' => 'form-horizontal',
                 'role' => 'form',
@@ -480,14 +481,14 @@
                                 <div class="form-group">
                                     <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
                                     <div class="col-sm-9">
-                                        <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo $worker_profile->CardNo; ?>">
+                                        <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->CardNo); ?>" readonly>
                                     </div>
                                 </div>
                                  
                                 <div class="form-group">
                                     <label for="LastIncrementDate" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
                                     <div class="col-sm-8  date" id="LastIncrementDate" data-date="<?php echo $worker_profile->LastIncrementDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php echo $worker_profile->LastIncrementDate; ?>">
+                                        <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->LastIncrementDate); ?>">
                                         <span class="add-on"><i class="icon-th"></i></span>
                                     </div>
                                 </div>
@@ -495,7 +496,7 @@
                                 <div class="form-group">
                                     <label for="JoiningDate" class="col-sm-3 control-label" >যোগদানের তারিখ</label>
                                     <div class="col-sm-8 date" id="JoiningDate" data-date="<?php echo $worker_profile->JoiningDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php echo $worker_profile->JoiningDate; ?>">
+                                        <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->JoiningDate); ?>">
                                         <span class="add-on"><i class="icon-th"></i></span>
                                     </div>
                                 </div>
@@ -505,19 +506,19 @@
                                 <div class="form-group">
                                     <label for="GrossSalary" class="col-sm-3 control-label" >মোট বেতন</label>
                                     <div class="col-sm-9">
-                                        <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php echo $worker_profile->GrossSalary; ?>">
+                                        <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->GrossSalary); ?>">
                                     </div>                        
                                 </div>
                                 <div class="form-group">
                                     <label for="LastIncrementMoney" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত টাকা</label>
                                     <div class="col-sm-9">
-                                        <input type="text" name="LastIncrementMoney"  class="form-control" id="id_LastIncrementMoney" value="<?php echo $worker_profile->LastIncrementMoney; ?>">
+                                        <input type="text" name="LastIncrementMoney"  class="form-control" id="id_LastIncrementMoney" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->LastIncrementMoney); ?>">
                                     </div>
                                 </div>  
                                  <div class="form-group">
                                     <label for="PromotionDate" class="col-sm-3 control-label" >পদোন্নতির তারিখ</label>
                                     <div class="col-sm-8 date" id="PromotionDate" data-date="<?php echo $worker_profile->PromotionDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php echo $worker_profile->PromotionDate; ?>">
+                                        <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->PromotionDate); ?>">
                                         <span class="add-on"><i class="icon-th"></i></span>
                                     </div>
                                 </div>

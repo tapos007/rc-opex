@@ -13,7 +13,7 @@
 </script>
 
 
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#JobCategoryName').on('change', function(e) {
             var jobCatName = $(this).val();
@@ -36,7 +36,7 @@
                         mySelect.append("<option value='0'>গ্রেড নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                            mySelect.append("<option value='" + k.ID + "'>" + k.Name + "</option>");
+                            mySelect.append("<option value='" + k.Name + "' data-foo='"+k.ID+"'>" + k.Name + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
                     }, dataType: 'json'
@@ -45,7 +45,8 @@
         });
 
         $('#GradeName').on('change', function(e) {
-            var gradeName = $(this).val();
+            var selected = $(this).find('option:selected');
+            var gradeName = selected.data('foo');
             if (gradeName == 0) {
                 var mySelect = $('#DesignationName');
                 mySelect.html('');
@@ -62,7 +63,7 @@
                         mySelect.append("<option>উপাধি নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-
+                           
                             mySelect.append("<option value='" + k.Designation + "' data-foo='" + k.ID + "' >" + k.Designation + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
@@ -492,7 +493,7 @@
                         <div class="form-group">
                             <label class="control-label col-lg-3" for="Department">বিভাগ</label>
                             <div class="col-lg-9">
-                                <select class ="form-control" name="Department" id="Floor" value="<?php echo set_value('Department'); ?>">
+                                <select class ="form-control" name="Department" id="Floor">
                                     <option value="">--Select One--</option>
                                     <?php foreach ($tbl_section as $rec_section) { ?>
                                         <option value="<?php echo $rec_section->Name; ?>"><?php echo $rec_section->Name; ?></option>
@@ -504,7 +505,7 @@
                         <div class="hidden">
                             <label class="control-label col-lg-3" for="Line">লাইন</label>
                             <div class="col-lg-9">
-                                <select class ="form-control" name="Line" id="Line" value="<?php echo set_value('Line'); ?>">
+                                <select class ="form-control" name="Line" id="Line">
                                     <option value="">--Select One--</option>
 
                                 </select>

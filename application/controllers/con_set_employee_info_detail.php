@@ -107,23 +107,6 @@ class Con_set_employee_info_detail extends CI_Controller {
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 //    public function generate_daily_report() {
 //        for ($id = 1; $id <= 18000; $id++) {

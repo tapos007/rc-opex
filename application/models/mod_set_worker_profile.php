@@ -165,10 +165,7 @@ class Mod_set_worker_profile extends CI_Model {
             'OthAllowCal' => $this->OthAllowCal
         );
         $this->db->where('CardNo', $this->CardNo);
-        if ($this->db->update('tbl_employee_profile', $data)) {
-            return TRUE;
-        }
-        return false;
+        $this->db->update('tbl_employee_profile', $data);
     }
 
     public function checkEmail() {
