@@ -20,63 +20,13 @@ class Con_proc_daily_report_generate extends CI_Controller {
         $this->load->helper('alert');
         $this->load->helper('date');
     }
-    //Hello vai Dhongso hoiye gelam
-//tapos
-//    public function getInOutTimeFromTblAccessLog($date, $card_specific_tbl_access_log) {
-////        echo $date;
-////        echo '<pre>';
-////        print_r($card_specific_tbl_access_log);
-////        echo '</pre>';
-//        $dates = array();
-//        $limit = count($card_specific_tbl_access_log) - 1;
-//        for ($index = 0; $index <= $limit; $index++) {
-//            if (date('Y-m-d', strtotime($card_specific_tbl_access_log[$index]['DateTime'])) == date('Y-m-d', strtotime($date))) {
-//                array_push($dates, $card_specific_tbl_access_log[$index]['DateTime']);
-//                //echo 'Paisi';
-//            }
-//        }
-//        return $dates;
-//    }
-//
-//    public function DailyAccessLog() {
-//        //SELECT * FROM `tbl_access_log_raw` where Intime between '2014-4-1 00:00:01' and '2014-4-30 23:59:59'
-//        $cardNo = 8002;
-//        $month = 4;
-//        $this->mod_access_log_raw->TruncateInvalidData();
-//        $days = $this->mod_access_log_raw->MonthSpecificGetDistinctDates($month);
-//        $card_specific_tbl_access_log = $this->mod_access_log->CardSpecificMonthData($cardNo, $month);
-//        $card_specific_tbl_incurrect_access_log = $this->mod_incurrect_access_log->CardSpecificMonthData($cardNo, $month);
-//        $card_specific_daily_access_log = array();
-//        $limit = count($days) - 1;
-//        for ($index = 0; $index <= $limit; $index++) {
-//            //echo $days[$index]['DATE(  `InTime` )'].'<br/>';
-//            $a_card_specific_daily_access_log['Date'] = $days[$index]['DATE(  `InTime` )'];
-//            $dates = $this->getInOutTimeFromTblAccessLog($days[$index]['DATE(  `InTime` )'], $card_specific_tbl_access_log);
-//            echo '<pre>';
-//            print_r($dates);
-//            echo '</pre>';
-//        }
-//    }
+
 
     public function search() {
         $data['container'] = 'temp/daily_report_generate/search';
         $this->load->view('main_page', $data);
     }
 
-//    public function generateData() {
-//        $data_tbl_access_log_array = array();
-//        for ($index = 1; $index <= 200; $index++) {
-//            $data_tbl_access_log['CardNo'] = $index;
-//            $data_tbl_access_log['DateTime'] = date("Y-m-d H:i:s", mt_rand(strtotime("2014-03-22 21:00:00"), strtotime("2014-03-22 21:30:00")));
-//            $data_tbl_access_log['Status'] = "OUT";
-//            $data_tbl_access_log['CreatedBy'] = "SYSTEM";
-//            //$data_tbl_access_log['CreatedOn'];
-//            $data_tbl_access_log['DelStatus'] = "ACT";
-//            array_push($data_tbl_access_log_array, $data_tbl_access_log);
-//        }
-//        $this->mod_access_log->insert_batch_random_data($data_tbl_access_log_array);
-//        echo 'Random Data Inserted Successfully';
-//    }
 
     public function AttendaceSheet() {
         $con = mysqli_connect("localhost", "root", "", "wages_manegement");

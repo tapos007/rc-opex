@@ -44,33 +44,18 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     } 
-    public function UpdateIncurrenctAccessLog($cardNo, $dateTime){
-        
-        $dateTime = date('Y-m-d',strtotime($dateTime));
-        //echo $cardNo.'<br/>'.$dateTime.'<br/>';
-        
+    public function UpdateIncurrenctAccessLog($cardNo, $dateTime){        
+        $dateTime = date('Y-m-d',strtotime($dateTime));               
         $firstTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 00:00:01'));
-        $lastTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 23:59:59'));
-        //echo $firstTime.'<br/>'.$lastTime.'<br/>';
-        //echo ";
-        //echo "UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'";
-        //exit();
+        $lastTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 23:59:59'));        
         $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
         
     }
-    public function UpdateIncurrenctAccessLogBatch($cardNo, $dateTime){
-        
-        $dateTime = date('Y-m-d',strtotime($dateTime));
-        //echo $cardNo.'<br/>'.$dateTime.'<br/>';
-        
-        $firstTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 00:00:01'));
-        $lastTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 23:59:59'));
-        //echo $firstTime.'<br/>'.$lastTime.'<br/>';
-        //echo ";
-        //echo "UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'";
-        //exit();
-        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
-        
+    public function UpdateIncurrenctAccessLogBatch($all_mismacthes){        
+        $limit= count($all_mismacthes)-1;
+        for($index = 0 ; $index <= $limit ; $index++){
+            $this->UpdateIncurrenctAccessLog($all_mismacthes[$index]['CardNo'], $all_mismacthes[$index]['DateTime']);
+        }        
     }
     
     public function incorrect_access_log($startdate, $enddate) {

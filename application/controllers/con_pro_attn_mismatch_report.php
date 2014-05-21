@@ -205,7 +205,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 //        echo json_encode($abc);
 //        //$data['tbl_mismatch_report'] = $abc;
 //    }
-    
+
     public function get_department_name() {
         $BuildingName = $this->input->post('Building');
         $Floor = $this->input->post('Floor');
@@ -312,11 +312,13 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 
     public function systemGeneratedCurrection() {
         $email = $this->session->userdata('Email');
-        $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData();
+        $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData();        
         $all_currect_data = array();
         $limit = count($all_mismacthes) - 1;
         $currect_data_index = 0;
         for ($index = 0; $index <= $limit; $index++) {
+            $all_mismacthes[$index]['DelStatus']='DEL';
+            
             $all_currect_data[$currect_data_index]['CardNo'] = $all_mismacthes[$index]['CardNo'];
             $all_currect_data[$currect_data_index]['CreatedBy'] = $email;
             $all_currect_data[$currect_data_index]['DelStatus'] = 'ACT';
@@ -324,14 +326,13 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             $all_currect_data[$currect_data_index + 1]['CardNo'] = $all_mismacthes[$index]['CardNo'];
             $all_currect_data[$currect_data_index + 1]['CreatedBy'] = $email;
             $all_currect_data[$currect_data_index + 1]['DelStatus'] = 'ACT';
-            if (date('H:i:s', strtotime($all_mismacthes[$index]['DateTime'])) >= date('H:i:s', strtotime('06:00:00'))) {
-                //echo 'OUT<br/>';
+            
+            if (date('H:i:s', strtotime($all_mismacthes[$index]['DateTime'])) >= date('H:i:s', strtotime('06:00:00'))) {                
                 $all_currect_data[$currect_data_index]['Status'] = 'IN';
                 $all_currect_data[$currect_data_index + 1]['Status'] = 'OUT';
                 $all_currect_data[$currect_data_index]['DateTime'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d', strtotime($all_mismacthes[$index]['DateTime'])) . ' 02:15:00'));
                 $all_currect_data[$currect_data_index + 1]['DateTime'] = $all_mismacthes[$index]['DateTime'];
-            } else {
-                //echo 'IN<br/>';
+            } else {                
                 $all_currect_data[$currect_data_index]['Status'] = 'IN';
                 $all_currect_data[$currect_data_index + 1]['Status'] = 'OUT';
                 $all_currect_data[$currect_data_index]['DateTime'] = $all_mismacthes[$index]['DateTime'];
@@ -339,16 +340,12 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             }
             $currect_data_index+=2;
         }
-       
-        echo '<pre>';
-        print_r(count($all_currect_data));
-        echo '</pre>';
-        exit();
+        echo 'Data Truncating.....';
+        $this->mod_incurrect_access_log->EmptyTable();
+        echo 'Data Inserting .....';
+        $this->mod_incurrect_access_log->insert_batch_random_data($all_mismacthes);
         $this->mod_access_log->insert_batch_random_data($all_currect_data);
-        $this->mod_pro_attn_mismatch_report->UpdateIncurrenctAccessLog($cardno, $InTime);
-        
-        
-        exit();
+        echo 'Data Updated & Inserted';
     }
 
 }
