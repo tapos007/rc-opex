@@ -157,6 +157,55 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->load->view('main_page', $data);
     }
 
+//    public function json_encode_result() {
+//        $BuildingName = $this->session->userdata('BuildingName');
+//        $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
+//        $Floor = $this->session->userdata('Floor');
+//        $data['floor'] = $Floor;
+//        $Department = $this->session->userdata('Department');
+//        if ($this->session->userdata('Role') == 'Admin') {
+//            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
+//        } else {
+//            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
+//        }
+//        date_default_timezone_set('Asia/Dacca');
+//        if ($this->input->post('Date')) {
+//            $mydate = $this->input->post('Date');
+//            $now = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
+//        } else {
+//            $now = date('Y-m-d', strtotime('-1 day', now()));
+//        }
+////        echo $now;
+////        exit();
+//        $StartDate = $now . ' 00:00:01';
+//        $EndDate = $now . ' 23:59:59';
+//        $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
+//        $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
+//        //$StartDate = date('Y-m-d H:i:s', strtotime("2014-03-03 00:00:01"));
+//        //$EndDate = date('Y-m-d H:i:s', strtotime("2014-03-03 23:59:59"));
+//        $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
+//        $mismatch_information = array();
+//        $abc = array();
+//        //$mismatch_information = $incorrect_access_log;
+//
+//        foreach ($incorrect_access_log as $access_log) {
+//            $mismatch_information['CardNo'] = $access_log->CardNo;
+//            $mismatch_information['DateTime'] = $access_log->DateTime;
+//            $data12 = $this->retrieve_employee_information($access_log->CardNo, $employee_details);
+//
+//            if ($data12 != NULL) {
+//                $mismatch_information['Name'] = $data12['Name'];
+//                $mismatch_information['BuildingName'] = $data12['BuildingName'];
+//                $mismatch_information['Floor'] = $data12['Floor'];
+//                $mismatch_information['Department'] = $data12['Department'];
+//                $mismatch_information['Line'] = $data12['Line'];
+//                array_push($abc, $mismatch_information);
+//            }
+//        }
+//        echo json_encode($abc);
+//        //$data['tbl_mismatch_report'] = $abc;
+//    }
+    
     public function get_department_name() {
         $BuildingName = $this->input->post('Building');
         $Floor = $this->input->post('Floor');

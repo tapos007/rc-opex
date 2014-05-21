@@ -80,26 +80,32 @@
                             <th><i class="glyphicon glyphicon-time"></i> বাহিরের সময়সূচী</th>
                         </tr>
                     </thead>
-
+                    <tfoot>
+                        <tr>
+                            <th><i class="glyphicon glyphicon-edit"></i>  কার্ড নং</th>     
+                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>       
+                        </tr>
+                    </tfoot>
                     <tbody>
-                        <?php 
-                        $bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
-                        foreach ($tbl_first_half_log_report as $rec_mismatch_report) { ?>
+                        <?php
+                        $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+                        foreach ($tbl_first_half_log_report as $rec_mismatch_report) {
+                            ?>
                             <tr>
-                                <td><?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report['CardNo']); ?></td>
+                                <td><?php echo str_replace(range(0, 9), $bn_digits, $rec_mismatch_report['CardNo']); ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>
                                 <td><?php
-                                    echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['InTime']))));
+                                    echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['InTime']))));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>
                                 <td><?php
-                                    echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['OutTime']))));
+                                    echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['OutTime']))));
                                     //echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime(date('d-m-Y H:i:s', strtotime($rec_mismatch_report['InTime'])))));
                                     ?>
                                 </td>
                             </tr>
-                        <?php } ?>
+<?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -107,28 +113,25 @@
     </div>
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();   ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();   ?>js/jquery.dataTables1.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
+<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
 
     $(document).ready(function() {
-        var table = $('#daily_log').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": "<?php //echo base_url();   ?>con_pro_first_half_attendance_log/server_processing.php"
-        });
+        var table = $('#daily_log').DataTable();
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')
                     .appendTo($(this).empty())
                     .on('change', function() {
-                table.column(i)
-                        .search($(this).val())
-                        .draw();
-            });
+                        table.column(i)
+                                .search($(this).val())
+                                .draw();
+                    });
 
             table.column(i).data().unique().sort().each(function(d, j) {
                 select.append('<option value="' + d + '">' + d + '</option>')
             });
         });
     });
-</script>-->
+</script>

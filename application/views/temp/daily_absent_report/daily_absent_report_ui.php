@@ -76,14 +76,13 @@
 
                         </tr>
                     </thead>
-<!--                        <tfoot>
+                        <tfoot>
                         <tr>
-                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
+                            <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>
+                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ</th>
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন</th>
                         </tr>
-                    </tfoot>-->
+                    </tfoot>
                     <tbody>
 <?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
                             <tr>         
@@ -105,25 +104,25 @@
     </div>    
 </div>
 
-<!--<link rel="stylesheet" href="<?php //echo base_url();    ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url();    ?>js/jquery.dataTables1.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
+<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
 
     $(document).ready(function() {
         var table = $('#daily_log').DataTable();
-
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')
                     .appendTo($(this).empty())
                     .on('change', function() {
-                table.column(i)
-                        .search($(this).val())
-                        .draw();
-            });
+                        table.column(i)
+                                .search($(this).val())
+                                .draw();
+                    });
 
             table.column(i).data().unique().sort().each(function(d, j) {
                 select.append('<option value="' + d + '">' + d + '</option>')
             });
         });
     });
-</script>-->
+</script>

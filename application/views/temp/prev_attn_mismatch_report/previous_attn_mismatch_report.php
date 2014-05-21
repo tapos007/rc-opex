@@ -1,3 +1,4 @@
+
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -79,31 +80,31 @@
                             <th><i class="glyphicon glyphicon-time"></i> সংশোধন</th>
                         </tr>
                     </thead>
-<!--                    <tfoot>
+                    <tfoot>
                         <tr>
-							<th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
+                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
                             <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>
+                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>
                         </tr>
-                    </tfoot>-->
+                    </tfoot>
                     <tbody>                        
-                        <?php 
-                        $bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
-                        foreach ($tbl_mismatch_report as $rec_mismatch_report) { ?>
+                        <?php
+                        $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+                        foreach ($tbl_mismatch_report as $rec_mismatch_report) {
+                            ?>
                             <tr>  
-                                <td><?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report['CardNo']); ?></td>
+                                <td><?php echo str_replace(range(0, 9), $bn_digits, $rec_mismatch_report['CardNo']); ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>   
-<!--                                <td><?php //echo $rec_mismatch_report['BuildingName']; ?></td>
-                                <td><?php //echo $rec_mismatch_report['Floor']; ?></td>-->
+    <!--                                <td><?php //echo $rec_mismatch_report['BuildingName'];   ?></td>
+                                <td><?php //echo $rec_mismatch_report['Floor'];   ?></td>-->
                                 <td><?php echo $rec_mismatch_report['Department']; ?></td>
-<!--                                <td><?php //echo $rec_mismatch_report['Line']; ?></td>                                                          -->
+    <!--                                <td><?php //echo $rec_mismatch_report['Line'];   ?></td>                                                          -->
                                 <td>
                                     <?php
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
-                                        echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
+                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
                                     }
                                     ?>
                                 </td> 
@@ -112,7 +113,7 @@
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
-                                        echo str_replace(range(0, 9),$bn_digits,date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
+                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
                                     }
                                     ?>
                                 </td> 
@@ -131,12 +132,14 @@
         </section>
     </div>
 </div>
-<!--<link rel="stylesheet" href="<?php //echo base_url(); ?>css/jquery.dataTables.css"/>
-<script src="<?php //echo base_url(); ?>js/jquery.dataTables1.js"></script>
+
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
+<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
+
     $(document).ready(function() {
         var table = $('#daily_log').DataTable();
-
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')
                     .appendTo($(this).empty())
@@ -151,4 +154,5 @@
             });
         });
     });
-</script>-->
+</script>
+
