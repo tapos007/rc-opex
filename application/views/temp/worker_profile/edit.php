@@ -37,7 +37,7 @@
                         mySelect.append("<option value='0'>গ্রেড নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                            mySelect.append("<option value='" + k.Name + "' data-foo='"+k.ID+"'>" + k.Name + "</option>");
+                            mySelect.append("<option value='" + k.Name + "' data-foo='" + k.ID + "'>" + k.Name + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
                     }, dataType: 'json'
@@ -64,7 +64,7 @@
                         mySelect.append("<option>উপাধি নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                           
+
                             mySelect.append("<option value='" + k.Designation + "' data-foo='" + k.ID + "' >" + k.Designation + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
@@ -227,6 +227,7 @@
                 শ্রমিক এবং কর্মচারীগণের নিবন্ধন 
             </div>          
             <?php
+            $ot_array = array(1 => 'হ্যাঁ', 0 => 'না');
             $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
             $attr = array(
                 'class' => 'form-horizontal',
@@ -476,55 +477,86 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">শ্রমিক/ কর্মচারী কাজের তথ্য</div>
                     <div class="panel-body"> 
-                        
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->CardNo); ?>" readonly>
-                                    </div>
-                                </div>
-                                 
-                                <div class="form-group">
-                                    <label for="LastIncrementDate" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
-                                    <div class="col-sm-8  date" id="LastIncrementDate" data-date="<?php echo $worker_profile->LastIncrementDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->LastIncrementDate); ?>">
-                                        <span class="add-on"><i class="icon-th"></i></span>
-                                    </div>
-                                </div>
-                                                  
-                                <div class="form-group">
-                                    <label for="JoiningDate" class="col-sm-3 control-label" >যোগদানের তারিখ</label>
-                                    <div class="col-sm-8 date" id="JoiningDate" data-date="<?php echo $worker_profile->JoiningDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->JoiningDate); ?>">
-                                        <span class="add-on"><i class="icon-th"></i></span>
-                                    </div>
-                                </div>
-                               
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="GrossSalary" class="col-sm-3 control-label" >মোট বেতন</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->GrossSalary); ?>">
-                                    </div>                        
-                                </div>
-                                <div class="form-group">
-                                    <label for="LastIncrementMoney" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত টাকা</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="LastIncrementMoney"  class="form-control" id="id_LastIncrementMoney" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->LastIncrementMoney); ?>">
-                                    </div>
-                                </div>  
-                                 <div class="form-group">
-                                    <label for="PromotionDate" class="col-sm-3 control-label" >পদোন্নতির তারিখ</label>
-                                    <div class="col-sm-8 date" id="PromotionDate" data-date="<?php echo $worker_profile->PromotionDate; ?>" data-date-format="yyyy-mm-dd">
-                                        <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->PromotionDate); ?>">
-                                        <span class="add-on"><i class="icon-th"></i></span>
-                                    </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->CardNo); ?>" readonly>
                                 </div>
                             </div>
-                            
-                       
+                            <div class="form-group">
+                                <label for="OT" class="col-sm-3 control-label" >ওভার টাইম</label>
+                                <div class="col-sm-9">
+                                    <select name="OT"  class="form-control" id="OT">
+                                        <option value="<?php echo $ot_array[$worker_profile->OT]; ?>"><?php echo $ot_array[$worker_profile->OT]; ?></option>
+                                        <option value="">-----</option>
+                                        <option value="1">হ্যাঁ</option>
+                                        <option value="0">না</option>
+                                    </select>
+                                </div>                                                        
+                            </div>
+                            <div class="form-group">
+                                <label for="AttendanceBonus" class="col-sm-3 control-label" >উপস্থিতি বোনাস</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="AttendanceBonus"  class="form-control" id="AttendanceBonus" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->AttendanceBonus); ?>">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="LastIncrementDate" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
+                                <div class="col-sm-8  date" id="LastIncrementDate" data-date="<?php echo $worker_profile->LastIncrementDate; ?>" data-date-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->LastIncrementDate); ?>">
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="JoiningDate" class="col-sm-3 control-label" >যোগদানের তারিখ</label>
+                                <div class="col-sm-8 date" id="JoiningDate" data-date="<?php echo $worker_profile->JoiningDate; ?>" data-date-format="yyyy-mm-dd">
+                                    <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->JoiningDate); ?>">
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="GrossSalary" class="col-sm-3 control-label" >মোট বেতন</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->GrossSalary); ?>">
+                                </div>                        
+                            </div>
+                            <div class="form-group">
+                                <label for="OtherAllowance" class="col-sm-3 control-label" >অন্যান্য ভাতা</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="OtherAllowance"  class="form-control" id="OtherAllowance" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->OtherAllowance); ?>">
+                                </div>                                                        
+                            </div>
+                            <div class="form-group">
+                                <label for="OthAllowCal" class="col-sm-3 control-label" >অন্যান্য ভাতা হিসাব</label>
+                                <div class="col-sm-9">
+                                    <select name="OthAllowCal"  class="form-control" id="OthAllowCal" readonly>
+                                        <option value="F">নির্দিষ্ট</option>
+                                        <!--<option value="M">মাসিক</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="LastIncrementMoney" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত টাকা</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="LastIncrementMoney"  class="form-control" id="id_LastIncrementMoney" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->LastIncrementMoney); ?>">
+                                </div>
+                            </div>  
+                            <div class="form-group">
+                                <label for="PromotionDate" class="col-sm-3 control-label" >পদোন্নতির তারিখ</label>
+                                <div class="col-sm-8 date" id="PromotionDate" data-date="<?php echo $worker_profile->PromotionDate; ?>" data-date-format="yyyy-mm-dd">
+                                    <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->PromotionDate); ?>">
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                     </div>
                 </div>

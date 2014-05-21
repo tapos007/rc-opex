@@ -36,7 +36,7 @@
                         mySelect.append("<option value='0'>গ্রেড নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                            mySelect.append("<option value='" + k.Name + "' data-foo='"+k.ID+"'>" + k.Name + "</option>");
+                            mySelect.append("<option value='" + k.Name + "' data-foo='" + k.ID + "'>" + k.Name + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
                     }, dataType: 'json'
@@ -63,7 +63,7 @@
                         mySelect.append("<option>উপাধি নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                           
+
                             mySelect.append("<option value='" + k.Designation + "' data-foo='" + k.ID + "' >" + k.Designation + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
