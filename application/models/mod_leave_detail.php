@@ -40,6 +40,10 @@ class Mod_leave_detail extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_leave_type_name($cardNo,$date){        
+        $query = $this->db->query("SELECT LeaveCategoryName FROM `tbl_leave_detail` WHERE cardno = ".$cardNo." and date = '".$date."'");        
+        return $query->result_array();        
+    }
 
     //Update Query in Course table ===========================================================
     //View Course Information ===================================================

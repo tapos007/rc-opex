@@ -8,6 +8,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->load->model('mod_access_log');
         $this->load->model('mod_leave_detail');
         $this->load->model('mod_pro_attn_mismatch_report');
+        $this->load->model('mod_leave_type_allocation');
         $this->load->helper('date');
     }
 
@@ -116,11 +117,21 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->mod_access_log->insert($Outdata);
     }
 
-    public function Leave_Details_Delete($cardNo,$date) {        
+    public function Leave_Details_Delete($cardNo, $date) {
+        $leaveType = $this->mod_leave_detail->get_leave_type_name($cardNo, $date);
+        $leaveType = $leaveType[0]['LeaveCategoryName'];
+        $this->mod_leave_type_allocation->CardNo = $cardNo;
+        $this->mod_leave_type_allocation->LeaveType = $leaveType;
+        $this->mod_leave_type_allocation->Year = date('Y', strtotime($date));
+        $card_specific_leave_data = $this->mod_leave_type_allocation->view_by_id();
+        foreach ($card_specific_leave_data as $a_data) {
+            if ($a_data->LeaveType == $leaveType) {
+                $this->mod_leave_type_allocation->Days = $a_data->Days + 1;
+                $this->mod_leave_type_allocation->update();
+            }
+        }
         $this->mod_leave_detail->LeaveEntryDelete($cardNo, $date);
-        //update tbl_leave_type_allocation
-        
-        $this->search_get($cardNo, date('m',strtotime($date)));
+        $this->search_get($cardNo, date('m', strtotime($date)));
     }
 
 }

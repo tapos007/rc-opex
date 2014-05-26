@@ -26,6 +26,7 @@ class Con_proc_leave_type_allocation extends CI_Controller {
     public function insert() {
         $tbl_leave_detail = array();
         $mydate = $this->input->post("mydate");
+       
         $year = date('Y', strtotime($mydate[0]));
 //        echo $year;
 //        exit();
@@ -36,7 +37,7 @@ class Con_proc_leave_type_allocation extends CI_Controller {
             //echo $amydate." <br>";
             $data = array(
                 'CardNo' => $this->input->post('CardNo'),
-                'Date' => $amydate,
+                'Date' => date('Y-m-d',strtotime($amydate)),
                 'LeaveCategoryName' => $this->input->post('LeaveTypeName'),
                 'Note' => $this->input->post('Note'),
                 'ApprovedBy' => $this->session->userdata('Email'),
