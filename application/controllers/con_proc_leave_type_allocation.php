@@ -45,7 +45,6 @@ class Con_proc_leave_type_allocation extends CI_Controller {
             array_push($tbl_leave_detail, $data);
         }
         $this->mod_leave_detail->insert_batch($tbl_leave_detail);
-
         $this->mod_leave_type_allocation->CardNo = $cardNo;
         $this->mod_leave_type_allocation->LeaveType = $this->input->post('LeaveTypeName');
         $this->mod_leave_type_allocation->Year = $year;

@@ -59,11 +59,11 @@ class Mod_leave_detail extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-    
-    public function view_by_CardNo($CardNo,$Month) {
-        $LikeDate = '2014-'.$Month."-1 00:00:00";
-        $Month = (int)$Month + 1;
-        $LikeDateEnd = '2014-'.$Month."-1 00:00:00";
+
+    public function view_by_CardNo($CardNo, $Month) {
+        $LikeDate = '2014-' . $Month . "-1 00:00:00";
+        $Month = (int) $Month + 1;
+        $LikeDateEnd = '2014-' . $Month . "-1 00:00:00";
         $this->db->select('*');
         $this->db->from('tbl_leave_detail');
         $this->db->where('CardNo', $CardNo);
@@ -81,10 +81,8 @@ class Mod_leave_detail extends CI_Model {
             'ApplicationNo' => $this->ApplicationNo
         );
         $this->db->where('CardNo', $this->CardNo);
-        if ($this->db->update('tbl_leave_detail', $data)) {
-            return TRUE;
-        }
-        return false;
+        $this->db->where('Date', $this->Date);
+        $this->db->update('tbl_leave_detail', $data);
     }
 
 //    public function getLongData() {
@@ -96,6 +94,7 @@ class Mod_leave_detail extends CI_Model {
 //        return $query->result();
 //       
 //    }
+    
 
     public function EmptyTable() {
         $this->db->truncate('tbl_leave_detail');
@@ -147,6 +146,7 @@ class Mod_leave_detail extends CI_Model {
             return $query->result_array();
         }
     }
+
     public function DateSpecificAllLeaves($date) {
 
 //        $first_date = date('Y-m', strtotime($date)) . '-01';
@@ -170,5 +170,7 @@ class Mod_leave_detail extends CI_Model {
         $query = $this->db->get('tbl_leave_detail');
         return $query->result_array();
     }
-
+    public function LeaveEntryDelete($cardNo,$date){
+        $query = $this->db->query("DELETE FROM `tbl_leave_detail` WHERE CardNo = ".$cardNo." and Date = '".$date."'");        
+    }
 }
