@@ -6,6 +6,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         parent::__construct();
         $this->load->model('mod_pro_employee_monthly_report');
         $this->load->model('mod_access_log');
+        $this->load->model('mod_leave_detail');
         $this->load->model('mod_pro_attn_mismatch_report');
         $this->load->helper('date');
     }
@@ -20,14 +21,16 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $Month = $this->input->post('Month');
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
-        //$data['tbl_employee_leave'];
+        $data['tbl_employee_monthly_leave_report'] = $this->mod_leave_detail->view_by_CardNo($CardNo,$Month);    
+//$data['tbl_employee_leave'];
         $data['container'] = 'temp/employee_monthly_report/view';
         $this->load->view('main_page', $data);
     }
     public function search_get($CardNo,$Month) {        
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
-        //$data['tbl_employee_leave'];
+ $data['tbl_employee_monthly_leave_report'] = $this->mod_leave_detail->view_by_CardNo($CardNo,$Month);        
+//$data['tbl_employee_leave'];
         $data['container'] = 'temp/employee_monthly_report/view';
         $this->load->view('main_page', $data);
     }
@@ -42,6 +45,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
 
         $this->mod_pro_employee_monthly_report->update_in_out_time($CardNo, $DateTime, $DateTimeOld);
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
+         $data['tbl_employee_monthly_leave_report'] = $this->mod_leave_detail->view_by_CardNo($CardNo,$Month);
         $data['container'] = 'temp/employee_monthly_report/view';
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
         $this->load->view('main_page', $data);

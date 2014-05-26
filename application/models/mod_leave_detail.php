@@ -59,6 +59,18 @@ class Mod_leave_detail extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+    
+    public function view_by_CardNo($CardNo,$Month) {
+        $LikeDate = '2014-'.$Month."-1 00:00:00";
+        $Month = (int)$Month + 1;
+        $LikeDateEnd = '2014-'.$Month."-1 00:00:00";
+        $this->db->select('*');
+        $this->db->from('tbl_leave_detail');
+        $this->db->where('CardNo', $CardNo);
+        $this->db->where('Date BETWEEN ' . '"' . date("Y-m-d", strtotime($LikeDate)) . '"' . ' AND ' . '"' . date("Y-m-d", strtotime($LikeDateEnd)) . '"', NULL, FALSE);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
     public function update() {
         $data = array(
