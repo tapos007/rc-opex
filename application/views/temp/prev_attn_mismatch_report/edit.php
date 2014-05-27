@@ -37,13 +37,13 @@
                         <div class="form-group">
                             <label for="Percentage" class="col-sm-3 control-label" >নাম</label>
                             <div class="col-sm-9">
-                                <input type="text" name="Percentage"  class="form-control" id="id_Percentage" value="<?php echo $rec_mismatch_report['Name']; ?>" disabled="">
+                                <input type="text" name="Percentage"  class="form-control" id="id_Percentage" value="<?php echo $rec_mismatch_report['Name']; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="Head" class="col-sm-3 control-label" >সেকশন</label>
                             <div class="col-sm-9">
-                                <input type="text" name="Head"  class="form-control" id="id_Head" value="<?php echo $rec_mismatch_report['Department']; ?>" disabled="">
+                                <input type="text" name="Head"  class="form-control" id="id_Head" value="<?php echo $rec_mismatch_report['Department']; ?>" readonly>
                             </div>
                         </div>
 
