@@ -547,9 +547,18 @@
                             if ($iCount % 2 == 0) {
                                 $iCount++;
                                 ?>
-                                <tr style="font-size: 15px;">
+                                <tr style ="color:
+                                    <?php if($rec_employee_monthly_report['CreatedBy']=='SYSTEM'){ 
+                                        ?>black;<?php                                     
+                                    } 
+                                    else if($rec_employee_monthly_report['CreatedBy']=='AUTO'){
+                                        ?> red;<?php 
+                                    }
+                                    else {
+                                        ?> green;<?php
+                                    }?>font-size:15px;">
                                     <td><?php echo date('d-M-Y', strtotime($rec_employee_monthly_report['DateTime'])); ?></td>
-                                    <td style ="color:  #E13300"><?php echo $rec_employee_monthly_report['CardNo']; ?></td>
+                                    <td><?php echo $rec_employee_monthly_report['CardNo']; ?></td>
                             <input type="hidden" name="cNo" id="cNo" value="<?php echo $rec_employee_monthly_report['CardNo']; ?>" />
                             <td><?php echo $rec_employee_monthly_report['Name']; ?></td>
 

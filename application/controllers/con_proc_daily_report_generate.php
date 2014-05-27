@@ -73,7 +73,7 @@ class Con_proc_daily_report_generate extends CI_Controller {
                 if ($inTime == $outTime) {
                     $an_incurrect_access_log['CardNo'] = $rows[$index1]['CardNo'];
                     
-                    $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($inTime)));
+                    $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s',  strtotime($inTime));
                     $an_incurrect_access_log['Status'] = 'IN';
                     $an_incurrect_access_log['CreatedBy'] = 'SYSTEM';
                     $an_incurrect_access_log['DelStatus'] = 'ACT';
@@ -81,14 +81,14 @@ class Con_proc_daily_report_generate extends CI_Controller {
                     //echo 'Invalid-->' . $rows[$index1]['CardNo'] . '<br/>';
                 } else {
                     $an_access_log['CardNo'] = $rows[$index1]['CardNo'];
-                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($inTime)));
+                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
                     $an_access_log['Status'] = 'IN';
                     $an_access_log['CreatedBy'] = 'SYSTEM';
                     $an_access_log['DelStatus'] = 'ACT';
                     array_push($tbl_access_log, $an_access_log);
                     //echo 'Valid-->' . $rows[$index1]['CardNo'] . '<br/>';
                     $an_access_log['CardNo'] = $rows[$index1]['CardNo'];
-                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($outTime)));
+                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($outTime));
                     $an_access_log['Status'] = 'OUT';
                     $an_access_log['CreatedBy'] = 'SYSTEM';
                     $an_access_log['DelStatus'] = 'ACT';

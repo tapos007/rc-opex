@@ -1,5 +1,8 @@
 <?php
 
+ini_set('max_execution_time', 6000);
+ini_set('memory_limit', '512M');
+
 class Con_proc_monthly_report_generate extends CI_Controller {
 
     public function __construct() {
@@ -16,7 +19,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $this->load->helper('alert');
         $this->load->helper('date');
     }
-    
+
 //     function index() {        
 //        $data['building_name'] = $this->mod_monthly_wages_detail->get_building_by_name();
 //        $data['container'] = 'temp/wages_detail/employee_wages_detail';
@@ -27,7 +30,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         date_default_timezone_set('Asia/Dacca');
         $month = $this->input->post('Month');
         $building = $this->input->post('Building');
-        $floor=  $this->input->post('Floor');
+        $floor = $this->input->post('Floor');
         $Department = $this->input->post('DepartmentSection');
         $line = $this->input->post('LineUnit');
         echo '<pre>';
@@ -36,7 +39,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         exit();
 //        echo $month;
 //        exit();
-       
+
         $data['tbl_monthly_wages_detail'] = $this->mod_monthly_wages_detail->specific_employee_information_report($building, $floor, $Department, $line, $month);
 //        echo '<pre>';
 //        print_r($data['tbl_monthly_wages_detail']);
@@ -45,26 +48,26 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $data['container'] = 'temp/wages_detail/employee_wages_detail';
         $this->load->view('main_page', $data);
     }
-    
+
     public function view_monthly_report() {
 //        echo 'This is monthly report view';
 //        exit();
-        date_default_timezone_set('Asia/Dacca');        
+        date_default_timezone_set('Asia/Dacca');
         $now = date('m', now());
         $data['tbl_monthly_wages_detail'] = $this->mod_monthly_wages_detail->MonthSpecificGetAllDataWith($now - 1);
-    //        echo '<pre>';
-    //        print_r($data['tbl_monthly_wages_detail']);
-    //        echo '</pre>';
-    //        exit();
+        //        echo '<pre>';
+        //        print_r($data['tbl_monthly_wages_detail']);
+        //        echo '</pre>';
+        //        exit();
         $data['container'] = 'temp/wages_detail/employee_wages_detail';
         $this->load->view('main_page', $data);
     }
-    
+
     public function get_department_name() {
         $BuildingName = $this->input->post('Building');
         $Floor = $this->input->post('Floor');
         $DepartmentName = $this->mod_monthly_wages_detail->get_department_name($BuildingName, $Floor);
-        
+
         echo json_encode($DepartmentName);
     }
 
@@ -104,7 +107,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $data['container'] = 'temp/wages_detail/employee_wages_detail';
         $this->load->view('main_page', $data);
     }
-    
+
     public function get_floor() {
         $building = $this->input->post('building_name');
         $query = $this->mod_monthly_wages_detail->get_floor_by_name($building);
@@ -125,7 +128,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $query = $this->mod_monthly_wages_detail->get_line_by_name($building, $floor, $Department);
         echo json_encode($query);
     }
-
 
     public function PopulateSalarySheet() {
         $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray();
@@ -201,11 +203,10 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                     ->setCellValue('X' . ($index + 2), $tbl_monthly_wages_detail[$index]['AttendanceBonus'])
                     ->setCellValue('Y' . ($index + 2), $tbl_monthly_wages_detail[$index]['NoOfAOT'])
                     ->setCellValue('Z' . ($index + 2), $tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00)
-                    ->setCellValue('AA' . ($index + 2), $tbl_monthly_wages_detail[$index]['HolidayNetPayable']+$tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + (($tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour']) * $tbl_monthly_wages_detail[$index]['HourlyOTWage']) + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00))
+                    ->setCellValue('AA' . ($index + 2), $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + (($tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour']) * $tbl_monthly_wages_detail[$index]['HourlyOTWage']) + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00))
                     ->setCellValue('AB' . ($index + 2), '0')
                     ->setCellValue('AC' . ($index + 2), $tbl_monthly_wages_detail[$index]['StampCharge'])
                     ->setCellValue('AD' . ($index + 2), $tbl_monthly_wages_detail[$index]['NetPayable']);
-                   
         }
 
 
@@ -229,9 +230,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $objWriter->save('php://output');
         exit;
     }
-    
-
-    
 
     public function Retrieve_employee_information($card_no, $myvalue) {
 
@@ -348,14 +346,15 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             if ($tbl_monthly_wages_detail[$index]['HolidayWorkDays'] > 0) {
 
                 //echo $tbl_monthly_wages_detail[$index]['CardNo'].'->'.$tbl_monthly_wages_detail[$index]['Absent'].'<br/>' ;
-                $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] = round($this->HolidaySalaryCalculation($holidayList, $data_tbl_daily_whole, $tbl_monthly_wages_detail[$index]['CardNo'], $tbl_monthly_wages_detail[$index]['HourlyOTWage']));
+                $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] = number_format((float) (round($this->HolidaySalaryCalculation($holidayList, $data_tbl_daily_whole, $tbl_monthly_wages_detail[$index]['CardNo'], $tbl_monthly_wages_detail[$index]['HourlyOTWage']))), 2, '.', '');
             }
-            $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] = (($tbl_monthly_wages_detail[$index]['Basic'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent'])) + $tbl_monthly_wages_detail[$index]['HouseRent'] + $tbl_monthly_wages_detail[$index]['TreatmentAllowance'] + $tbl_monthly_wages_detail[$index]['TravelAllowance'] + $tbl_monthly_wages_detail[$index]['FoodAllowance'];
-            $total = $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance);
-            $tbl_monthly_wages_detail[$index]['NetPayable'] = round($total - $tbl_monthly_wages_detail[$index]['StampCharge']);
+            $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['Basic'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent'])) + $tbl_monthly_wages_detail[$index]['HouseRent'] + $tbl_monthly_wages_detail[$index]['TreatmentAllowance'] + $tbl_monthly_wages_detail[$index]['TravelAllowance'] + $tbl_monthly_wages_detail[$index]['FoodAllowance']), 2, '.', '');
+            $total = number_format((float) ($tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance)), 2, '.', '');
+            $tbl_monthly_wages_detail[$index]['NetPayable'] = number_format((float) (($total - $tbl_monthly_wages_detail[$index]['StampCharge'])), 2, '.', '');
         }
-
-
+//        echo '<pre>';
+//        print_r($tbl_monthly_wages_detail);
+//        echo '</pre>';
         //exit();
         //$this->UpdateLeaveAllocationTable($tbl_monthly_wages_detail);
         $this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
@@ -457,7 +456,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
     }
 
     public function GenerateMonthlyReport() {
-
         $tbl_daily_attendance_log = $this->mod_daily_attendance_log->getLongDataArray();
         $tbl_grade_mapping = $this->mod_grade_mapping->getLongDataArray();
         $tbl_employee_profile = $this->mod_set_employee_info_detail->view();
@@ -495,13 +493,13 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             $a_monthly_wages_detail['AttendanceBonus'] = $allowances['AttendanceBonus'];
 
             $a_monthly_wages_detail['Basic'] = ($an_employee_info['GrossSalary'] - ($allowances['TreatmentAllowance'] + $allowances['TravelAllowance'] + $allowances['FoodAllowance'])) / 1.4;
-            $a_monthly_wages_detail['HouseRent'] = $a_monthly_wages_detail['Basic'] * 0.4;
-            $a_monthly_wages_detail['DailyWage'] = $a_monthly_wages_detail['GrossSalary'] / $month_days;
+            $a_monthly_wages_detail['HouseRent'] = number_format((float) ($a_monthly_wages_detail['Basic'] * 0.4), 2, '.', '');
+            $a_monthly_wages_detail['DailyWage'] = number_format((float) ($a_monthly_wages_detail['GrossSalary'] / $month_days), 2, '.', '');
             $a_monthly_wages_detail['TotalWorkingDays'] = $month_days - count($holidayList);
             $a_monthly_wages_detail['TotalAvailableToPay'] = 0;
             $a_monthly_wages_detail['OutStandingDues'] = 0;
             $a_monthly_wages_detail['TotalOverTimeHour'] = 0;
-            $a_monthly_wages_detail['HourlyOTWage'] = $a_monthly_wages_detail['Basic'] / 104;
+            $a_monthly_wages_detail['HourlyOTWage'] = number_format((float) ($a_monthly_wages_detail['Basic'] / 104), 2, '.', '');
             $a_monthly_wages_detail['AdditionalAllowance'] = 0;
             $a_monthly_wages_detail['Absent'] = 0;
 
@@ -562,49 +560,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
 //        echo '</pre>';
         //$this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
         $this->Salary_distribution($tbl_monthly_wages_detail);
-    }
-
-    public function test() {
-
-        echo '<pre>';
-        print_r($tbl_grade_mapping);
-        echo '</pre>';
-    }
-
-//    public function JoinResult() {
-//        $join_array = $this->mod_monthly_wages_detail->GetJoinResult();
-//        //$join_array=$this->mod_monthly_wages_detail->GetAllDataArray();
-//        $limit = count($join_array) - 1;
-//        for ($index = 0; $index <= $limit; $index++) {
-//            $join_array[$index]['Month']=0;
-//            $join_array[$index]['Year']=0;
-//            $join_array[$index]['FormDate']=0;
-//            $join_array[$index]['ToDate']=0;
-//            $join_array[$index]['WorkDays']=0;
-//            $join_array[$index]['HolidayWorkDays']=0;
-//            $join_array[$index]['Absent']=0;
-//            $join_array[$index]['LeaveOfEmpolyee']=0;
-//            $join_array[$index]['OverTimeHour']=0;
-//            $join_array[$index]['AdditionalOverTimeHour']=0;
-//            $join_array[$index]['NightShiftOverTimeHour']=0;
-//            $join_array[$index]['AttendanceBonus']=0;
-//            $join_array[$index]['StampCharge']=0;
-//            $join_array[$index]['HolidayNetPayable']=0;
-//            $join_array[$index]['NetPayable']=0;
-//            $join_array[$index]['NoOfOT']=0;
-//            $join_array[$index]['NoOfAOT']=0;
-//            $join_array[$index]['NoOfNight']=0;
-//        }
-//        echo '<pre>';
-//        print_r($join_array);
-//        echo '</pre>';
-//    }
-    public function WriteToFile() {
-        $file = 'array.txt';
-        $fh = fopen($file, 'w') or die("can't open file");
-        $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray();
-        fwrite($fh, serialize($tbl_monthly_wages_detail));
-        fclose($fh);
     }
 
 }

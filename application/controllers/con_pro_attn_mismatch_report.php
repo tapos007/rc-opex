@@ -311,7 +311,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
     }
 
     public function systemGeneratedCurrection() {
-        $email = $this->session->userdata('Email');
+        $email = 'AUTO';
         $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData();        
         $all_currect_data = array();
         $limit = count($all_mismacthes) - 1;
