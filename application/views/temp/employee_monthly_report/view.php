@@ -539,13 +539,17 @@
 
                         <?php
                         $iCount = 0;
+//                        echo '<pre>';
+//                        print_r($tbl_employee_monthly_report);
+//                        echo '</pre>';
+//                        exit();
                         foreach ($tbl_employee_monthly_report as $rec_employee_monthly_report) {
                             if ($iCount % 2 == 0) {
                                 $iCount++;
                                 ?>
                                 <tr style="font-size: 15px;">
                                     <td><?php echo date('d-M-Y', strtotime($rec_employee_monthly_report['DateTime'])); ?></td>
-                                    <td><?php echo $rec_employee_monthly_report['CardNo']; ?></td>
+                                    <td style ="color:  #E13300"><?php echo $rec_employee_monthly_report['CardNo']; ?></td>
                             <input type="hidden" name="cNo" id="cNo" value="<?php echo $rec_employee_monthly_report['CardNo']; ?>" />
                             <td><?php echo $rec_employee_monthly_report['Name']; ?></td>
 
