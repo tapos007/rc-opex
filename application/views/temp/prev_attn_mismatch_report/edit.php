@@ -2,8 +2,8 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-timepicker.js"></script>
 <script>
     $(document).ready(function() {
-        $('#InTime').timepicker();
-        $('#OutTime').timepicker();
+        //$('#InTime').timepicker();
+        //$('#OutTime').timepicker();
     });
 </script>
 
