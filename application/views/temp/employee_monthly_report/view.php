@@ -436,7 +436,7 @@
                                     <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
                                     <input type="hidden" name="CardNo" value="<?php echo $rec_mismatch_report['CardNo']; ?>"/>
                                     <input type="hidden" name="Date" value="<?php echo $rec_mismatch_report['DateTime']; ?>"/>
-                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i></button>
+                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
                                     <?php echo form_close(); ?>
                                 </td>
                             </tr>
@@ -578,7 +578,7 @@
                                 &nbsp;<button class="btn btn-primary btn-xs" data-toggle="modal" name="dd" id="DateTimeNew<?php echo $iCount; ?>"  data-target="#editInOut" value ="<?php echo date('d-m-Y H:i:s', gmt_to_local(strtotime($rec_employee_monthly_report['DateTime']), 'UP6')); ?>" onclick="editDateTime(this.id);" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
                             </td>
 
-                            <td><a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/delete_monthly_attandance_record/<?php echo $rec_employee_monthly_report['CardNo'] ?>/<?php echo date('Y-m-d', strtotime($rec_employee_monthly_report['DateTime'])); ?>" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a></td>
+                            <td><a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/delete_monthly_attandance_record/<?php echo $rec_employee_monthly_report['CardNo'] ?>/<?php echo date('Y-m-d', strtotime($rec_employee_monthly_report['DateTime'])); ?>" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> মুছুন</a></td>
 
                             </tr>
                             <?php
