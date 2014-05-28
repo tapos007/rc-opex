@@ -19,7 +19,7 @@
                 </header> 
                 <div class="panel-body">  
                     <?php
-                    $bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
+                    //$bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
                     $attr = array(
                         'class' => 'form-horizontal',
                         'role' => 'form'
@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
                             <div class="col-sm-9">
-                                <input type="text" name="CardNo"  class="form-control" id="CardNo" value="<?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report->CardNo); ?>">
+                                <input type="text" name="CardNo"  class="form-control" id="CardNo" value="<?php echo $rec_mismatch_report->CardNo; ?>">
                             </div>
                         </div>
                         <div class="form-group">
