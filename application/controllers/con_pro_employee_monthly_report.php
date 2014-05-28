@@ -28,6 +28,15 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->load->view('main_page', $data);
     }
 
+    public function delete_monthly_attandance_record() {
+        $CardNo = $this->uri->segment(3);
+        $Date = $this->uri->segment(4);
+//        echo $Date."<br/>".$CardNo;
+//        exit();
+        $this->mod_pro_employee_monthly_report->delete_monthly_attandance($CardNo, $Date);
+        $this->search_get($CardNo, date('m', strtotime($Date)));
+    }
+    
     public function search_get($CardNo, $Month) {
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);

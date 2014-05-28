@@ -18,25 +18,25 @@
 </style>
 <script>
     $(document).ready(function() {
-        $("body").on("focus", ".datepicker", function(){
+        $("body").on("focus", ".datepicker", function() {
             $(this).datepicker();
         });
-        
+
         $('#leaveApprovalForm').validate({
-           rules: {
-               CardNo: 'required',
-               NumberOfDays: 'required',
-               LeaveTypeName: 'required',
-               Date: 'required'
-           },
-           messages: {
-               CardNo: 'Please enter card number',
-               NumberOfDays: 'Please enter number of days',
-               LeaveTypeName: 'Please select a leave type',
-               Date: 'Please select a dates'
-           }
+            rules: {
+                CardNo: 'required',
+                NumberOfDays: 'required',
+                LeaveTypeName: 'required',
+                Date: 'required'
+            },
+            messages: {
+                CardNo: 'Please enter card number',
+                NumberOfDays: 'Please enter number of days',
+                LeaveTypeName: 'Please select a leave type',
+                Date: 'Please select a dates'
+            }
         });
-        
+
         $("#CardNo").change(function() {
             $('#Image').html('');
             $("#employeeLeaveStatus").html('');
@@ -136,7 +136,7 @@
                                     <div class="col-sm-3" id="Image" style="margin-right: 105px; margin-top: 5px; height: 75px; width:75px; ">
 
                                     </div>
-                                    
+
                                     <div class="col-sm-5">
                                         <h3 id="Name"></h3>
                                         <h4 id="Designation"></h4>
@@ -525,6 +525,7 @@
                             <th><i class="glyphicon glyphicon-time"></i> নাম</th>               
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
+                            <th><i class="glyphicon glyphicon-trash"></i> মুছুন</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -548,15 +549,13 @@
                                 $iCount++;
                                 ?>
                                 <tr style ="color:
-                                    <?php if($rec_employee_monthly_report['CreatedBy']=='SYSTEM'){ 
-                                        ?>black;<?php                                     
-                                    } 
-                                    else if($rec_employee_monthly_report['CreatedBy']=='AUTO'){
-                                        ?> red;<?php 
-                                    }
-                                    else {
-                                        ?> green;<?php
-                                    }?>font-size:15px;">
+                                <?php if ($rec_employee_monthly_report['CreatedBy'] == 'SYSTEM') {
+                                    ?>black;<?php
+                                    } else if ($rec_employee_monthly_report['CreatedBy'] == 'AUTO') {
+                                        ?> red;<?php
+                                    } else {
+                                        ?> green;<?php }
+                                    ?>font-size:15px;">
                                     <td><?php echo date('d-M-Y', strtotime($rec_employee_monthly_report['DateTime'])); ?></td>
                                     <td><?php echo $rec_employee_monthly_report['CardNo']; ?></td>
                             <input type="hidden" name="cNo" id="cNo" value="<?php echo $rec_employee_monthly_report['CardNo']; ?>" />
@@ -577,10 +576,12 @@
                                 ?>
 
                                 &nbsp;<button class="btn btn-primary btn-xs" data-toggle="modal" name="dd" id="DateTimeNew<?php echo $iCount; ?>"  data-target="#editInOut" value ="<?php echo date('d-m-Y H:i:s', gmt_to_local(strtotime($rec_employee_monthly_report['DateTime']), 'UP6')); ?>" onclick="editDateTime(this.id);" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
-                            </td> 
+                            </td>
+
+                            <td><a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/delete_monthly_attandance_record/<?php echo $rec_employee_monthly_report['CardNo'] ?>/<?php echo date('Y-m-d', strtotime($rec_employee_monthly_report['DateTime'])); ?>" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a></td>
 
                             </tr>
-                        <?php
+                            <?php
                         }
                     }
                     ?>
@@ -644,7 +645,7 @@
                     </h4> 
                     <button class="btn btn-primary btn-xs" data-toggle="modal" name="dd" id="InsertLeaveDetails" data-target="#InsertLeave" >Insert Leave </button>
                 </header> 
-                
+
                 <table class="table table-striped border-top display" id="daily_log" border="1" style="font-size: 10px;">
                     <thead>                        
                         <tr style="font-size: 15px;">
@@ -680,14 +681,14 @@
                                     ?>
                                 </td> 
                                 <td>
-    <?php echo $rec_leave_report['ApplicationNo']; ?>
+                                    <?php echo $rec_leave_report['ApplicationNo']; ?>
                                 </td>
                                 <td>
-<!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date']; ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
-                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Delete/<?php echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'] ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i> মুছুন</a>
+    <!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'];   ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
+                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Delete/<?php echo $rec_leave_report['CardNo'] . '/' . $rec_leave_report['Date'] ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i> মুছুন</a>
                                 </td>
                             </tr>
-<?php } ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -709,6 +710,6 @@
 
 
     }
-    
-    
+
+
 </script>
