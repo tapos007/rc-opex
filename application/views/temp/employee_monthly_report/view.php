@@ -436,7 +436,7 @@
                                     <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
                                     <input type="hidden" name="CardNo" value="<?php echo $rec_mismatch_report['CardNo']; ?>"/>
                                     <input type="hidden" name="Date" value="<?php echo $rec_mismatch_report['DateTime']; ?>"/>
-                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i></button>
+                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
                                     <?php echo form_close(); ?>
                                 </td>
                             </tr>
