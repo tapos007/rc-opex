@@ -90,15 +90,15 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             "Status" => $status,
             "DelStatus" => 'ACT'
         );
-        echo '<pre>';
-        print_r($Indata);
-        
-        echo '</pre>';
-        echo '<pre>';
-        print_r($Outdata);
-        
-        echo '</pre>';
-        exit();
+//        echo '<pre>';
+//        print_r($Indata);
+//        
+//        echo '</pre>';
+//        echo '<pre>';
+//        print_r($Outdata);
+//        
+//        echo '</pre>';
+//        exit();
 
         $this->mod_pro_attn_mismatch_report->UpdateIncurrenctAccessLog($cardno, $InTime);
         $this->mod_access_log->insert($Indata);
