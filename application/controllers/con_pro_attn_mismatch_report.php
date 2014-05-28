@@ -303,9 +303,9 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         //echo $cardNo.'<br/>'.$time;
         //exit();
         $data['tbl_mismatch_report'] = $this->mod_pro_attn_mismatch_report->view_by_CardNo1($cardNo);
-        //  echo '<pre>';
-        //  print_r($data['mismatch']);
-        //  echo '</pre>';
+//          echo '<pre>';
+//          print_r($data['tbl_mismatch_report']);
+//          echo '</pre>';
         $data['container'] = 'temp/prev_attn_mismatch_report/edit';
         $this->load->view('main_page', $data);
     }

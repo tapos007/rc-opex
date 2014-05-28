@@ -27,23 +27,23 @@
                     echo form_open('con_pro_attn_mismatch_report/insert1', $attr);
                     foreach ($tbl_mismatch_report as $rec_mismatch_report) {
                         ?>
-                        <input type="hidden" name="CardNo" value="<?php $rec_mismatch_report['CardNo']; ?>"/>
+                        <input type="hidden" name="CardNo" value="<?php $rec_mismatch_report->CardNo; ?>"/>
                         <div class="form-group">
                             <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
                             <div class="col-sm-9">
-                                <input type="text" name="CardNo"  class="form-control" id="CardNo" value="<?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report['CardNo']); ?>">
+                                <input type="text" name="CardNo"  class="form-control" id="CardNo" value="<?php echo str_replace(range(0, 9),$bn_digits,$rec_mismatch_report->CardNo); ?>">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="Percentage" class="col-sm-3 control-label" >নাম</label>
                             <div class="col-sm-9">
-                                <input type="text" name="Percentage"  class="form-control" id="id_Percentage" value="<?php echo $rec_mismatch_report['Name']; ?>" readonly>
+                                <input type="text" name="Percentage"  class="form-control" id="id_Percentage" value="<?php echo $rec_mismatch_report->Name; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="Head" class="col-sm-3 control-label" >সেকশন</label>
                             <div class="col-sm-9">
-                                <input type="text" name="Head"  class="form-control" id="id_Head" value="<?php echo $rec_mismatch_report['Department']; ?>" readonly>
+                                <input type="text" name="Head"  class="form-control" id="id_Head" value="<?php echo $rec_mismatch_report->Department; ?>" readonly>
                             </div>
                         </div>
 
