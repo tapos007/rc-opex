@@ -65,6 +65,7 @@
                     <li><a class="" href="<?php //echo site_url('con_set_additional_reward_staff/view'); ?>">Staff Reward</a></li>-->
                     <!--<li><a class="" href="<?php  //echo site_url('con_access_log/view'); ?>">Access Log</a></li>-->
                     <li><a class="" href="<?php echo site_url('con_set_grade_mapping/view'); ?>">Grade Mapping</a></li>
+                    <li><a class="" href="<?php echo site_url('con_set_employee_salary/create'); ?>">Employee Salary</a></li>
                 </ul>
             </li>
             <li class="sub-menu">
