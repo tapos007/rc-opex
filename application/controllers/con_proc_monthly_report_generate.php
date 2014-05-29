@@ -129,8 +129,8 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         echo json_encode($query);
     }
 
-    public function PopulateSalarySheet() {
-        $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray();
+    public function PopulateSalarySheet($Month) {        
+        $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray($Month);        
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("RCIS")
@@ -298,20 +298,19 @@ class Con_proc_monthly_report_generate extends CI_Controller {
     }
 
     public function Salary_distribution($tbl_monthly_wages_detail) {
+
         //$data['tbl_wages_breakdown'] = $this->mod_set_wages_breakdown->view();
         //$treatment = $data['tbl_wages_breakdown'][1]->Percentage;
         $tbl_grade_mapping = $this->mod_grade_mapping->getLongDataArray();
         //$tbl_leave_type_allocation = $this->mod_leave_type_allocation->GetDataArray();
-//        echo '<pre>';
-//        print_r($tbl_leave_type_allocation);
-//        echo '</pre>';
-//        exit();
+
         $tiffin_allowance = 20.00;
         $dinner = 60.00;
         //$tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray();
         $limit = count($tbl_monthly_wages_detail) - 1;
         $holidayList = $this->mod_set_holiday_catagory->GetAllHolidays($tbl_monthly_wages_detail[0]['ToDate']);
-        $data_tbl_daily_whole = $this->mod_daily_attendance_log->getLongDataArray();
+        
+        $data_tbl_daily_whole = $this->mod_daily_attendance_log->getLongDataArray($tbl_monthly_wages_detail[0]['Month']);
         $month_days = date('t', strtotime($tbl_monthly_wages_detail[0]['ToDate']));
         //$total_work_days = $month_days - count($holidayList);
         //echo $month_days.'<br/>';
@@ -358,7 +357,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         //exit();
         //$this->UpdateLeaveAllocationTable($tbl_monthly_wages_detail);
         $this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
-        $this->PopulateSalarySheet();
+        //$this->PopulateSalarySheet($tbl_monthly_wages_detail[0]['Month']);
     }
 
     public function GetWorkingDays($holidayList, $a_date) {
@@ -455,13 +454,14 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
     }
 
-    public function GenerateMonthlyReport() {
-        $tbl_daily_attendance_log = $this->mod_daily_attendance_log->getLongDataArray();
+    public function GenerateMonthlyReport($Month) {
+        $tbl_daily_attendance_log = $this->mod_daily_attendance_log->getLongDataArray($Month); //        
         $tbl_grade_mapping = $this->mod_grade_mapping->getLongDataArray();
         $tbl_employee_profile = $this->mod_set_employee_info_detail->view();
         $holidayList = $this->mod_set_holiday_catagory->GetAllHolidays($tbl_daily_attendance_log[0]['Date']);
         $leaveList = $this->mod_leave_detail->GetAllLeaves($tbl_daily_attendance_log[0]['Date']);
         $month_days = date('t', strtotime($tbl_daily_attendance_log[0]['Date']));
+
         //$workingDayList = $this->GetWorkingDays($holidayList, $tbl_daily_attendance_log[0]['Date']);
         //$working_days = count($workingDayList);
         $limit = count($tbl_daily_attendance_log) - 1;
@@ -558,6 +558,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
 //        echo '<pre>';
 //        print_r($tbl_monthly_wages_detail);
 //        echo '</pre>';
+        //exit();
         //$this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
         $this->Salary_distribution($tbl_monthly_wages_detail);
     }

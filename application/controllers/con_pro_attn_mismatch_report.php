@@ -310,9 +310,13 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->load->view('main_page', $data);
     }
 
-    public function systemGeneratedCurrection() {
+    public function systemGeneratedCurrection($Month) {
         $email = 'AUTO';
-        $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData();        
+        $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData($Month);
+        echo '<pre>';
+        print_r($all_mismacthes);
+        echo '</pre>';
+        //exit();
         $all_currect_data = array();
         $limit = count($all_mismacthes) - 1;
         $currect_data_index = 0;
@@ -341,7 +345,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             $currect_data_index+=2;
         }
         echo 'Data Truncating.....';
-        $this->mod_incurrect_access_log->EmptyTable();
+        $this->mod_incurrect_access_log->EmptyTable($Month);
         echo 'Data Inserting .....';
         $this->mod_incurrect_access_log->insert_batch_random_data($all_mismacthes);
         $this->mod_access_log->insert_batch_random_data($all_currect_data);

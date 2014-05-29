@@ -21,12 +21,10 @@ class Con_proc_daily_report_generate extends CI_Controller {
         $this->load->helper('date');
     }
 
-
     public function search() {
         $data['container'] = 'temp/daily_report_generate/search';
         $this->load->view('main_page', $data);
     }
-
 
     public function AttendaceSheet() {
         $con = mysqli_connect("localhost", "root", "", "wages_manegement");
@@ -45,9 +43,13 @@ class Con_proc_daily_report_generate extends CI_Controller {
         mysqli_close($con);
     }
 
-    public function SeperateValidData() {
+    public function SeperateValidData($Month) {
         $this->mod_access_log_raw->TruncateInvalidData();
-        $days = $this->mod_access_log_raw->GetDistinctDates();
+        $days = $this->mod_access_log_raw->GetDistinctDates($Month);
+//        echo '<pre>';
+//        print_r($days);
+//        echo '</pre>';
+//        exit();
         $limit = count($days) - 1;
         $tbl_access_log = array();
         $tbl_incurrect_access_log = array();
@@ -72,8 +74,8 @@ class Con_proc_daily_report_generate extends CI_Controller {
                 }
                 if ($inTime == $outTime) {
                     $an_incurrect_access_log['CardNo'] = $rows[$index1]['CardNo'];
-                    
-                    $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s',  strtotime($inTime));
+
+                    $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
                     $an_incurrect_access_log['Status'] = 'IN';
                     $an_incurrect_access_log['CreatedBy'] = 'SYSTEM';
                     $an_incurrect_access_log['DelStatus'] = 'ACT';
@@ -111,8 +113,12 @@ class Con_proc_daily_report_generate extends CI_Controller {
         $this->load->view('main_page', $data);
     }
 
-    public function generate_daily_report() {
-        $days = $this->mod_access_log->GetDistinctDates();
+    public function generate_daily_report($Month) {
+        $days = $this->mod_access_log->GetDistinctDates($Month);
+//        echo '<pre>';
+//        print_r($days);
+//        echo '</pre>';
+//        exit();
         $limt = count($days) - 1;
         for ($index = 0; $index <= $limt; $index++) {
             $data_tbl_daily_whole = array();

@@ -13,6 +13,7 @@ class Mod_access_log extends CI_Model {
     public function insert($data) {
         $this->db->insert('tbl_access_log', $data);
     }
+
     public function insert_batch_random_data($data) {
         $this->db->insert_batch('tbl_access_log', $data);
     }
@@ -57,6 +58,7 @@ class Mod_access_log extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
     public function getDateSpecificLongData1($date) {
         $first_date_time = $date . ' 00:00:01';
         $last_date_time = $date . ' 23:59:59';
@@ -67,14 +69,15 @@ class Mod_access_log extends CI_Model {
 //        exit();
         return $query->result_array();
     }
-    public function getDateSpecificLongData($date) {        
+
+    public function getDateSpecificLongData($date) {
 //        echo $date;
 //        exit();
-        $first_date_time = $date.' 00:00:01';
-        $last_date_time = $date.' 23:59:59';
+        $first_date_time = $date . ' 00:00:01';
+        $last_date_time = $date . ' 23:59:59';
         $this->db->select('*');
-        $this->db->where('DateTime >=', date('Y-m-d H:i:s',strtotime($first_date_time)));
-        $this->db->where('DateTime <=', date('Y-m-d H:i:s',strtotime($last_date_time)));
+        $this->db->where('DateTime >=', date('Y-m-d H:i:s', strtotime($first_date_time)));
+        $this->db->where('DateTime <=', date('Y-m-d H:i:s', strtotime($last_date_time)));
         $this->db->from('tbl_access_log');
         $this->db->order_by('cardno asc, datetime asc');
         $query = $this->db->get();
@@ -84,10 +87,11 @@ class Mod_access_log extends CI_Model {
 //        exit();
         return $query->result();
     }
-    public function GetDateSpecificCardNo($date){
-        $first_date_time = $date.' 00:00:01';
-        $last_date_time = $date.' 23:59:59';
-        $query = $this->db->query("SELECT CardNo,DateTime FROM `tbl_access_log` where DateTime between '".$first_date_time."' and '".$last_date_time."' group by CardNo order by CardNo");
+
+    public function GetDateSpecificCardNo($date) {
+        $first_date_time = $date . ' 00:00:01';
+        $last_date_time = $date . ' 23:59:59';
+        $query = $this->db->query("SELECT CardNo,DateTime FROM `tbl_access_log` where DateTime between '" . $first_date_time . "' and '" . $last_date_time . "' group by CardNo order by CardNo");
 //        echo count($query->result_array());
 //        exit();
         return $query->result_array();
@@ -106,11 +110,11 @@ class Mod_access_log extends CI_Model {
         return $query->result_array();
     }
 
-    public function GetDistinctDates() {
+    public function GetDistinctDates($Month) {
 
-        $query = $this->db->query('SELECT DATE(`DateTime`) 
-                                    FROM   tbl_access_log 
-                                    GROUP  BY DATE(`DateTime`)');
+        $query = $this->db->query("SELECT DATE(`DateTime`) 
+                                    FROM   tbl_access_log WHERE DateTime LIKE  '%-" . $Month . "-%'
+                                    GROUP  BY DATE(`DateTime`)");
         return $query->result_array();
     }
 

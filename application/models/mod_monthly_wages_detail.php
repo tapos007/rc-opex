@@ -218,9 +218,10 @@ class Mod_monthly_wages_detail extends CI_Model {
         return $query->result();
     }
 
-    public function GetAllDataArray() {
+    public function GetAllDataArray($Month) {        
         $this->db->select('*');
         $this->db->from('tbl_monthly_wages_detail');
+        $this->db->where('Month', $Month);
         $this->db->order_by('CardNo asc');
         $query = $this->db->get();
         return $query->result_array();

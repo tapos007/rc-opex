@@ -66,8 +66,10 @@ class Mod_incurrect_access_log extends CI_Model {
         return $query->result();
        
     }
-    public function EmptyTable(){
-        $this->db->truncate('tbl_incurrect_access_log'); 
+    public function EmptyTable($Month){
+        echo $Month;
+        //exit();
+        $query = $this->db->query("DELETE FROM `tbl_incurrect_access_log` WHERE DateTime Like '%-".$Month."-%' and `DelStatus` = 'ACT'");
     }
     public function getLongDataArray() {
         
@@ -78,8 +80,8 @@ class Mod_incurrect_access_log extends CI_Model {
         return $query->result_array();
        
     }
-    public function getGruoupedData(){
-        $query = $this->db->query("SELECT * FROM `tbl_incurrect_access_log` where DelStatus = 'ACT' group by Cardno,DateTime");
+    public function getGruoupedData($Month){
+        $query = $this->db->query("SELECT * FROM `tbl_incurrect_access_log` where DateTime Like '%-".$Month."-%' and DelStatus = 'ACT'   group by Cardno,DateTime");
         return $query->result_array();
     }
 

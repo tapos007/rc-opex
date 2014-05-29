@@ -68,25 +68,25 @@ class Mod_access_log_raw extends CI_Model {
         $this->db->query("DELETE FROM  `tbl_access_log_raw` WHERE  `InTime` =  '0000-00-00'");
     }
 
-    public function GetDistinctDates() {
+    public function GetDistinctDates($Month) {
 
-        $query = $this->db->query('SELECT DATE(  `InTime` ) 
-                                    FROM tbl_access_log_raw
-                                    GROUP BY DATE(  `InTime` )');
+        $query = $this->db->query("SELECT DATE(  `InTime` ) 
+                                    FROM tbl_access_log_raw WHERE InTime LIKE  '%-" . $Month . "-%'
+                                    GROUP BY DATE(  `InTime` ) ");
         return $query->result_array();
     }
-    public function MonthSpecificGetDistinctDates($month){
+
+    public function MonthSpecificGetDistinctDates($month) {
         $year = date('Y', now());
-        $firstDate=$year.'-'.$month.'-'.'1';
-        $lastDate = date('Y-m-t',  strtotime($firstDate));
-        $firstDateTime = $firstDate.' 00:00:01';
-        $lastDateTime = $lastDate.' 23:59:59';
+        $firstDate = $year . '-' . $month . '-' . '1';
+        $lastDate = date('Y-m-t', strtotime($firstDate));
+        $firstDateTime = $firstDate . ' 00:00:01';
+        $lastDateTime = $lastDate . ' 23:59:59';
         //echo $firstDateTime.'<br/>'.$lastDateTime;
-        
         //exit();
         $query = $this->db->query("SELECT DATE(  `InTime` ) FROM tbl_access_log_raw 
-                                    where Intime between '".$firstDateTime."' and '".$lastDateTime.
-                                    "' GROUP BY DATE(  `InTime` )");
+                                    where Intime between '" . $firstDateTime . "' and '" . $lastDateTime .
+                "' GROUP BY DATE(  `InTime` )");
         return $query->result_array();
     }
 
@@ -116,13 +116,13 @@ class Mod_access_log_raw extends CI_Model {
 //        exit();
         return $query->result_array();
     }
+
     public function insert($data) {
 //        echo '<pre>';
 //        print_r($data);
 //        echo '</pre>';
 //        exit();
         $this->db->insert('tbl_access_log_raw', $data);
-        
     }
 
 }
