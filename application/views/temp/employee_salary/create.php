@@ -1,5 +1,12 @@
-<script>
+<link rel="stylesheet" type="text/css" href="<?php //echo base_url(); ?>assets/bootstrap-datepicker/css/datepicker.css"/>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
     $(document).ready(function() {
+
+        $("body").on("focus", ".datepicker", function() {
+            $(this).datepicker();
+        });
+
         $('#JobCategoryName').on('change', function(e) {
             var jobCatName = $(this).val();
             if (jobCatName == 0) {
@@ -65,8 +72,6 @@
     }
 </style>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.validate.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/bootstrap-datepicker/css/datepicker.css"/>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("#employeeSalaryInsertUpdateForm").validate({
@@ -78,11 +83,8 @@
                 LastIncrementDate: "required",
                 LastIncrementMoney: "required",
                 PromotionDate: "required",
-                OT: "required",
                 AttendanceBonus: "required",
-                OtherAllowance: "required",
-                OthAllowCal: "required",
-                IsActive: "required"
+                OtherAllowance: "required"
             },
             messages: {
                 GradeName: "অনুগ্রহ করে গ্রেডের নাম টাইপ করুন",
@@ -92,16 +94,9 @@
                 LastIncrementDate: "অনুগ্রহ করে সর্বশেষ বর্ধিত তারিখ নির্বাচন করুন",
                 LastIncrementMoney: "অনুগ্রহ করে সর্বশেষ বর্ধিত টাকা টাইপ করুন",
                 PromotionDate: "অনুগ্রহ করে পদোন্নতির তারিখ নির্বাচন করুন",
-                OT: "অনুগ্রহ করে ওভার টাইম টাইপ করুন",
                 AttendanceBonus: "অনুগ্রহ করে উপস্থিত বোনাস টাইপ করুন",
-                OtherAllowance: "অনুগ্রহ করে অন্যান্য ভাতা টাইপ করুন",
-                OthAllowCal: "অনুগ্রহ করে অন্যান্য ভাতা হিসাব টাইপ করুন",
-                IsActive: "অনুগ্রহ করে সক্রিয়/সক্রিয় নয় বাছুন"
+                OtherAllowance: "অনুগ্রহ করে অন্যান্য ভাতা টাইপ করুন"
             }
-        });
-
-        $("body").on("focus", ".datepicker", function() {
-            $(this).datepicker();
         });
 
         $("#searchButton").click(function() {
@@ -137,6 +132,7 @@
                             $("#AttendanceBonus").val(data.AttendanceBonus);
                             $("#OtherAllowance").val(data.OtherAllowance);
                             $("#OthAllowCal").val(data.OthAllowCal);
+                            $("#IsActive").val(data.IsActive);
                         }
                     }, dataType: 'json'
                 });
@@ -257,7 +253,10 @@
                 <div class="form-group">
                     <label for="OT" class="col-lg-3 control-label" >ওভার টাইম</label>
                     <div class="col-lg-6">
-                        <input type="text" name="OT"  class="form-control" id="OT" placeholder="ওভার টাইম  টাইপ করুন" >
+                        <select class="form-control" name="OT" id="OT">
+                            <option value="1">হ্যাঁ</option>
+                            <option value="0">না</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -268,6 +267,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="MedicalAllowance" class="col-lg-3 control-label" >চিকিৎসা ভাতা</label>
+                    <div class="col-lg-6">                        
+                        <input type="text" name="MedicalAllowance"  class="form-control" id="MedicalAllowance" value="২৫০" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="TravelAllowance" class="col-lg-3 control-label" >ভ্রমন ভাতা</label>
+                    <div class="col-lg-6">                        
+                        <input type="text" name="TravelAllowance"  class="form-control" id="TravelAllowance" value="২০০" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="FoodAllowance" class="col-lg-3 control-label" >খাবার ভাতা</label>
+                    <div class="col-lg-6">                        
+                        <input type="text" name="FoodAllowance"  class="form-control" id="FoodAllowance" value="৬৫০" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="OtherAllowance" class="col-lg-3 control-label" >অন্যান্য ভাতা</label>
                     <div class="col-lg-6">                        
                         <input type="text" name="OtherAllowance"  class="form-control" id="OtherAllowance" placeholder="অন্যান্য ভাতা  টাইপ করুন" >
@@ -277,9 +294,8 @@
                     <label for="OthAllowCal" class="col-lg-3 control-label" >অন্যান্য ভাতা হিসাব</label>
                     <div class="col-lg-6">                        
                         <select class="form-control" name="OthAllowCal" id="OthAllowCal">
-                            <option value="">--- বাছুন ---</option>
                             <option value="M">মাসিক</option>
-                            <option value="Y">বাৎসরিক</option>
+                            <option value="D">বাৎসরিক</option>
                         </select>
                     </div>
                 </div>
@@ -288,7 +304,6 @@
                     <label for="IsActive" class="col-lg-3 control-label" >সক্রিয়</label>
                     <div class="col-lg-6">
                         <select class="form-control" name="IsActive" id="IsActive">
-                            <option value="">--- বাছুন ---</option>
                             <option value="1">হ্যাঁ</option>
                             <option value="0">না</option>
                         </select>
@@ -296,10 +311,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-6 col-lg-push-3">
-<!--                        <input class="btn btn-success" type="submit" name="Insert" value="Save"/>
-                        <input class="btn btn-info" type="submit" name="Update" value="update"/>-->
-                        <button class="btn btn-success" type="submit" name="submit" value="save" ><i class="glyphicon glyphicon-save"></i> সংরক্ষণ করুন</button>
-                        <button class="btn btn-info" type="submit" name="submit" value="update" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন করুন</button>
+                        <button class="btn btn-success btn-sm" type="submit" name="submit" value="save" ><i class="glyphicon glyphicon-save"></i> সংরক্ষণ করুন</button>
+                        <button class="btn btn-info btn-sm" type="submit" name="submit" value="update" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন করুন</button>
                     </div>
                 </div>
             </div>

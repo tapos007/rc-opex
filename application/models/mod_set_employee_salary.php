@@ -13,6 +13,9 @@ class Mod_set_employee_salary extends CI_Model {
     public $OT;
     public $AttendanceBonus;
     public $OtherAllowance;
+    public $MedicalAllowance;
+    public $TravelAllowance;
+    public $FoodAllowance;
     public $OthAllowCal;
     public $IsActive;
 
@@ -28,6 +31,9 @@ class Mod_set_employee_salary extends CI_Model {
             'OT' => $this->OT,
             'AttendanceBonus' => $this->AttendanceBonus,
             'OtherAllowance' => $this->OtherAllowance,
+            'MedicalAllowance' => $this->MedicalAllowance,
+            'TravelAllowance' => $this->TravelAllowance,
+            'FoodAllowance' => $this->FoodAllowance,
             'OthAllowCal' => $this->OthAllowCal,
             'IsActive' => $this->IsActive
         );
@@ -45,9 +51,13 @@ class Mod_set_employee_salary extends CI_Model {
             'OT' => $this->OT,
             'AttendanceBonus' => $this->AttendanceBonus,
             'OtherAllowance' => $this->OtherAllowance,
+            'MedicalAllowance' => $this->MedicalAllowance,
+            'TravelAllowance' => $this->TravelAllowance,
+            'FoodAllowance' => $this->FoodAllowance,
             'OthAllowCal' => $this->OthAllowCal,
             'IsActive' => $this->IsActive
         );
+        $this->db->where('CardNo', $this->CardNo);
         $this->db->update('tbl_employee_salary', $data);
     }
     
