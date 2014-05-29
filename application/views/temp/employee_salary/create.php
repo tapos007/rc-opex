@@ -121,18 +121,6 @@
             }
         });
 
-//        $("#searchForm").validate({
-//            rules: {
-//                Search: {
-//                    rangelength: [1, 65500]
-//                }
-//            },
-//            messages: {
-//                Search: {
-//                    rangelength: ""
-//                }
-//            }
-//        });
 
         $("#searchButton").click(function() {
             var cardno = $("#Search").val();
