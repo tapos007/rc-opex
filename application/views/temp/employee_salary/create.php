@@ -21,7 +21,7 @@
                         mySelect.append("<option value='0'>গ্রেড নির্বাচন করুন</option> ");
                         mySelect.append("<option>------------------</option> ");
                         $.each(data, function(v, k) {
-                            mySelect.append("<option value='" + k.ID + "'>" + k.Name + "</option>");
+                            mySelect.append("<option value='" + k.Name + "' data-foo='" + k.ID + "'>" + k.Name + "</option>");
                         });
                         $('#GradeKeyword').val(data.Keyword);
                     }, dataType: 'json'
@@ -30,7 +30,8 @@
         });
 
         $('#GradeName').on('change', function(e) {
-            var gradeName = $(this).val();
+            var selected = $(this).find('option:selected');
+            var gradeName = selected.data('foo');
             if (gradeName == 0) {
                 var mySelect = $('#DesignationName');
                 mySelect.html('');
@@ -52,24 +53,6 @@
                         });
                         $('#GradeKeyword').val(data.Keyword);
                     }, dataType: 'json'
-                });
-            }
-        });
-
-        $('#DesignationName').on('change', function(e) {
-            var DesignationID = $(this).val();
-            if (DesignationID == 0) {
-                $('#GradeMappingName').val('');
-            } else {
-                $.ajax({
-                    type: "POST",
-                    data: "DesignationID=" + DesignationID,
-                    url: "<?php echo base_url(); ?>con_set_grade_mapping/get_mapping_keyword",
-                    dataType: 'json',
-                    success: function(abc)
-                    {
-                        $('#GradeMappingName').val(abc.ShortForm + '-' + abc.Grade + '-' + abc.Designation);
-                    }
                 });
             }
         });
@@ -98,7 +81,8 @@
                 OT: "required",
                 AttendanceBonus: "required",
                 OtherAllowance: "required",
-                OthAllowCal: "required"
+                OthAllowCal: "required",
+                IsActive: "required"
             },
             messages: {
                 GradeName: "অনুগ্রহ করে গ্রেডের নাম টাইপ করুন",
@@ -106,26 +90,58 @@
                 CardNo: "অনুগ্রহ করে কার্ড নং টাইপ করুন",
                 GrossSalary: "অনুগ্রহ করে মূল বেতন টাইপ করুন",
                 LastIncrementDate: "অনুগ্রহ করে সর্বশেষ বর্ধিত তারিখ নির্বাচন করুন",
-                LastIncrementMoney: "অনুগ্রহ করে গসর্বশেষ বর্ধিত টাকা টাইপ করুন",
+                LastIncrementMoney: "অনুগ্রহ করে সর্বশেষ বর্ধিত টাকা টাইপ করুন",
                 PromotionDate: "অনুগ্রহ করে পদোন্নতির তারিখ নির্বাচন করুন",
                 OT: "অনুগ্রহ করে ওভার টাইম টাইপ করুন",
                 AttendanceBonus: "অনুগ্রহ করে উপস্থিত বোনাস টাইপ করুন",
                 OtherAllowance: "অনুগ্রহ করে অন্যান্য ভাতা টাইপ করুন",
-                OthAllowCal: "অনুগ্রহ করে অন্যান্য ভাতা হিসাব টাইপ করুন"
+                OthAllowCal: "অনুগ্রহ করে অন্যান্য ভাতা হিসাব টাইপ করুন",
+                IsActive: "অনুগ্রহ করে সক্রিয়/সক্রিয় নয় বাছুন"
             }
-        });
-        
-        $('#searchForm').validate({
-           rules:{
-               Search: "required"
-           },
-           messages:{
-               Search:"অনুগ্রহ করে কার্ড নং টাইপ করে অনুসন্ধান করুন"
-           }
         });
 
         $("body").on("focus", ".datepicker", function() {
             $(this).datepicker();
+        });
+
+        $("#searchButton").click(function() {
+            var cardno = $("#Search").val();
+
+            if (cardno == '') {
+                alert('অনুগ্রহ করে কার্ড নং টাইপ করে অনুসন্ধান করুন');
+                $("#Search").focus();
+                return false;
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url(); ?>con_set_employee_salary/get_employee_salary_by_cardno_json_result",
+                    data: "CardNo=" + cardno,
+                    success: function(data)
+                    {
+                        if (data == '') {
+                            alert('দুঃখিত এই কার্ড নাম্বারের তথ্য নেই দয়া করে অন্য কার্ড নাম্বার দ্বারা অনুসন্ধান করুন');
+                            $("#Search").val('');
+                            $("#Search").focus();
+                        } else if (data != '') {
+                            $("#CardNoDiv").hide();
+                            $("#CardNoHidden").val(data.CardNo);
+                            $("#GradeName").append('select <option value="' + data.Grade + '">' + data.Grade + '</option>');
+                            $("#DesignationName").append('select <option value="' + data.Designation + '">' + data.Designation + '</option>');
+                            //$("#GradeName").val(data.Grade);
+                            //$("#DesignationName").val(data.Designation);
+                            $("#GrossSalary").val(data.GrossSalary);
+                            $("#LastIncrementDate").val(data.LastIncrementDate);
+                            $("#LastIncrementMoney").val(data.LastIncrementMoney);
+                            $("#PromotionDate").val(data.PromotionDate);
+                            $("#OT").val(data.OT);
+                            $("#AttendanceBonus").val(data.AttendanceBonus);
+                            $("#OtherAllowance").val(data.OtherAllowance);
+                            $("#OthAllowCal").val(data.OthAllowCal);
+                        }
+                    }, dataType: 'json'
+                });
+                return false;
+            }
         });
 
     });
@@ -150,7 +166,7 @@
                     <div class="col-lg-5"> 
                         <input type="text" name="Search" id="Search" class="form-control"/>
                     </div>
-                    <button class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>
+                    <button class="btn btn-sm btn-primary" id="searchButton"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>
                 </div>
                 <?php echo form_close(); ?>
             </div>
@@ -168,7 +184,7 @@
             'id' => 'employeeSalaryInsertUpdateForm',
             'role' => 'form'
         );
-        echo form_open('', $attr);
+        echo form_open('con_set_employee_salary/insert', $attr);
         ?>
 
         <section class="panel panel-primary">                        
@@ -204,13 +220,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="CardNoDiv">
                     <label for="CardNo" class="col-lg-3 control-label" >কার্ড নং</label>
                     <div class="col-lg-6">                        
                         <input type="text" name="CardNo"  class="form-control" id="CardNo" placeholder="কার্ড নং টাইপ করুন" >
                     </div>
                 </div>
 
+                <input type="hidden" name="CardNoHidden" id="CardNoHidden"/>
                 <div class="form-group">
                     <label for="GrossSalary" class="col-lg-3 control-label" >মূল বেতন</label>
                     <div class="col-lg-6">                        
@@ -258,8 +275,12 @@
                 </div>
                 <div class="form-group">
                     <label for="OthAllowCal" class="col-lg-3 control-label" >অন্যান্য ভাতা হিসাব</label>
-                    <div class="col-lg-6">
-                        <input type="text" name="OthAllowCal"  class="form-control" id="OthAllowCal" placeholder="অন্যান্য ভাতা হিসাব টাইপ করুন" >
+                    <div class="col-lg-6">                        
+                        <select class="form-control" name="OthAllowCal" id="OthAllowCal">
+                            <option value="">--- বাছুন ---</option>
+                            <option value="M">মাসিক</option>
+                            <option value="Y">বাৎসরিক</option>
+                        </select>
                     </div>
                 </div>
 
@@ -267,6 +288,7 @@
                     <label for="IsActive" class="col-lg-3 control-label" >সক্রিয়</label>
                     <div class="col-lg-6">
                         <select class="form-control" name="IsActive" id="IsActive">
+                            <option value="">--- বাছুন ---</option>
                             <option value="1">হ্যাঁ</option>
                             <option value="0">না</option>
                         </select>
@@ -274,8 +296,10 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-6 col-lg-push-3">
-                        <button class="btn btn-success" type="submit" name="Insert"><i class="glyphicon glyphicon-save"></i> সংরক্ষণ করুন</button>
-                        <button class="btn btn-info" type="submit" name="Update"><i class="glyphicon glyphicon-pencil"></i> সংশোধন করুন</button>
+<!--                        <input class="btn btn-success" type="submit" name="Insert" value="Save"/>
+                        <input class="btn btn-info" type="submit" name="Update" value="update"/>-->
+                        <button class="btn btn-success" type="submit" name="submit" value="save" ><i class="glyphicon glyphicon-save"></i> সংরক্ষণ করুন</button>
+                        <button class="btn btn-info" type="submit" name="submit" value="update" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন করুন</button>
                     </div>
                 </div>
             </div>
@@ -283,4 +307,32 @@
     </div>
     <?php echo form_close(); ?>
     <div class="col-md-2"></div>
+</div>
+
+<?php if ($this->session->flashdata('msg')) { ?>
+    <script>
+        $(document).ready(function() {
+            $("#confirmationModal").modal("show");
+        });
+    </script>
+<?php } ?>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="text-center">
+                <h3 class="modal-title"><strong><i class="glyphicon glyphicon-comment"></i> নিশ্চিতকরণ বার্তা</strong></h3>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <?php
+                    echo $this->session->flashdata('msg')
+                    ?>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-default btn-xs" data-dismiss="modal" type="button"> বন্ধ করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

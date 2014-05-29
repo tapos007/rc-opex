@@ -144,7 +144,7 @@
                                     <td><?php echo $monthly_employee_wages->PresentDistrict; ?> </td>
                                     <td><?php echo $monthly_employee_wages->Reference; ?> </td>
                                     <td><?php echo $monthly_employee_wages->EducationalQual; ?> </td>
-                                    
+
                                     <td><?php echo $monthly_employee_wages->Comment; ?> </td>
                                 </tr>
                             <?php } ?>
