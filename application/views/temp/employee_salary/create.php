@@ -1,11 +1,14 @@
-<link rel="stylesheet" type="text/css" href="<?php //echo base_url(); ?>assets/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="<?php //echo base_url();  ?>assets/bootstrap-datepicker/css/datepicker.css"/>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $("body").on("focus", ".datepicker", function() {
-            $(this).datepicker();
-        });
+//        $("body").on("focus", ".datepicker", function() {
+//            $(this).datepicker();
+//        });
+
+        $("#LastIncrementDate").datepicker();
+        $("#PromotionDate").datepicker();
 
         $('#JobCategoryName').on('change', function(e) {
             var jobCatName = $(this).val();
@@ -78,7 +81,22 @@
             rules: {
                 GradeName: "required",
                 DesignationName: "required",
-                CardNo: "required",
+                CardNo: {
+                    required: true,
+                    max: 65500,
+                    remote:
+                            {
+                                url: '<?php echo base_url(); ?>con_set_employee_salary/check_cardno_availibility',
+                                type: "post",
+                                data:
+                                        {
+                                            cardno: function()
+                                            {
+                                                return $('#employeeSalaryInsertUpdateForm :input[name="CardNo"]').val();
+                                            }
+                                        }
+                            }
+                },
                 GrossSalary: "required",
                 LastIncrementDate: "required",
                 LastIncrementMoney: "required",
@@ -89,7 +107,11 @@
             messages: {
                 GradeName: "অনুগ্রহ করে গ্রেডের নাম টাইপ করুন",
                 DesignationName: "অনুগ্রহ করে উপাধির নাম টাইপ করুন",
-                CardNo: "অনুগ্রহ করে কার্ড নং টাইপ করুন",
+                CardNo: {
+                    required: "অনুগ্রহ করে কার্ড নং টাইপ করুন",
+                    remote: "দুঃখিত এই কার্ড নাম্বারটি বর্তমানে ডাটাবেইস এ আছে। দয়া করে অন্য কার্ড নাম্বার দিয়ে চেষ্টা করুন",
+					max: "কার্ড নং অবশ্যই (১-৬৫৫০০) এর মধ্যে হতে হবে"
+                },
                 GrossSalary: "অনুগ্রহ করে মূল বেতন টাইপ করুন",
                 LastIncrementDate: "অনুগ্রহ করে সর্বশেষ বর্ধিত তারিখ নির্বাচন করুন",
                 LastIncrementMoney: "অনুগ্রহ করে সর্বশেষ বর্ধিত টাকা টাইপ করুন",
@@ -99,9 +121,21 @@
             }
         });
 
+//        $("#searchForm").validate({
+//            rules: {
+//                Search: {
+//                    rangelength: [1, 65500]
+//                }
+//            },
+//            messages: {
+//                Search: {
+//                    rangelength: ""
+//                }
+//            }
+//        });
+
         $("#searchButton").click(function() {
             var cardno = $("#Search").val();
-
             if (cardno == '') {
                 alert('অনুগ্রহ করে কার্ড নং টাইপ করে অনুসন্ধান করুন');
                 $("#Search").focus();
@@ -114,7 +148,7 @@
                     success: function(data)
                     {
                         if (data == '') {
-                            alert('দুঃখিত এই কার্ড নাম্বারের তথ্য নেই দয়া করে অন্য কার্ড নাম্বার দ্বারা অনুসন্ধান করুন');
+                            alert('দুঃখিত এই কার্ড নাম্বারের তথ্য নেই । দয়া করে অন্য কার্ড নাম্বার দ্বারা অনুসন্ধান করুন');
                             $("#Search").val('');
                             $("#Search").focus();
                         } else if (data != '') {
@@ -122,8 +156,6 @@
                             $("#CardNoHidden").val(data.CardNo);
                             $("#GradeName").append('select <option value="' + data.Grade + '">' + data.Grade + '</option>');
                             $("#DesignationName").append('select <option value="' + data.Designation + '">' + data.Designation + '</option>');
-                            //$("#GradeName").val(data.Grade);
-                            //$("#DesignationName").val(data.Designation);
                             $("#GrossSalary").val(data.GrossSalary);
                             $("#LastIncrementDate").val(data.LastIncrementDate);
                             $("#LastIncrementMoney").val(data.LastIncrementMoney);
@@ -131,6 +163,9 @@
                             $("#OT").val(data.OT);
                             $("#AttendanceBonus").val(data.AttendanceBonus);
                             $("#OtherAllowance").val(data.OtherAllowance);
+                            $("#MedicalAllowance").val(data.MedicalAllowance);
+                            $("#TravelAllowance").val(data.TravelAllowance);
+                            $("#FoodAllowance").val(data.FoodAllowance);
                             $("#OthAllowCal").val(data.OthAllowCal);
                             $("#IsActive").val(data.IsActive);
                         }
@@ -269,19 +304,19 @@
                 <div class="form-group">
                     <label for="MedicalAllowance" class="col-lg-3 control-label" >চিকিৎসা ভাতা</label>
                     <div class="col-lg-6">                        
-                        <input type="text" name="MedicalAllowance"  class="form-control" id="MedicalAllowance" value="২৫০" readonly>
+                        <input type="text" name="MedicalAllowance"  class="form-control" id="MedicalAllowance" value="২৫০" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="TravelAllowance" class="col-lg-3 control-label" >ভ্রমন ভাতা</label>
                     <div class="col-lg-6">                        
-                        <input type="text" name="TravelAllowance"  class="form-control" id="TravelAllowance" value="২০০" readonly>
+                        <input type="text" name="TravelAllowance"  class="form-control" id="TravelAllowance" value="২০০" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="FoodAllowance" class="col-lg-3 control-label" >খাবার ভাতা</label>
                     <div class="col-lg-6">                        
-                        <input type="text" name="FoodAllowance"  class="form-control" id="FoodAllowance" value="৬৫০" readonly>
+                        <input type="text" name="FoodAllowance"  class="form-control" id="FoodAllowance" value="৬৫০" >
                     </div>
                 </div>
                 <div class="form-group">

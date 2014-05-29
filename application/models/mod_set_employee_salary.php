@@ -39,7 +39,7 @@ class Mod_set_employee_salary extends CI_Model {
         );
         $this->db->insert('tbl_employee_salary', $data);
     }
-    
+
     public function update() {
         $data = array(
             'Designation' => $this->Designation,
@@ -60,13 +60,25 @@ class Mod_set_employee_salary extends CI_Model {
         $this->db->where('CardNo', $this->CardNo);
         $this->db->update('tbl_employee_salary', $data);
     }
-    
+
     public function view_by_cardno() {
         $this->db->select('*');
         $this->db->from('tbl_employee_salary');
         $this->db->where('CardNo', $this->CardNo);
         $query = $this->db->get();
         return $query->row_array();
+    }
+
+    public function check_cardno_avaibility($cardno) {
+        $this->db->select('CardNo');
+        $this->db->from('tbl_employee_salary');
+        $this->db->where('CardNo', $cardno);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
 }

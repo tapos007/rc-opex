@@ -71,4 +71,13 @@ class Con_set_employee_salary extends CI_Controller {
         echo json_encode($Result);
     }
 
+    public function check_cardno_availibility() {
+        $cardno = $this->input->post('cardno');
+        if ($this->mod_set_employee_salary->check_cardno_avaibility($cardno)) {
+            echo 'false';
+        } else {
+            echo 'true';
+        }
+    }
+
 }
