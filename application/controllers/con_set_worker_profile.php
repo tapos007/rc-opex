@@ -70,37 +70,6 @@ class Con_set_worker_profile extends CI_Controller {
 
     public function update_employee() {
         $this->mod_set_worker_profile->ID = $this->input->post('id');
-//        $this->mod_set_worker_profile->Name = $this->input->post('Name');
-//        $this->mod_set_worker_profile->Designation = $this->input->post('Designation');
-//        $this->mod_set_worker_profile->JoiningDate = date('Y-m-d', strtotime($this->input->post('JoiningDate')));
-//        $this->mod_set_worker_profile->CardNo = $this->input->post('CardNo');
-//        $this->mod_set_worker_profile->Grade = $this->input->post('Grade');
-//        $this->mod_set_worker_profile->GrossSalary = $this->input->post('GrossSalary');
-//        $this->mod_set_worker_profile->LastIncrementDate = date('Y-m-d', strtotime($this->input->post('LastIncrementDate')));
-//        $this->mod_set_worker_profile->LastIncrementMoney = $this->input->post('LastIncrementMoney');
-//        $this->mod_set_worker_profile->ContactNo = $this->input->post('ContactNo');
-//        $this->mod_set_worker_profile->NID = $this->input->post('NID');
-//        $this->mod_set_worker_profile->PromotionDate = date('Y-m-d', strtotime($this->input->post('PromotionDate')));
-//        $this->mod_set_worker_profile->GuardianName = $this->input->post('GuardianName');
-//        $this->mod_set_worker_profile->PermanentVillage = $this->input->post('PermanentVillage');
-//        $this->mod_set_worker_profile->PermanenttPost = $this->input->post('PermanenttPost');
-//        $this->mod_set_worker_profile->PermanentThana = $this->input->post('PermanentThana');
-//        $this->mod_set_worker_profile->PermanentDistrict = $this->input->post('PermanentDistrict');
-//        $this->mod_set_worker_profile->PresentVillage = $this->input->post('PresentVillage');
-//        $this->mod_set_worker_profile->PresentPost = $this->input->post('PresentPost');
-//        $this->mod_set_worker_profile->PresentThana = $this->input->post('PresentThana');
-//        $this->mod_set_worker_profile->PresentDistrict = $this->input->post('PresentDistrict');
-//        $this->mod_set_worker_profile->Reference = $this->input->post('Reference');
-//        $this->mod_set_worker_profile->EducationalQual = $this->input->post('EducationalQual');
-//        $this->mod_set_worker_profile->Image = $this->input->post('Image');
-//        $this->mod_set_worker_profile->ImageThumb = $this->input->post('ImageThumb');
-//        $this->mod_set_worker_profile->Comment = $this->input->post('Comment');
-//        $this->mod_set_worker_profile->Status = $this->input->post('Status');
-//        $this->mod_set_worker_profile->BuildingName = $this->input->post('BuildingName');
-//        $this->mod_set_worker_profile->Floor = $this->input->post('Floor');
-//        $this->mod_set_worker_profile->Department = $this->input->post('Department');
-//        $this->mod_set_worker_profile->Line = $this->input->post('Line');
-//        $this->mod_set_worker_profile->Parameter5 = $this->input->post('Parameter5');
         $engNumber = array(1,2,3,4,5,6,7,8,9,0);
         $bangNumber = array('১','২','৩','৪','৫','৬','৭','৮','৯','০');
         $this->mod_set_worker_profile->Name = $this->input->post('Name');

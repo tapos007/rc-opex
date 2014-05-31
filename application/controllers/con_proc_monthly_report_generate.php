@@ -559,7 +559,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             
         }
 
-=======
+
         $this->load->model('mod_buil_sec_other');
         $this->load->helper('alert');
         $this->load->helper('date');
