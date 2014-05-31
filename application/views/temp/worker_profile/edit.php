@@ -239,7 +239,76 @@
             foreach ($tbl_worker_profile as $worker_profile) {
                 
             }
-            ?>            
+            ?> 
+            <section>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">কর্মরত ভবনের তথ্য</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->CardNo); ?>" readonly>
+                            </div>
+                        </div>
+                        <?php
+                        $role = array(
+                            'WG4' => 'WG4',
+                        );
+                        ?>
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="BuildingName">ভবনের নাম</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="BuildingName" id="BuildingName" readonly>
+                                    <option value="<?php echo $this->session->userdata('BuildingName'); ?>"><?php echo $this->session->userdata('BuildingName'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="Floor">ফ্লোর</label>
+                            <div class="col-lg-9">
+                                <p>
+                                    <select class ="form-control"  name="Floor" id="Floor">
+                                        <?php
+                                        if (is_array($floor_info)) {
+
+
+                                            foreach ($floor_info as $flors) {
+                                                ?>
+                                                <option value="<?php echo $flors['Name']; ?>"><?php echo $flors['Name']; ?></option>
+                                                <?php
+                                            }
+                                        } else {
+                                            ?>
+                                            <option value="<?php echo $floor_info; ?>"><?php echo $floor_info; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="Department">বিভাগ</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="Department" id="Floor" value="<?php echo set_value('Department'); ?>">
+                                    <?php foreach ($tbl_section as $rec_section) { ?>
+                                        <option value="<?php echo $rec_section->Name; ?>"><?php echo $rec_section->Name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            <label class="control-label col-lg-3" for="Line">লাইন</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="Line" id="Line" >
+                                    <option value="<?php echo $rec_worker_profile->Line; ?>"><?php echo $rec_worker_profile->Line; ?></option>
+
+                                </select>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </section> 
             <section>
                 <div class="panel panel-primary">
                     <div class="panel-heading">ব্যক্তিগত তথ্য</div>
@@ -286,7 +355,7 @@
                                         <option value="">-----------------</option>
                                         <?php foreach ($tbl_district as $rec_district) { ?>
                                             <option value="<?php echo $rec_district->District; ?>" <?php if ($rec_district->District == $worker_profile->PermanentDistrict) echo 'selected'; ?> data-foo="<?php echo $rec_district->DistrinctEng; ?>"> <?php echo $rec_district->District; ?> </option>
-                                        <?php } ?>
+<?php } ?>
                                     </select>
                                 </div>
                             </div>
@@ -333,8 +402,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </section>
@@ -351,7 +418,7 @@
                                         <option value="">-----------------</option>
                                         <?php foreach ($tbl_district as $rec_district) { ?>
                                             <option value="<?php echo $rec_district->District; ?>" <?php if ($rec_district->District == $worker_profile->PresentDistrict) echo 'selected'; ?> data-foo="<?php echo $rec_district->DistrinctEng; ?>"> <?php echo $rec_district->District; ?> </option>
-                                        <?php } ?>
+<?php } ?>
                                     </select>
                                 </div>
                             </div> 
@@ -398,7 +465,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
@@ -416,7 +482,7 @@
                                             <option>----------------------------</option>                                    
                                             <?php foreach ($tbl_job_category as $rec_job_category) { ?>
                                                 <option value="<?php echo $rec_job_category->ID; ?>" <?php if ($workerlistOfselect == $rec_job_category->ID) echo 'selected'; ?>><?php echo $rec_job_category->CategoryName; ?></option>
-                                            <?php } ?>                                
+<?php } ?>                                
                                         </select>                        
                                     </div>
                                 </div>                        
@@ -426,7 +492,7 @@
                                         <select class ="form-control" name="Grade" id="GradeName">
                                             <?php foreach ($jobcatinfo as $rec_job_categorys) { ?>
                                                 <option value="<?php echo $rec_job_categorys->ID; ?>" <?php if ($worker_profile->Grade == $rec_job_categorys->Keyword) echo 'selected'; ?>><?php echo $rec_job_categorys->Name; ?></option>
-                                            <?php } ?>   
+<?php } ?>   
                                         </select>
                                         <input type="hidden" name="GradeKeyword" id="GradeKeyword" value=""/>
                                     </div>
@@ -435,9 +501,9 @@
                                     <label for="DesignationName" class="col-lg-3 control-label" >উপাধির নাম </label>
                                     <div class="col-lg-9">                            
                                         <select class ="form-control" name="Designation" id="DesignationName"> 
-                                            <?php //foreach ($designationList as $rec_designation) {  ?>
+                                            <?php //foreach ($designationList as $rec_designation) {   ?>
                                             <option value="<?php echo $worker_profile->Designation; ?>"><?php echo $worker_profile->Designation; ?></option>
-                                            <?php //}  ?>
+<?php //}   ?>
                                         </select>
                                     </div>                            
                                 </div>
@@ -473,23 +539,16 @@
                 </div>
             </section>
 
-            <section>
+<!--            <section>
                 <div class="panel panel-primary">
                     <div class="panel-heading">শ্রমিক/ কর্মচারী কাজের তথ্য</div>
                     <div class="panel-body"> 
-
                         <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="CardNo" class="col-sm-3 control-label" >কার্ড নং</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="CardNo"  class="form-control" id="id_CardNo" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->CardNo); ?>" readonly>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label for="OT" class="col-sm-3 control-label" >ওভার টাইম</label>
                                 <div class="col-sm-9">
                                     <select name="OT"  class="form-control" id="OT">
-                                        <option value="<?php echo $ot_array[$worker_profile->OT]; ?>"><?php echo $ot_array[$worker_profile->OT]; ?></option>
+                                        <option value="<?php //echo $ot_array[$worker_profile->OT];  ?>"><?php //echo $ot_array[$worker_profile->OT];  ?></option>
                                         <option value="">-----</option>
                                         <option value="1">হ্যাঁ</option>
                                         <option value="0">না</option>
@@ -499,37 +558,36 @@
                             <div class="form-group">
                                 <label for="AttendanceBonus" class="col-sm-3 control-label" >উপস্থিতি বোনাস</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="AttendanceBonus"  class="form-control" id="AttendanceBonus" value="<?php echo str_replace(range(0, 9), $bn_digits,$worker_profile->AttendanceBonus); ?>">
+                                    <input type="text" name="AttendanceBonus"  class="form-control" id="AttendanceBonus" value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->AttendanceBonus);  ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="LastIncrementDate" class="col-sm-3 control-label" >সর্বশেষ বর্ধিত তারিখ</label>
-                                <div class="col-sm-8  date" id="LastIncrementDate" data-date="<?php echo $worker_profile->LastIncrementDate; ?>" data-date-format="yyyy-mm-dd">
-                                    <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->LastIncrementDate); ?>">
+                                <div class="col-sm-8  date" id="LastIncrementDate" data-date="<?php //echo $worker_profile->LastIncrementDate;  ?>" data-date-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" name="LastIncrementDate"  value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->LastIncrementDate);  ?>">
                                     <span class="add-on"><i class="icon-th"></i></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="JoiningDate" class="col-sm-3 control-label" >যোগদানের তারিখ</label>
-                                <div class="col-sm-8 date" id="JoiningDate" data-date="<?php echo $worker_profile->JoiningDate; ?>" data-date-format="yyyy-mm-dd">
-                                    <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->JoiningDate); ?>">
+                                <div class="col-sm-8 date" id="JoiningDate" data-date="<?php //echo $worker_profile->JoiningDate;  ?>" data-date-format="yyyy-mm-dd">
+                                    <input type="text" name="JoiningDate"  class="form-control" id="JoiningDate" value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->JoiningDate);  ?>">
                                     <span class="add-on"><i class="icon-th"></i></span>
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="GrossSalary" class="col-sm-3 control-label" >মোট বেতন</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->GrossSalary); ?>">
+                                    <input type="text" name="GrossSalary"  class="form-control" id="id_GrossSalary" value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->GrossSalary);  ?>">
                                 </div>                        
                             </div>
                             <div class="form-group">
                                 <label for="OtherAllowance" class="col-sm-3 control-label" >অন্যান্য ভাতা</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="OtherAllowance"  class="form-control" id="OtherAllowance" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->OtherAllowance); ?>">
+                                    <input type="text" name="OtherAllowance"  class="form-control" id="OtherAllowance" value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->OtherAllowance);  ?>">
                                 </div>                                                        
                             </div>
                             <div class="form-group">
@@ -537,7 +595,7 @@
                                 <div class="col-sm-9">
                                     <select name="OthAllowCal"  class="form-control" id="OthAllowCal" readonly>
                                         <option value="F">নির্দিষ্ট</option>
-                                        <!--<option value="M">মাসিক</option>-->
+                                        <option value="M">মাসিক</option>
                                     </select>
                                 </div>
                             </div>
@@ -549,84 +607,15 @@
                             </div>  
                             <div class="form-group">
                                 <label for="PromotionDate" class="col-sm-3 control-label" >পদোন্নতির তারিখ</label>
-                                <div class="col-sm-8 date" id="PromotionDate" data-date="<?php echo $worker_profile->PromotionDate; ?>" data-date-format="yyyy-mm-dd">
-                                    <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php echo str_replace(range(0, 9), $bn_digits, $worker_profile->PromotionDate); ?>">
+                                <div class="col-sm-8 date" id="PromotionDate" data-date="<?php //echo $worker_profile->PromotionDate;  ?>" data-date-format="yyyy-mm-dd">
+                                    <input type="text" name="PromotionDate"  class="form-control" id="PromotionDate" value="<?php //echo str_replace(range(0, 9), $bn_digits, $worker_profile->PromotionDate);  ?>">
                                     <span class="add-on"><i class="icon-th"></i></span>
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
-            </section>                
-            <section>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">কর্মরত ভবনের তথ্য</div>
-                    <div class="panel-body">
-                        <?php
-                        $role = array(
-                            'WG4' => 'WG4',
-                        );
-                        ?>
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="BuildingName">ভবনের নাম</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="BuildingName" id="BuildingName" readonly>
-                                    <option value="<?php echo $this->session->userdata('BuildingName'); ?>"><?php echo $this->session->userdata('BuildingName'); ?></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="Floor">ফ্লোর</label>
-                            <div class="col-lg-9">
-                                <p>
-                                    <select class ="form-control"  name="Floor" id="Floor">
-                                        <?php
-                                        if (is_array($floor_info)) {
-
-
-                                            foreach ($floor_info as $flors) {
-                                                ?>
-                                                <option value="<?php echo $flors['Name']; ?>"><?php echo $flors['Name']; ?></option>
-                                                <?php
-                                            }
-                                        } else {
-                                            ?>
-                                            <option value="<?php echo $floor_info; ?>"><?php echo $floor_info; ?></option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="Department">বিভাগ</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="Department" id="Floor" value="<?php echo set_value('Department'); ?>">
-                                    <?php foreach ($tbl_section as $rec_section) { ?>
-                                        <option value="<?php echo $rec_section->Name; ?>"><?php echo $rec_section->Name; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="hidden">
-                            <label class="control-label col-lg-3" for="Line">লাইন</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="Line" id="Line" >
-                                    <option value="<?php echo $rec_worker_profile->Line; ?>"><?php echo $rec_worker_profile->Line; ?></option>
-
-                                </select>
-                            </div>
-                        </div>                        
-                    </div>
-                </div>
-            </section>           
+            </section>                -->                      
 
             <section>
                 <div class="panel panel-primary">
