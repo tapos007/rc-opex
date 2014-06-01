@@ -9,7 +9,8 @@ class Mod_set_employee_info_detail extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-    public function view_by_cardno_array($cardNo){
+
+    public function view_by_cardno_array($cardNo) {
         $this->db->select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->where('CardNo', $cardNo);
@@ -39,19 +40,167 @@ class Mod_set_employee_info_detail extends CI_Model {
         return $row->cnt;
     }
 
-    public function all_record() {
+    public function all_record($per_page, $limit) {
         if ($this->session->userdata('Role') == 'Admin') {
-            $sql = $this->db->query("SELECT * FROM tbl_employee_profile WHERE BuildingName = '" . $this->session->userdata('BuildingName') . "' ");
-            return $sql->result();
+            $this->db->select('*');
+            $this->db->from('tbl_employee_profile');
+            $this->db->where('BuildingName', $this->session->userdata('BuildingName'));
+            $this->db->limit($per_page, $limit);
+            $query = $this->db->get();
+//            echo '<pre>';
+//            print_r($query);
+//            echo '</pre>';
+//            exit();
+            return $query->result();
         } else {
-            $sql = $this->db->query("SELECT * FROM tbl_employee_profile  WHERE BuildingName = '" . $this->session->userdata('BuildingName') . "' AND Floor = '" . $this->session->userdata('Floor') . "' ");
-            return $sql->result();
+            $this->db->select('*');
+            $this->db->from('tbl_employee_profile');
+            $this->db->where('BuildingName', $this->session->userdata('BuildingName'));
+            $this->db->where('Floor', $this->session->userdata('Floor'));
+            $this->db->limit($per_page, $limit);
+            $query = $this->db->get();
+//            echo '<pre>';
+//            print_r($query);
+//            echo '</pre>';
+//            exit();
+            return $query->result();
         }
+    }
+
+    //Employee Info Details Pagination Count
+    public function serach_count_rows_for_pagination() {
+        $this->db->select('*');
+        $this->db->from('tbl_employee_profile');
+        $query = $this->db->get();
+        return count($query->result());
+    }
+
+    //Section List from tbl_section table
+    public function get_section_list() {
+        $this->db->select('*');
+        $this->db->from('tbl_section');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    //Search Result of Employee Details Information
+    public function search_employee_info_details_all_records($department, $employee_name, $cardno, $contactno, $from_gross_salary, $to_gross_salary, $nid,  $limit,$per_page) {
+        if ($this->session->userdata('Role') != 'Admin') {
+            
+           
+            $sql = 'SELECT ID,BuildingName,Floor,Department,Line,Name,Designation,JoiningDate,CardNo,Grade,GrossSalary,LastIncrementDate,LastIncrementMoney,ContactNo,NID,PromotionDate,GuardianName,PermanentVillage,PermanenttPost,PermanentThana,PermanentDistrict,PresentVillage,PresentPost,PresentThana,PresentDistrict,Reference,EducationalQual,Comment FROM tbl_employee_profile ';
+            $sql = $sql . "WHERE BuildingName = '" . $this->session->userdata('BuildingName') . "' AND Floor = '" . $this->session->userdata('Floor')."'";
+           
+            if ($department) {
+                    $sql = $sql . "AND `Department` = '" . $department . "' ";
+                }
+            
+            if ($employee_name) {
+                    $sql = $sql . "AND `Name` LIKE '%" . $employee_name . "%' ";
+                } 
+           
+            if ($cardno != '') {
+                    $sql = $sql . "AND `CardNo` = '" . $cardno . "' ";
+                }
+           
+            if ($contactno) {
+                    $sql = $sql . "AND `ContactNo` = '" . $contactno . "' ";
+                } 
+          
+            if ($nid) {
+                    $sql = $sql . "AND `NID` = '" . $nid . "' ";
+                }
+            
+            if ($from_gross_salary && $to_gross_salary) {
+                    $sql = $sql . "AND `GrossSalary` BETWEEN '" . $from_gross_salary . "' AND '" . $to_gross_salary . "' ";
+                } 
+            if ($limit) {
+               $sql = $sql . " LIMIT " . $per_page . ", " . $limit . " ";
+            } 
+           
+            //$sql = $sql . "AND BuildingName = '" . $this->session->userdata('BuildingName') . "' LIMIT " . $per_page . ", " . $limit . " ";
+           $query = $this->db->query($sql);
+           
+            return $query->result_array();
+        } else {
+            $sql = 'SELECT * FROM tbl_employee_profile ';
+            $sql = $sql . "WHERE BuildingName = '" . $this->session->userdata('BuildingName') . "' AND Floor = '" . $this->session->userdata('Floor')."' ";
+            
+            if ($department) {
+                    $sql = $sql . "AND `Department` = '" . $department . "' ";
+                }
+           
+            if ($employee_name) {
+                    $sql = $sql . "AND `Name` LIKE '%" . $employee_name . "%' ";
+                } 
+           
+            if ($cardno != '') {
+                    $sql = $sql . "AND `CardNo` = '" . $cardno . "' ";
+                } 
+            
+            if ($contactno != '') {
+                    $sql = $sql . "AND `ContactNo` = '" . $contactno . "' ";
+                }
+            
+            if ($nid) {
+                    $sql = $sql . "AND `NID` = '" . $nid . "' ";
+                } 
+            
+            if ($from_gross_salary  && $to_gross_salary ) {
+                    $sql = $sql . "AND `GrossSalary` BETWEEN '" . $from_gross_salary . "' AND '" . $to_gross_salary . "' ";
+                } 
+            if ($limit) {
+                $sql = $sql . " LIMIT " . $per_page . ", " . $limit . " ";
+            }
+            
+            //$sql = $sql . "AND BuildingName = '" . $this->session->userdata('BuildingName') . "' AND Floor = '" . $this->session->userdata('Floor') . "' LIMIT " . $per_page . ", " . $limit . " ";
+           $query = $this->db->query($sql);
+           return $query;
+        }
+    }
+    public function search_employee_info_details_all_records_count($department, $employee_name, $cardno, $contactno, $from_gross_salary, $to_gross_salary, $nid,  $limit,$per_page) {
+       
+            
+           
+            $sql = 'SELECT * FROM tbl_employee_profile ';
+            $sql = $sql . "WHERE BuildingName = '" . $this->session->userdata('BuildingName') . "' AND Floor = '" . $this->session->userdata('Floor')."'";
+           
+            if ($department) {
+                    $sql = $sql . "AND `Department` = '" . $department . "' ";
+                }
+            
+            if ($employee_name) {
+                    $sql = $sql . "AND `Name` LIKE '%" . $employee_name . "%' ";
+                } 
+           
+            if ($cardno != '') {
+                    $sql = $sql . "AND `CardNo` = '" . $cardno . "' ";
+                }
+           
+            if ($contactno) {
+                    $sql = $sql . "AND `ContactNo` = '" . $contactno . "' ";
+                } 
+          
+            if ($nid) {
+                    $sql = $sql . "AND `NID` = '" . $nid . "' ";
+                }
+            
+            if ($from_gross_salary && $to_gross_salary) {
+                    $sql = $sql . "AND `GrossSalary` BETWEEN '" . $from_gross_salary . "' AND '" . $to_gross_salary . "' ";
+                } 
+            
+           
+            //$sql = $sql . "AND BuildingName = '" . $this->session->userdata('BuildingName') . "' LIMIT " . $per_page . ", " . $limit . " ";
+           $query = $this->db->query($sql);
+            return $query->num_rows();
+        
+        
     }
 
     public function all_record_count($searchterm) {
         if ($searchterm) {
-            $sql = "SELECT count(*) FROM tbl_employee_profile WHERE CardNo='" . $searchterm . "' OR ContactNo='" . $searchterm . "'";
+            $sql = "SELECT count(*) FROM tbl_employee_profile WHERE CardNo='"
+                    . $searchterm . "' OR ContactNo='" . $searchterm . "'";
         } else {
             $sql = "SELECT * FROM tbl_employee_profile";
         }
@@ -60,6 +209,7 @@ class Mod_set_employee_info_detail extends CI_Model {
         if ($result->num_rows() > 0) {
             return $result->num_rows();
         } else {
+
             return false;
         }
     }
@@ -86,7 +236,8 @@ class Mod_set_employee_info_detail extends CI_Model {
         return $query->result();
     }
 
-    public function specific_employee_information_array($buildingName, $floor) {
+    public function specific_employee_information_array(
+    $buildingName, $floor) {
         $this->db->select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
@@ -97,7 +248,8 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function specific_employee_information_report($buildingName, $floor, $department, $line) {
-        $this->db->select('*');
+        $this->db->
+                select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->like('BuildingName', $buildingName);
         $this->db->like('Floor', $floor);
@@ -108,7 +260,8 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function specific_employee_information_report_array($buildingName, $floor, $department, $line) {
-        $this->db->select('*');
+        $this->db->select(
+                '*');
         $this->db->from('tbl_employee_profile');
         $this->db->like('BuildingName', $buildingName);
         $this->db->like('Floor', $floor);
@@ -119,7 +272,8 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function get_line_by_name($building, $floor, $Department) {
-        $this->db->distinct();
+        $this
+        ->db->distinct();
         $this->db->select('Line');
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $building);
@@ -130,7 +284,8 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function get_department_by_name($building, $floor) {
-        $this->db->distinct();
+        $this
+        ->db->distinct();
         $this->db->select('Department');
         $this->db->from('tbl_employee_profile');
         if (!empty($building)) {
@@ -142,12 +297,14 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function regular_employee_cardno_list($CurrentMonth, $PreviousMonth) {
-        $query = $this->db->query("SELECT al.CardNo, al.DateTime, pro.Name, pro.Line, pro.Department, pro.Floor FROM tbl_access_log as al INNER JOIN tbl_employee_profile AS pro ON pro.CardNo = al.CardNo WHERE al.DateTime LIKE '%" . $CurrentMonth . "%' OR al.DateTime LIKE '%" . $PreviousMonth . "%' GROUP BY al.CardNo ORDER BY pro.Floor ASC, pro.Department, pro.Line");
+        $query = $this->db->query("SELECT al.CardNo, al.DateTime, pro.Name, pro.Line, pro.Department, pro.Floor FROM tbl_access_log as al INNER JOIN tbl_employee_profile AS pro ON pro.CardNo = al.CardNo WHERE al.DateTime LIKE '%"
+                . $CurrentMonth . "%' OR al.DateTime LIKE '%" . $PreviousMonth . "%' GROUP BY al.CardNo ORDER BY pro.Floor ASC, pro.Department, pro.Line");
         return $query->result();
     }
 
     public function attendance_log($DateTime) {
         $query = $this->db->query("SELECT CardNo FROM tbl_access_log WHERE DateTime like '%" . $DateTime . "%' group by CardNo");
+
         return $query->result();
     }
 
@@ -163,13 +320,14 @@ class Mod_set_employee_info_detail extends CI_Model {
                                     on section.FloorID = floor.ID
                                     inner join tbl_building as building
                                     on floor.BuildingID = building.ID
-                                    WHERE building.Name = '" . $buildingName . "' and floor.Name = '" . $floor . "' ");
+                                    WHERE building.Name = '"
+                . $buildingName . "' and floor.Name = '" . $floor . "' ");
         return $query->result();
     }
+
     public function getAllsection() {
         $query = $this->db->get('tbl_section');
         return $query->result();
     }
-    
 
 }
