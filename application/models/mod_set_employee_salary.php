@@ -80,5 +80,12 @@ class Mod_set_employee_salary extends CI_Model {
             return FALSE;
         }
     }
+    public function get_long_data_array(){
+        $this->db->select('*');
+        $this->db->from('tbl_employee_salary');
+        $this->db->order_by('CardNo asc');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
 }

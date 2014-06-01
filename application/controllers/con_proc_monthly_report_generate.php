@@ -18,6 +18,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $this->load->model('mod_buil_sec_other');
         $this->load->helper('alert');
         $this->load->helper('date');
+        $this->load->model('mod_set_employee_salary');
     }
 
 //     function index() {        
@@ -71,23 +72,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         echo json_encode($DepartmentName);
     }
 
-    public function get_line_name() {
-        $BuildingName = $this->input->post('Building');
-        $Floor = $this->input->post('Floor');
-        $DepartmentName = $this->input->post('Department');
-        $LineName = $this->mod_monthly_wages_detail->get_line_name($BuildingName, $Floor, $DepartmentName);
-        echo json_encode($LineName);
-    }
-
-//        public function view_monthly_report() {
-//        echo 'This is monthly report view';
-//        exit();
-//        $data['tbl_monthly_wages_detail'] = $this->mod_monthly_wages_detail->view();
-//        $data['container'] = 'temp/wages_detail/employee_wages_detail';
-//        $this->load->view('main_page', $data);
-//    }
-
-
     public function view() {
         $building = $this->input->post('building');
         $floor = $this->input->post('floor');
@@ -129,8 +113,8 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         echo json_encode($query);
     }
 
-    public function PopulateSalarySheet($Month) {        
-        $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray($Month);        
+    public function PopulateSalarySheet($Month) {
+        $tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray($Month);
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("RCIS")
@@ -186,7 +170,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                     ->setCellValue('G' . ($index + 2), $tbl_monthly_wages_detail[$index]['GrossSalary'])
                     ->setCellValue('H' . ($index + 2), $tbl_monthly_wages_detail[$index]['Basic'])//not present in db table
                     ->setCellValue('I' . ($index + 2), $tbl_monthly_wages_detail[$index]['HouseRent'])//not present in db table
-                    ->setCellValue('J' . ($index + 2), $tbl_monthly_wages_detail[$index]['TreatmentAllowance'])//
+                    ->setCellValue('J' . ($index + 2), $tbl_monthly_wages_detail[$index]['MedicalAllowance'])//
                     ->setCellValue('K' . ($index + 2), $tbl_monthly_wages_detail[$index]['TravelAllowance'])//
                     ->setCellValue('L' . ($index + 2), $tbl_monthly_wages_detail[$index]['FoodAllowance'])//
                     ->setCellValue('M' . ($index + 2), $tbl_monthly_wages_detail[$index]['DailyWage'])//
@@ -199,11 +183,11 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                     ->setCellValue('T' . ($index + 2), $tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour'])
                     ->setCellValue('U' . ($index + 2), $tbl_monthly_wages_detail[$index]['HourlyOTWage'])
                     ->setCellValue('V' . ($index + 2), ($tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour']) * $tbl_monthly_wages_detail[$index]['HourlyOTWage'])
-                    ->setCellValue('W' . ($index + 2), $tbl_monthly_wages_detail[$index]['AdditionalAllowance'])
+                    ->setCellValue('W' . ($index + 2), $tbl_monthly_wages_detail[$index]['OtherAllowance'])
                     ->setCellValue('X' . ($index + 2), $tbl_monthly_wages_detail[$index]['AttendanceBonus'])
                     ->setCellValue('Y' . ($index + 2), $tbl_monthly_wages_detail[$index]['NoOfAOT'])
                     ->setCellValue('Z' . ($index + 2), $tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00)
-                    ->setCellValue('AA' . ($index + 2), $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + (($tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour']) * $tbl_monthly_wages_detail[$index]['HourlyOTWage']) + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00))
+                    ->setCellValue('AA' . ($index + 2), $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + (($tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour']) * $tbl_monthly_wages_detail[$index]['HourlyOTWage']) + $tbl_monthly_wages_detail[$index]['OtherAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($tbl_monthly_wages_detail[$index]['NoOfAOT'] * 20.00))
                     ->setCellValue('AB' . ($index + 2), '0')
                     ->setCellValue('AC' . ($index + 2), $tbl_monthly_wages_detail[$index]['StampCharge'])
                     ->setCellValue('AD' . ($index + 2), $tbl_monthly_wages_detail[$index]['NetPayable']);
@@ -232,7 +216,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
     }
 
     public function Retrieve_employee_information($card_no, $myvalue) {
-
         //$count = 0;
         $abc = array();
         foreach ($myvalue as $rec_employee_info) {
@@ -246,8 +229,6 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                 $abc['Floor'] = $rec_employee_info->Floor;
                 $abc['Department'] = $rec_employee_info->Department;
                 $abc['Line'] = $rec_employee_info->Line;
-                $abc['Parameter5'] = $rec_employee_info->Parameter5;
-                $abc['GrossSalary'] = $rec_employee_info->GrossSalary;
                 return $abc;
             }
         }
@@ -259,8 +240,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         $abc['Floor'] = 'Not Found';
         $abc['Department'] = 'Not Found';
         $abc['Line'] = 'Not Found';
-        $abc['Parameter5'] = 'Not Found';
-        $abc['GrossSalary'] = 0;
+
         return $abc;
 
 
@@ -298,57 +278,44 @@ class Con_proc_monthly_report_generate extends CI_Controller {
     }
 
     public function Salary_distribution($tbl_monthly_wages_detail) {
-
-        //$data['tbl_wages_breakdown'] = $this->mod_set_wages_breakdown->view();
-        //$treatment = $data['tbl_wages_breakdown'][1]->Percentage;
-        $tbl_grade_mapping = $this->mod_grade_mapping->getLongDataArray();
-        //$tbl_leave_type_allocation = $this->mod_leave_type_allocation->GetDataArray();
-
         $tiffin_allowance = 20.00;
         $dinner = 60.00;
-        //$tbl_monthly_wages_detail = $this->mod_monthly_wages_detail->GetAllDataArray();
+        $total_ot_salary = 0;
         $limit = count($tbl_monthly_wages_detail) - 1;
         $holidayList = $this->mod_set_holiday_catagory->GetAllHolidays($tbl_monthly_wages_detail[0]['ToDate']);
-        
         $data_tbl_daily_whole = $this->mod_daily_attendance_log->getLongDataArray($tbl_monthly_wages_detail[0]['Month']);
         $month_days = date('t', strtotime($tbl_monthly_wages_detail[0]['ToDate']));
-        //$total_work_days = $month_days - count($holidayList);
-        //echo $month_days.'<br/>';
-        //echo $total_work_days.'<br/>';
-        //echo $total_work_days;
-        //$this->mod_monthly_wages_detail->truncate_table();
         for ($index = 0; $index <= $limit; $index++) {
-            //$net_payable = 0.0;
-            //$holidaySalary = 0.0;
-            //$basic = ($tbl_monthly_wages_detail[$index]['GrossSalary'] - ($treatment_allowance + $transport_allowance + $food_allowance)) / 1.4;
-            //$house_rent = $basic * 0.4;
-            //$daily_wage = $tbl_monthly_wages_detail[$index]['GrossSalary'] / $month_days;
-//            if ($tbl_monthly_wages_detail[$index]['CardNo'] == '10147')
-//                echo $tbl_monthly_wages_detail[$index]['CardNo'] . '<br/>';
-            $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] = $tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour'];
-            //$daily_ot_wage = $basic / 104;
-            $total_ot_salary = $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] * $tbl_monthly_wages_detail[$index]['HourlyOTWage'];
             $no_of_tiffin = $tbl_monthly_wages_detail[$index]['NoOfAOT'];
-
-            $tbl_monthly_wages_detail[$index]['Absent'] = $tbl_monthly_wages_detail[$index]['TotalWorkingDays'] - $tbl_monthly_wages_detail[$index]['WorkDays'] - $tbl_monthly_wages_detail[$index]['LeaveOfEmpolyee'];
-            if ($tbl_monthly_wages_detail[$index]['Absent'] > 0) {
-                $tbl_monthly_wages_detail[$index]['AttendanceBonus'] = 0;
-            } else {
-                if ($tbl_monthly_wages_detail[$index]['AttendanceBonus'] > 2 && $tbl_monthly_wages_detail[$index]['AttendanceBonus'] < 31) {
-                    $tbl_monthly_wages_detail[$index]['AttendanceBonus'] = 0;
-                } else {
-                    $allowances = $this->GetAllowances($tbl_monthly_wages_detail[$index]['Parameter5'], $tbl_grade_mapping);
-                    $tbl_monthly_wages_detail[$index]['AttendanceBonus'] = $allowances['AttendanceBonus'];
-                }
+            $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] = $tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour'];
+            if ($tbl_monthly_wages_detail[$index]['OT']) {
+                $total_ot_salary = $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] * $tbl_monthly_wages_detail[$index]['HourlyOTWage'];
+//                echo 'Total OT  : ' . $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] . '<br/>';
+//                echo 'Total OT Money : ' . $total_ot_salary . '<br/>';
             }
-
+            $tbl_monthly_wages_detail[$index]['Absent'] = $tbl_monthly_wages_detail[$index]['TotalWorkingDays'] - $tbl_monthly_wages_detail[$index]['WorkDays'] - $tbl_monthly_wages_detail[$index]['LeaveOfEmpolyee'];
+            if ($tbl_monthly_wages_detail[$index]['Absent'] > 0 || $tbl_monthly_wages_detail[$index]['NotInTime'] > 2) {
+                $tbl_monthly_wages_detail[$index]['AttendanceBonus'] = 0;
+//                echo 'Total Absent  : ' . $tbl_monthly_wages_detail[$index]['Absent'] . '<br/>';
+//                echo 'Total Not In Time  : ' . $tbl_monthly_wages_detail[$index]['NotInTime'] . '<br/>';
+//                echo 'Attendance Bonus : ' . $tbl_monthly_wages_detail[$index]['AttendanceBonus'] . '<br/>';
+            }
+            if ($tbl_monthly_wages_detail[$index]['OtherAllowance']) {
+//                echo 'Other Allowance  : ' . $tbl_monthly_wages_detail[$index]['OtherAllowance'] . '<br/>';
+                if ($tbl_monthly_wages_detail[$index]['OthAllowCal'] == 'M')
+                    $tbl_monthly_wages_detail[$index]['OtherAllowance'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['OtherAllowance'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent']))), 2, '.', '');
+//                echo 'Fixed Or Monthly  : ' . $tbl_monthly_wages_detail[$index]['OthAllowCal'] . '<br/>';
+//                echo 'Other Allowance : ' . $tbl_monthly_wages_detail[$index]['OtherAllowance'] . '<br/>';
+            }
             if ($tbl_monthly_wages_detail[$index]['HolidayWorkDays'] > 0) {
-
-                //echo $tbl_monthly_wages_detail[$index]['CardNo'].'->'.$tbl_monthly_wages_detail[$index]['Absent'].'<br/>' ;
                 $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] = number_format((float) (round($this->HolidaySalaryCalculation($holidayList, $data_tbl_daily_whole, $tbl_monthly_wages_detail[$index]['CardNo'], $tbl_monthly_wages_detail[$index]['HourlyOTWage']))), 2, '.', '');
             }
-            $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['Basic'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent'])) + $tbl_monthly_wages_detail[$index]['HouseRent'] + $tbl_monthly_wages_detail[$index]['TreatmentAllowance'] + $tbl_monthly_wages_detail[$index]['TravelAllowance'] + $tbl_monthly_wages_detail[$index]['FoodAllowance']), 2, '.', '');
-            $total = number_format((float) ($tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['AdditionalAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance)), 2, '.', '');
+//            echo 'Holiday Works  : ' . $tbl_monthly_wages_detail[$index]['HolidayWorkDays'] . '<br/>';
+//            echo 'Holiday Work Payable : ' . $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] . '<br/>';
+            //exit();
+
+            $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['Basic'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent'])) + $tbl_monthly_wages_detail[$index]['HouseRent'] + $tbl_monthly_wages_detail[$index]['MedicalAllowance'] + $tbl_monthly_wages_detail[$index]['TravelAllowance'] + $tbl_monthly_wages_detail[$index]['FoodAllowance']), 2, '.', '');
+            $total = number_format((float) ($tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['OtherAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance)), 2, '.', '');
             $tbl_monthly_wages_detail[$index]['NetPayable'] = number_format((float) (($total - $tbl_monthly_wages_detail[$index]['StampCharge'])), 2, '.', '');
         }
 //        echo '<pre>';
@@ -402,28 +369,31 @@ class Con_proc_monthly_report_generate extends CI_Controller {
         return $no_of_leave;
     }
 
-    public function GetAllowances($grade, $grade_list) {
-
-
-        $allowances = array();
-        $limit = count($grade_list) - 1;
+    public function GetAllowances($CardNo, $tbl_employee_salary) {
+        $EmployeeSalaryStructure = array();
+        $limit = count($tbl_employee_salary) - 1;
         for ($index = 0; $index <= $limit; $index++) {
-            if ($grade == $grade_list[$index]['Name']) {
-                $allowances['TreatmentAllowance'] = $grade_list[$index]['TreatmentAllowance'];
-                $allowances['TravelAllowance'] = $grade_list[$index]['TravelAllowance'];
-                $allowances['FoodAllowance'] = $grade_list[$index]['FoodAllowance'];
-                $allowances['AttendanceBonus'] = $grade_list[$index]['AttendanceBonus'];
-                return $allowances;
+            if ($CardNo == $tbl_employee_salary[$index]['CardNo']) {
+                $EmployeeSalaryStructure['GrossSalary'] = $tbl_employee_salary[$index]['GrossSalary'];
+                $EmployeeSalaryStructure['OT'] = $tbl_employee_salary[$index]['OT'];
+                $EmployeeSalaryStructure['AttendanceBonus'] = $tbl_employee_salary[$index]['AttendanceBonus'];
+                $EmployeeSalaryStructure['OtherAllowance'] = $tbl_employee_salary[$index]['OtherAllowance'];
+                $EmployeeSalaryStructure['MedicalAllowance'] = $tbl_employee_salary[$index]['MedicalAllowance'];
+                $EmployeeSalaryStructure['TravelAllowance'] = $tbl_employee_salary[$index]['TravelAllowance'];
+                $EmployeeSalaryStructure['FoodAllowance'] = $tbl_employee_salary[$index]['FoodAllowance'];
+                $EmployeeSalaryStructure['OthAllowCal'] = $tbl_employee_salary[$index]['OthAllowCal'];
+                return $EmployeeSalaryStructure;
             }
         }
-        $allowances['TreatmentAllowance'] = 0;
-        $allowances['TravelAllowance'] = 0;
-        $allowances['FoodAllowance'] = 0;
-        $allowances['AttendanceBonus'] = 0;
-        return $allowances;
-//        echo '<pre>';
-//        print_r($allowances);
-//        echo '</pre>';
+        $EmployeeSalaryStructure['GrossSalary'] = 0;
+        $EmployeeSalaryStructure['OT'] = 0;
+        $EmployeeSalaryStructure['AttendanceBonus'] = 0;
+        $EmployeeSalaryStructure['OtherAllowance'] = 0;
+        $EmployeeSalaryStructure['MedicalAllowance'] = 0;
+        $EmployeeSalaryStructure['TravelAllowance'] = 0;
+        $EmployeeSalaryStructure['FoodAllowance'] = 0;
+        $EmployeeSalaryStructure['OthAllowCal'] = 'M';
+        return $EmployeeSalaryStructure;
     }
 
     public function UpdateLeaveAllocationTable($tbl_monthly_wages_detail) {
@@ -455,8 +425,11 @@ class Con_proc_monthly_report_generate extends CI_Controller {
     }
 
     public function GenerateMonthlyReport($Month) {
-        $tbl_daily_attendance_log = $this->mod_daily_attendance_log->getLongDataArray($Month); //        
-        $tbl_grade_mapping = $this->mod_grade_mapping->getLongDataArray();
+        $tbl_daily_attendance_log = $this->mod_daily_attendance_log->getLongDataArray($Month);
+        //echo count($tbl_daily_attendance_log) . '<br/>'; //        
+        $tbl_employee_salary = $this->mod_set_employee_salary->get_long_data_array();
+        //echo count($tbl_employee_salary);
+        //exit();
         $tbl_employee_profile = $this->mod_set_employee_info_detail->view();
         $holidayList = $this->mod_set_holiday_catagory->GetAllHolidays($tbl_daily_attendance_log[0]['Date']);
         $leaveList = $this->mod_leave_detail->GetAllLeaves($tbl_daily_attendance_log[0]['Date']);
@@ -483,16 +456,18 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             $a_monthly_wages_detail['Floor'] = $an_employee_info['Floor'];
             $a_monthly_wages_detail['Department'] = $an_employee_info['Department'];
             $a_monthly_wages_detail['Line'] = $an_employee_info['Line'];
-            $a_monthly_wages_detail['Parameter5'] = $an_employee_info['Parameter5'];
-            $a_monthly_wages_detail['GrossSalary'] = $an_employee_info['GrossSalary'];
 
-            $allowances = $this->GetAllowances($an_employee_info['Parameter5'], $tbl_grade_mapping);
-            $a_monthly_wages_detail['TreatmentAllowance'] = $allowances['TreatmentAllowance'];
-            $a_monthly_wages_detail['TravelAllowance'] = $allowances['TravelAllowance'];
-            $a_monthly_wages_detail['FoodAllowance'] = $allowances['FoodAllowance'];
-            $a_monthly_wages_detail['AttendanceBonus'] = $allowances['AttendanceBonus'];
+            $EmployeeSalaryStructure = $this->GetAllowances($tbl_daily_attendance_log[$index]['CardNo'], $tbl_employee_salary);
+            $a_monthly_wages_detail['GrossSalary'] = $EmployeeSalaryStructure['GrossSalary'];
+            $a_monthly_wages_detail['OT'] = $EmployeeSalaryStructure['OT'];
+            $a_monthly_wages_detail['AttendanceBonus'] = $EmployeeSalaryStructure['AttendanceBonus'];
+            $a_monthly_wages_detail['OtherAllowance'] = $EmployeeSalaryStructure['OtherAllowance'];
+            $a_monthly_wages_detail['MedicalAllowance'] = $EmployeeSalaryStructure['MedicalAllowance'];
+            $a_monthly_wages_detail['TravelAllowance'] = $EmployeeSalaryStructure['TravelAllowance'];
+            $a_monthly_wages_detail['FoodAllowance'] = $EmployeeSalaryStructure['FoodAllowance'];
+            $a_monthly_wages_detail['OthAllowCal'] = $EmployeeSalaryStructure['OthAllowCal'];
 
-            $a_monthly_wages_detail['Basic'] = ($an_employee_info['GrossSalary'] - ($allowances['TreatmentAllowance'] + $allowances['TravelAllowance'] + $allowances['FoodAllowance'])) / 1.4;
+            $a_monthly_wages_detail['Basic'] = ($a_monthly_wages_detail['GrossSalary'] - ($a_monthly_wages_detail['MedicalAllowance'] + $a_monthly_wages_detail['TravelAllowance'] + $a_monthly_wages_detail['FoodAllowance'])) / 1.4;
             $a_monthly_wages_detail['HouseRent'] = number_format((float) ($a_monthly_wages_detail['Basic'] * 0.4), 2, '.', '');
             $a_monthly_wages_detail['DailyWage'] = number_format((float) ($a_monthly_wages_detail['GrossSalary'] / $month_days), 2, '.', '');
             $a_monthly_wages_detail['TotalWorkingDays'] = $month_days - count($holidayList);
@@ -500,9 +475,8 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             $a_monthly_wages_detail['OutStandingDues'] = 0;
             $a_monthly_wages_detail['TotalOverTimeHour'] = 0;
             $a_monthly_wages_detail['HourlyOTWage'] = number_format((float) ($a_monthly_wages_detail['Basic'] / 104), 2, '.', '');
-            $a_monthly_wages_detail['AdditionalAllowance'] = 0;
             $a_monthly_wages_detail['Absent'] = 0;
-
+            $a_monthly_wages_detail['NotInTime'] = 0;
             //Check tbl_leave_detail
             $no_of_leave = $this->EmployeeLeaveCount($a_monthly_wages_detail['CardNo'], $leaveList);
             $a_monthly_wages_detail['LeaveOfEmpolyee'] = $no_of_leave;
@@ -516,7 +490,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                 $a_monthly_wages_detail['HolidayWorkDays'] = 0;
                 //$a_monthly_wages_detail['LeaveOfEmpolyee'] = 0;
                 if ($tbl_daily_attendance_log[$index]['InTime'] == 0) {
-                    $a_monthly_wages_detail['AttendanceBonus'] = 1;
+                    $a_monthly_wages_detail['NotInTime'] = 1;
                 }
             }
             $a_monthly_wages_detail['OverTimeHour'] = $tbl_daily_attendance_log[$index]['OverTimeHour'];
@@ -536,10 +510,7 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                 } else {
                     $a_monthly_wages_detail['WorkDays'] += 1;
                     if ($tbl_daily_attendance_log[$index + 1]['InTime'] == 0) {
-                        if ($a_monthly_wages_detail['AttendanceBonus'] == $allowances['AttendanceBonus']) {
-                            $a_monthly_wages_detail['AttendanceBonus'] = 0;
-                        }
-                        $a_monthly_wages_detail['AttendanceBonus'] += 1;
+                        $a_monthly_wages_detail['NotInTime']+=1;
                     }
                 }
                 $a_monthly_wages_detail['OverTimeHour'] += $tbl_daily_attendance_log[$index + 1]['OverTimeHour'];
@@ -552,16 +523,19 @@ class Con_proc_monthly_report_generate extends CI_Controller {
                 if ($index == $limit)
                     break;
             }
-
             array_push($tbl_monthly_wages_detail, $a_monthly_wages_detail);
         }
-//        echo '<pre>';
-//        print_r($tbl_monthly_wages_detail);
-//        echo '</pre>';
-        //exit();
-        //$this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
         $this->Salary_distribution($tbl_monthly_wages_detail);
     }
+
+    public function get_line_name() {
+        $BuildingName = $this->input->post('Building');
+        $Floor = $this->input->post('Floor');
+        $DepartmentName = $this->input->post('Department');
+        $LineName = $this->mod_monthly_wages_detail->get_line_name($BuildingName, $Floor, $DepartmentName);
+        echo json_encode($LineName);
+    }
+    
 
 }
 

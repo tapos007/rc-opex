@@ -20,7 +20,7 @@ class Mod_monthly_wages_detail extends CI_Model {
     public $GrossSalary;
     public $Basic;
     public $HouseRent;
-    public $TreatmentAllowance;
+    public $MedicalAllowance;
     public $TravelAllowance;
     public $FoodAllowance;
     public $DailyWage;
