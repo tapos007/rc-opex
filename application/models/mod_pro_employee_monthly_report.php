@@ -125,7 +125,12 @@ class Mod_pro_employee_monthly_report extends CI_Model {
     }
     
     public function delete_monthly_attandance($cardno, $date) {
-        $query = $this->db->query("DELETE FROM `tbl_access_log` WHERE CardNo = '".$cardno."' and DateTime like '".$date."%' ");        
+        $query = $this->db->query("DELETE FROM `tbl_access_log` WHERE CardNo = '".$cardno."' and DateTime like '".$date."%' ");     
+        if($query){
+            return true;
+        }else{
+            return false;
+        }
     }
     
 }
