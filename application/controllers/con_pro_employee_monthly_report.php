@@ -36,7 +36,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->mod_pro_employee_monthly_report->delete_monthly_attandance($CardNo, $Date);
         $this->search_get($CardNo, date('m', strtotime($Date)));
     }
-    
+
     public function search_get($CardNo, $Month) {
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
@@ -48,18 +48,12 @@ class Con_pro_employee_monthly_report extends CI_Controller {
 
     public function update() {
         $CardNo = $this->input->post('CardNo');
-        $Month = $this->input->post('Month');
-
         $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
         $DateTimeOld = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTimeOld'))));
 
 
         $this->mod_pro_employee_monthly_report->update_in_out_time($CardNo, $DateTime, $DateTimeOld);
-        $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
-        $data['tbl_employee_monthly_leave_report'] = $this->mod_leave_detail->view_by_CardNo($CardNo, $Month);
-        $data['container'] = 'temp/employee_monthly_report/view';
-        $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
-        $this->load->view('main_page', $data);
+       
     }
 
     public function generic_intime() {

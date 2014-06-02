@@ -504,7 +504,85 @@
 </div>-->
 <!-- End Miss-match Report -->
 
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+        $(".edit_tr").click(function()
+        {
+            var ID = $(this).attr('id');
+            $("#first_" + ID).hide();
+           
+            $("#first_input_" + ID).show();
+           
+        }).change(function()
+        {
+            var ID = $(this).attr('id');
+           var oldDate = $("#first_" + ID).text();
+           var CardNo = $("#first_" + ID).data('card');
+            var first = $("#first_input_" + ID).val();
+            var dataString = 'CardNo=' + CardNo + '&DateTime=' + first + '&DateTimeOld='+ oldDate;
+            $("#first_" + ID).html('<img src="load.gif" />'); // Loading image
 
+            if (first.length > 0)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url(); ?>con_pro_employee_monthly_report/update",
+                    data: dataString,
+                    cache: false,
+                    success: function(html)
+                    {
+                        $("#first_" + ID).html(first);
+                        
+                    }
+                });
+            }
+            else
+            {
+                alert('Enter something.');
+            }
+
+        });
+
+// Edit input box click action
+        $(".editbox").mouseup(function()
+        {
+            return false;
+        });
+
+// Outside click action
+        $(document).mouseup(function()
+        {
+            $(".editbox").hide();
+            $(".text").show();
+        });
+
+    });
+</script>
+<style>
+    .editbox
+    {
+        display:none
+    }
+    td
+    {
+        padding:5px;
+    }
+    .editbox
+    {
+        font-size:14px;
+        width:270px;
+        background-color:#ffffcc;
+        border:solid 1px #000;
+        padding:4px;
+    }
+    .edit_tr:hover
+    {
+        background:url(<?php echo base_url(); ?>images/edit.png) right no-repeat #80C8E5;
+        cursor:pointer;
+    }
+</style>
 
 <!-- Monthly Attendance Report -->
 <div class="row"> 
@@ -544,11 +622,13 @@
 //                        print_r($tbl_employee_monthly_report);
 //                        echo '</pre>';
 //                        exit();
+                        $mm = 0;
                         foreach ($tbl_employee_monthly_report as $rec_employee_monthly_report) {
+                            $mm++;
                             if ($iCount % 2 == 0) {
                                 $iCount++;
                                 ?>
-                                <tr style ="color:
+                                <tr id="<?php echo  ($mm+1); ?>" class="edit_tr" style ="color:
                                 <?php if ($rec_employee_monthly_report['CreatedBy'] == 'SYSTEM') {
                                     ?>black;<?php
                                     } else if ($rec_employee_monthly_report['CreatedBy'] == 'AUTO') {
@@ -571,11 +651,13 @@
                             $iCount++;
                             ?>
 
-                            <td><?php
-                                echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_employee_monthly_report['DateTime'])));
+                            <td class="edit_td">
+                                <span data-card="<?php echo $rec_employee_monthly_report['CardNo']; ?>" id="first_<?php echo $mm; ?>" class="text"><?php echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_employee_monthly_report['DateTime']))); ?></span>
+                                <input type="text" value="<?php echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_employee_monthly_report['DateTime']))); ?>" class="editbox" id="first_input_<?php echo $mm; ?>">
+                                <?php
                                 ?>
 
-                                &nbsp;<button class="btn btn-primary btn-xs" data-toggle="modal" name="dd" id="DateTimeNew<?php echo $iCount; ?>"  data-target="#editInOut" value ="<?php echo date('d-m-Y H:i:s', gmt_to_local(strtotime($rec_employee_monthly_report['DateTime']), 'UP6')); ?>" onclick="editDateTime(this.id);" ><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
+
                             </td>
 
                             <td><a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/delete_monthly_attandance_record/<?php echo $rec_employee_monthly_report['CardNo'] ?>/<?php echo date('Y-m-d', strtotime($rec_employee_monthly_report['DateTime'])); ?>" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> মুছুন</a></td>
@@ -684,7 +766,7 @@
                                     <?php echo $rec_leave_report['ApplicationNo']; ?>
                                 </td>
                                 <td>
-    <!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'];   ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
+    <!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'];     ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
                                     <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Delete/<?php echo $rec_leave_report['CardNo'] . '/' . $rec_leave_report['Date'] ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i> মুছুন</a>
                                 </td>
                             </tr>
