@@ -155,7 +155,7 @@ class Con_proc_daily_report_generate extends CI_Controller {
                         $out = strtotime($current->DateTime);
                         date_default_timezone_set('GMT');
                         $diff = abs($out - $in);
-                        echo '<br/>'.date('H:i:s',$diff) . '<br/>' . $current->CardNo;                        
+                        echo '<br/>' . date('H:i:s', $diff) . '<br/>' . $current->CardNo;
                         $hour_diff = date("H:i:s", $diff);
                         $total_hour_worked+=$hour_diff;
                         $flag = FALSE;
@@ -302,7 +302,6 @@ class Con_proc_daily_report_generate extends CI_Controller {
             //exit();
             $this->mod_daily_attendance_log->insert_batch_daily_report($data_tbl_daily_whole);
         }
-
     }
 
     public function view_by_id() {
@@ -330,20 +329,76 @@ class Con_proc_daily_report_generate extends CI_Controller {
         }
     }
 
-    public function SubTractTime() {
-        $tbl_access_log_raw = $this->mod_access_log_raw->getLongDataArray();
-
+    public function SubTractTime($tbl_access_log_raw) {
         $limit = count($tbl_access_log_raw) - 1;
         for ($index = 0; $index <= $limit; $index++) {
-            $date = new DateTime($tbl_access_log_raw[$index]['InTime']);
+            $date = new DateTime($tbl_access_log_raw[$index]['DateTime']);
             $date->modify("-6 hours");
             $tbl_access_log_raw[$index]['InTime'] = $date->format("Y-m-d H:i:s");
+            $tbl_access_log_raw[$index]['Ip'] = $tbl_access_log_raw[$index]['IP'];
+            unset($tbl_access_log_raw[$index]['DateTime']);
+            unset($tbl_access_log_raw[$index]['IP']);
         }
-//        echo '<pre>';
-//        print_r($tbl_access_log_raw);
-//        echo '</pre>';
-        $this->mod_access_log_raw->EmptyTable();
+        return $tbl_access_log_raw;
+    }
+
+    public function pull_data_from_access_log($date) {
+        $tbl_access_log_raw = $this->mod_access_log->get_floor_specific_access_record($date);
+        echo count($tbl_access_log_raw);
+        $tbl_access_log_raw = $this->SubTractTime($tbl_access_log_raw);
+        $this->seperate_valid_data($tbl_access_log_raw);
         $this->mod_access_log_raw->insert_batch_random_data($tbl_access_log_raw);
+    }
+
+    public function seperate_valid_data($tbl_access_log_raw) {
+        $tbl_incurrect_access_log = array();
+        $tbl_access_log = array();
+        $limit1 = count($tbl_access_log_raw) - 1;
+        for ($index1 = 0; $index1 <= $limit1; $index1++) {
+            $inTime = $outTime = $tbl_access_log_raw[$index1]['InTime'];
+            while (($index1 != $limit1) && ($tbl_access_log_raw[$index1]['CardNo'] == $tbl_access_log_raw[$index1 + 1]['CardNo'])) {
+                if (date('Y-m-d H:i:s', strtotime($inTime)) > date('Y-m-d H:i:s', strtotime($tbl_access_log_raw[$index1 + 1]['InTime']))) {
+                    $inTime = $tbl_access_log_raw[$index1 + 1]['InTime'];
+                }
+                if (date('Y-m-d H:i:s', strtotime($outTime)) < date('Y-m-d H:i:s', strtotime($tbl_access_log_raw[$index1 + 1]['InTime']))) {
+                    $to_time = strtotime($inTime);
+                    $from_time = strtotime($tbl_access_log_raw[$index1 + 1]['InTime']);
+                    if ((round(abs($to_time - $from_time) / 60, 2)) > 5) {
+                        $outTime = $tbl_access_log_raw[$index1 + 1]['InTime'];
+                    }
+                }
+                $index1++;
+            }
+            if ($inTime == $outTime) {
+                $an_incurrect_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+
+                $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
+                $an_incurrect_access_log['Status'] = 'IN';
+                $an_incurrect_access_log['CreatedBy'] = 'SYSTEM';
+                $an_incurrect_access_log['DelStatus'] = 'ACT';
+                array_push($tbl_incurrect_access_log, $an_incurrect_access_log);
+                //echo 'Invalid-->' . $tbl_access_log_raw[$index1]['CardNo'] . '<br/>';
+            } else {
+                $an_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+                $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
+                $an_access_log['Status'] = 'IN';
+                $an_access_log['CreatedBy'] = 'SYSTEM';
+                $an_access_log['DelStatus'] = 'ACT';
+                array_push($tbl_access_log, $an_access_log);
+                //echo 'Valid-->' . $tbl_access_log_raw[$index1]['CardNo'] . '<br/>';
+                $an_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+                $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($outTime));
+                $an_access_log['Status'] = 'OUT';
+                $an_access_log['CreatedBy'] = 'SYSTEM';
+                $an_access_log['DelStatus'] = 'ACT';
+                array_push($tbl_access_log, $an_access_log);
+            }
+        }
+        if (!empty($tbl_access_log))
+            $this->mod_access_log->insert_batch_random_data($tbl_access_log);
+        if (!empty($tbl_incurrect_access_log))
+            $this->mod_incurrect_access_log->insert_batch_random_data($tbl_incurrect_access_log);
+        echo 'Inserted';
     }
 
 }
