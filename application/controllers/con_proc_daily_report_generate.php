@@ -46,9 +46,9 @@ class Con_proc_daily_report_generate extends CI_Controller {
     public function SeperateValidData($Month) {
         $this->mod_access_log_raw->TruncateInvalidData();
         $days = $this->mod_access_log_raw->GetDistinctDates($Month);
-//        echo '<pre>';
-//        print_r($days);
-//        echo '</pre>';
+        echo '<pre>';
+        print_r($days);
+        echo '</pre>';
 //        exit();
         $limit = count($days) - 1;
         $tbl_access_log = array();
