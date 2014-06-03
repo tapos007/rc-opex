@@ -118,15 +118,19 @@ class Con_proc_daily_report_generate extends CI_Controller {
 //        echo '<pre>';
 //        print_r($days);
 //        echo '</pre>';
-//        exit();
+        //exit();
         $limt = count($days) - 1;
         for ($index = 0; $index <= $limt; $index++) {
             $data_tbl_daily_whole = array();
             $data['tbl_work_hour_breakdown'] = $this->mod_set_work_hour_breakdown->view1();
             $data['tbl_access_log'] = $this->mod_access_log->getDateSpecificLongData($days[$index]['DATE(`DateTime`)']);
+            echo $days[$index]['DATE(`DateTime`)'] . '<br/>';
+//            echo '<pre>';
+//            print_r($data['tbl_access_log']);
+//            echo '</pre>';
+            //exit();
             $flag = TRUE;
             $one_flag = TRUE;
-            $total_hour_worked = date("H:i:s", 0);
             $data_tbl_daily['TotalWorkedHour'] = date("H:i:s", 0);
             $data_tbl_daily['GenarelWorkHour'] = date("H:i:s", 0);
             $data_tbl_daily['OverTimeHour'] = date("H:i:s", 0);
@@ -135,6 +139,7 @@ class Con_proc_daily_report_generate extends CI_Controller {
             $data_tbl_daily['InTime'] = 0;
             foreach ($data['tbl_access_log'] as $rec_access_log) {
                 if ($one_flag) {
+                    $total_hour_worked = date("H:i:s", 0);
                     $previous = $rec_access_log;
                     $current = $rec_access_log;
                     $date = explode(' ', $previous->DateTime);
@@ -150,13 +155,12 @@ class Con_proc_daily_report_generate extends CI_Controller {
                         $out = strtotime($current->DateTime);
                         date_default_timezone_set('GMT');
                         $diff = abs($out - $in);
-                        //echo $diff . '<br/>';
+                        echo '<br/>'.date('H:i:s',$diff) . '<br/>' . $current->CardNo;                        
                         $hour_diff = date("H:i:s", $diff);
                         $total_hour_worked+=$hour_diff;
                         $flag = FALSE;
                     } else {//odd no row
                         $previous = $rec_access_log;
-
                         if (($total_hour_worked != 0) && ($previous->CardNo != $current->CardNo)) {
                             $data_tbl_daily['Date'] = date("Y-m-d ", strtotime($current->DateTime));
                             $data_tbl_daily['CardNo'] = $current->CardNo;
@@ -295,23 +299,10 @@ class Con_proc_daily_report_generate extends CI_Controller {
             $data_tbl_daily['NihgtShiftOverTimeHour'] = date("H:i:s", 0);
             $data_tbl_daily['InTime'] = 0;
             $total_hour_worked = date("H:i:s", 0);
+            //exit();
             $this->mod_daily_attendance_log->insert_batch_daily_report($data_tbl_daily_whole);
         }
 
-//        $data['tbl_access_log'] = $this->mod_access_log->getLongDataArray();
-//        $this->mod_access_log_backup->insert_batch_random_data($data['tbl_access_log']);
-//        $this->mod_access_log->EmptyTable();
-//
-//        $data['tbl_incurrect_access_log'] = $this->mod_incurrect_access_log->getLongDataArray();
-//        $this->mod_incurrect_access_log_backup->insert_batch_random_data($data['tbl_incurrect_access_log']);
-//        $this->mod_incurrect_access_log->EmptyTable();
-//
-//        $data['tbl_access_log_raw'] = $this->mod_access_log_raw->getLongDataArray();
-//        $this->mod_access_log_raw_backup->insert_batch_random_data($data['tbl_access_log_raw']);
-//        $this->mod_access_log_raw->EmptyTable();
-        //$data['tbl_daily_attendance_log'] = $this->mod_daily_attendance_log->view();
-        //$data['container'] = 'temp/daily_report_generate/daily_attendence_view';
-        //$this->load->view('main_page', $data);
     }
 
     public function view_by_id() {
