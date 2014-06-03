@@ -29,6 +29,7 @@
                 </a>
                 <ul class="sub"> 
                     <li><a class="" href="<?php echo site_url('con_set_worker_profile/create'); ?>">Create Staff</a></li>
+                    <li><a class="" href="<?php echo site_url('con_set_employee_salary/create'); ?>">Employee Salary</a></li>
                     <li><a class="" href="<?php echo site_url('con_set_employee_info_detail/example'); ?>">Employee Detail</a></li> 
 <!--                    <li><a class="" href="<?php //echo site_url('con_pro_employee_access_log/example'); ?>">Log Detail</a></li>                    -->
                 </ul>

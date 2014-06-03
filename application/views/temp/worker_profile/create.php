@@ -218,8 +218,8 @@
 </script>
 
 <div class="row">
-    <div class="col-lg-1"></div>
-    <div class="col-lg-10">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
         <section class="panel-success">
             <div class="bio-graph-heading" style="font-size: 30px"><i class="icon icon-user"></i>
                 শ্রমিক এবং কর্মচারীগণের নিবন্ধন 
@@ -232,7 +232,67 @@
                 'role' => 'form'
             );
             echo form_open_multipart('con_set_worker_profile/insert', $attr);
-            ?>            
+            ?>     
+            <section>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">কর্মরত ভবনের তথ্য</div>
+                    <div class="panel-body">
+                        <?php
+                        $role = array(
+                            'WG4' => 'WG4',
+                        );
+                        ?>
+                        <div class="form-group">
+                            <label for="CardNo" class="col-lg-3 control-label" >কার্ড নং</label>
+                            <div class="col-lg-9">
+                                <input type="text" name="CardNo"  class="form-control" id="id_CardNo" placeholder="কার্ড নং টাইপ করুন">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="BuildingName">ভবনের নাম</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="BuildingName" id="BuildingName" readonly>
+                                    <option value="<?php echo $this->session->userdata('BuildingName'); ?>"><?php echo $this->session->userdata('BuildingName'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="Floor">ফ্লোর</label>
+                            <div class="col-lg-9">
+                                <p>
+                                    <select class ="form-control" style="overflow-y: scroll !important;" name="Floor" id="Floor" readonly>
+                                        <option value="<?php echo $this->session->userdata('Floor'); ?>"><?php echo $this->session->userdata('Floor'); ?></option>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" for="Department">বিভাগ</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="Department" id="Floor">
+                                    <option value="">--Select One--</option>
+                                    <?php foreach ($tbl_section as $rec_section) { ?>
+                                        <option value="<?php echo $rec_section->Name; ?>"><?php echo $rec_section->Name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hidden">
+                            <label class="control-label col-lg-3" for="Line">লাইন</label>
+                            <div class="col-lg-9">
+                                <select class ="form-control" name="Line" id="Line">
+                                    <option value="">--Select One--</option>
+
+                                </select>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </section>
+
             <section>
                 <div class="panel panel-primary">
                     <div class="panel-heading">ব্যক্তিগত তথ্য</div>
@@ -393,7 +453,7 @@
                 </div>
             </section>
 
-            <section>
+<!--            <section>
                 <div class="panel panel-primary">
                     <div class="panel-heading">শ্রমিক/ কর্মচারী কাজের তথ্য</div>
                     <div class="panel-body"> 
@@ -410,7 +470,7 @@
                         <div class="form-group">
                             <label for="OT" class="col-sm-2 control-label" >ওভার টাইম</label>
                             <div class="col-sm-4">
-<!--                                <input type="text" name="OT"  class="form-control" id="OT" placeholder="ওভার টাইম টাইপ করুন">-->
+                                <input type="text" name="OT"  class="form-control" id="OT" placeholder="ওভার টাইম টাইপ করুন">
                                 <select name="OT"  class="form-control" id="OT">
                                     <option value="">--ওভার টাইম নির্বাচন করুন--</option>
                                     <option value="1">হ্যাঁ</option>
@@ -429,11 +489,11 @@
                             </div>
                             <label for="OthAllowCal" class="col-sm-2 control-label" >অন্যান্য ভাতা হিসাব</label>
                             <div class="col-sm-4">
-                                <!--<input type="text" name="OthAllowCal"  class="form-control" id="OthAllowCal" placeholder="মূল বেতন টাইপ করুন">-->
+                                <input type="text" name="OthAllowCal"  class="form-control" id="OthAllowCal" placeholder="মূল বেতন টাইপ করুন">
                                 <select name="OthAllowCal"  class="form-control" id="OthAllowCal" readonly>
-                                    <!--<option value="">--অন্যান্য ভাতা নির্বাচন করুন--</option>-->
+                                    <option value="">--অন্যান্য ভাতা নির্বাচন করুন--</option>
                                     <option value="F">নির্দিষ্ট</option>
-                                    <!--<option value="M">মাসিক</option>-->
+                                    <option value="M">মাসিক</option>
                                 </select>
                             </div>                        
                         </div>
@@ -459,61 +519,7 @@
                         </div>
                     </div>
                 </div>
-            </section>                
-
-            <section>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">কর্মরত ভবনের তথ্য</div>
-                    <div class="panel-body">
-                        <?php
-                        $role = array(
-                            'WG4' => 'WG4',
-                        );
-                        ?>
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="BuildingName">ভবনের নাম</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="BuildingName" id="BuildingName" readonly>
-                                    <option value="<?php echo $this->session->userdata('BuildingName'); ?>"><?php echo $this->session->userdata('BuildingName'); ?></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="Floor">ফ্লোর</label>
-                            <div class="col-lg-9">
-                                <p>
-                                    <select class ="form-control" style="overflow-y: scroll !important;" name="Floor" id="Floor" readonly>
-                                        <option value="<?php echo $this->session->userdata('Floor'); ?>"><?php echo $this->session->userdata('Floor'); ?></option>
-                                    </select>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-lg-3" for="Department">বিভাগ</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="Department" id="Floor">
-                                    <option value="">--Select One--</option>
-                                    <?php foreach ($tbl_section as $rec_section) { ?>
-                                        <option value="<?php echo $rec_section->Name; ?>"><?php echo $rec_section->Name; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="hidden">
-                            <label class="control-label col-lg-3" for="Line">লাইন</label>
-                            <div class="col-lg-9">
-                                <select class ="form-control" name="Line" id="Line">
-                                    <option value="">--Select One--</option>
-
-                                </select>
-                            </div>
-                        </div>                        
-                    </div>
-                </div>
-            </section>
+            </section>                -->            
 
             <section>
                 <div class="panel panel-primary">
@@ -558,5 +564,5 @@
             </section>
         </section>
     </div>
-    <div class="col-lg-1"></div>
+    <div class="col-lg-2"></div>
 </div>

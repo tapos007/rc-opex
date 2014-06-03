@@ -140,6 +140,8 @@
                             $("#Search").val('');
                             $("#Search").focus();
                         } else if (data != '') {
+                            $("#GradeName").html('');
+                            $("#DesignationName").html('');
                             $("#CardNoDiv").hide();
                             $("#CardNoHidden").val(data.CardNo);
                             $("#GradeName").append('select <option value="' + data.Grade + '">' + data.Grade + '</option>');
