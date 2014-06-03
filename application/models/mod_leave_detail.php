@@ -1,7 +1,5 @@
 <?php
-
 class Mod_leave_detail extends CI_Model {
-
     public $CardNo;
     public $Date;
     public $LeaveCategoryName;
