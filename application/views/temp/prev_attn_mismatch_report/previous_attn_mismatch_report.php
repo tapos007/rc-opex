@@ -104,7 +104,8 @@
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
-                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
+                                        
+                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
                                     }
                                     ?>
                                 </td> 
@@ -113,7 +114,7 @@
                                     $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
                                     $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
-                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime($rec_mismatch_report['DateTime'])));
+                                        echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
                                     }
                                     ?>
                                 </td> 

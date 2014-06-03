@@ -13,7 +13,7 @@ class Mod_access_log extends CI_Model {
     public function insert($data) {
         $this->db->insert('tbl_access_log', $data);
     }
-
+    
     public function insert_batch_random_data($data) {
         $this->db->insert_batch('tbl_access_log', $data);
     }
@@ -115,6 +115,13 @@ class Mod_access_log extends CI_Model {
         $query = $this->db->query("SELECT DATE(`DateTime`) 
                                     FROM   tbl_access_log WHERE DateTime LIKE  '%-" . $Month . "-%'
                                     GROUP  BY DATE(`DateTime`)");
+        return $query->result_array();
+    }
+    public function get_floor_specific_access_record($date){
+        $query = $this->db->query("SELECT access_log.CardNo, access_log.DateTime, access_log.IP
+                                FROM access_log
+                                INNER JOIN tbl_employee_profile
+                                ON access_log.CardNo=tbl_employee_profile.CardNo where DateTime LIKE '".$date."%' order by CardNo,DateTime");
         return $query->result_array();
     }
 

@@ -341,7 +341,6 @@ class Con_proc_daily_report_generate extends CI_Controller {
         }
         return $tbl_access_log_raw;
     }
-
     public function pull_data_from_access_log($date) {
         $tbl_access_log_raw = $this->mod_access_log->get_floor_specific_access_record($date);
         echo count($tbl_access_log_raw);
@@ -349,7 +348,6 @@ class Con_proc_daily_report_generate extends CI_Controller {
         $this->seperate_valid_data($tbl_access_log_raw);
         $this->mod_access_log_raw->insert_batch_random_data($tbl_access_log_raw);
     }
-
     public function seperate_valid_data($tbl_access_log_raw) {
         $tbl_incurrect_access_log = array();
         $tbl_access_log = array();
