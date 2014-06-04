@@ -290,38 +290,23 @@ class Con_proc_monthly_report_generate extends CI_Controller {
             $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] = $tbl_monthly_wages_detail[$index]['OverTimeHour'] + $tbl_monthly_wages_detail[$index]['AdditionalOverTimeHour'] + $tbl_monthly_wages_detail[$index]['NightShiftOverTimeHour'];
             if ($tbl_monthly_wages_detail[$index]['OT']) {
                 $total_ot_salary = $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] * $tbl_monthly_wages_detail[$index]['HourlyOTWage'];
-//                echo 'Total OT  : ' . $tbl_monthly_wages_detail[$index]['TotalOverTimeHour'] . '<br/>';
-//                echo 'Total OT Money : ' . $total_ot_salary . '<br/>';
             }
             $tbl_monthly_wages_detail[$index]['Absent'] = $tbl_monthly_wages_detail[$index]['TotalWorkingDays'] - $tbl_monthly_wages_detail[$index]['WorkDays'] - $tbl_monthly_wages_detail[$index]['LeaveOfEmpolyee'];
             if ($tbl_monthly_wages_detail[$index]['Absent'] > 0 || $tbl_monthly_wages_detail[$index]['NotInTime'] > 2) {
                 $tbl_monthly_wages_detail[$index]['AttendanceBonus'] = 0;
-//                echo 'Total Absent  : ' . $tbl_monthly_wages_detail[$index]['Absent'] . '<br/>';
-//                echo 'Total Not In Time  : ' . $tbl_monthly_wages_detail[$index]['NotInTime'] . '<br/>';
-//                echo 'Attendance Bonus : ' . $tbl_monthly_wages_detail[$index]['AttendanceBonus'] . '<br/>';
             }
             if ($tbl_monthly_wages_detail[$index]['OtherAllowance']) {
-//                echo 'Other Allowance  : ' . $tbl_monthly_wages_detail[$index]['OtherAllowance'] . '<br/>';
                 if ($tbl_monthly_wages_detail[$index]['OthAllowCal'] == 'M')
                     $tbl_monthly_wages_detail[$index]['OtherAllowance'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['OtherAllowance'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent']))), 2, '.', '');
-//                echo 'Fixed Or Monthly  : ' . $tbl_monthly_wages_detail[$index]['OthAllowCal'] . '<br/>';
-//                echo 'Other Allowance : ' . $tbl_monthly_wages_detail[$index]['OtherAllowance'] . '<br/>';
             }
             if ($tbl_monthly_wages_detail[$index]['HolidayWorkDays'] > 0) {
                 $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] = number_format((float) (round($this->HolidaySalaryCalculation($holidayList, $data_tbl_daily_whole, $tbl_monthly_wages_detail[$index]['CardNo'], $tbl_monthly_wages_detail[$index]['HourlyOTWage']))), 2, '.', '');
-            }
-//            echo 'Holiday Works  : ' . $tbl_monthly_wages_detail[$index]['HolidayWorkDays'] . '<br/>';
-//            echo 'Holiday Work Payable : ' . $tbl_monthly_wages_detail[$index]['HolidayNetPayable'] . '<br/>';
-            //exit();
-
+            }                                                                                                  //3417.333333333333+1864+250+200+650=6381.333333333333
             $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] = number_format((float) ((($tbl_monthly_wages_detail[$index]['Basic'] / $month_days) * ($month_days - $tbl_monthly_wages_detail[$index]['Absent'])) + $tbl_monthly_wages_detail[$index]['HouseRent'] + $tbl_monthly_wages_detail[$index]['MedicalAllowance'] + $tbl_monthly_wages_detail[$index]['TravelAllowance'] + $tbl_monthly_wages_detail[$index]['FoodAllowance']), 2, '.', '');
-            $total = number_format((float) ($tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['OtherAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance)), 2, '.', '');
+            $total = number_format((float) ($tbl_monthly_wages_detail[$index]['HolidayNetPayable'] + $tbl_monthly_wages_detail[$index]['TotalAvailableToPay'] + $tbl_monthly_wages_detail[$index]['OutStandingDues'] + $total_ot_salary + $tbl_monthly_wages_detail[$index]['OtherAllowance'] + $tbl_monthly_wages_detail[$index]['AttendanceBonus'] + ($no_of_tiffin * $tiffin_allowance)), 2, '.', '');                            
             $tbl_monthly_wages_detail[$index]['NetPayable'] = number_format((float) (($total - $tbl_monthly_wages_detail[$index]['StampCharge'])), 2, '.', '');
         }
-//        echo '<pre>';
-//        print_r($tbl_monthly_wages_detail);
-//        echo '</pre>';
-        //exit();
+
         //$this->UpdateLeaveAllocationTable($tbl_monthly_wages_detail);
         $this->mod_monthly_wages_detail->insert_batch_monthly_report($tbl_monthly_wages_detail);
         //$this->PopulateSalarySheet($tbl_monthly_wages_detail[0]['Month']);
