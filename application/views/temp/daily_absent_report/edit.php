@@ -9,7 +9,7 @@
     <div class='col-lg-3'></div>
     <div class='col-lg-6'>
         <fieldset>
-            <legend>Update Mismatch Access Log</legend>
+            <legend>New Attendance Entry</legend>
         </fieldset>                
         <?php
         $attr = array(
