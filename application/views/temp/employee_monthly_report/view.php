@@ -813,6 +813,4 @@
         document.getElementById('id_CardNo').value = c;
         document.getElementById('id_Month').value = m;
     }
-
-
 </script>
