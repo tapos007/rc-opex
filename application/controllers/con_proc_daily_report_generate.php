@@ -342,12 +342,12 @@ class Con_proc_daily_report_generate extends CI_Controller {
         return $tbl_access_log_raw;
     }
 
-    public function pull_data_from_access_log() {
+    public function pull_data_from_access_log($today) {
         date_default_timezone_set('Asia/Dacca');
-        $today = date('Y-m-d', now());
+        //$today = date('Y-m-d', now());
         $yesterday = date('Y-m-d', strtotime('-1 day', strtotime($today)));
         echo $today . '<br/>' . $yesterday;
-        //exit();
+        exit();
         //populate tbl_access_log
         $tbl_access_log_raw = $this->mod_access_log->get_floor_specific_access_record($today);
         echo count($tbl_access_log_raw);
