@@ -47,13 +47,10 @@
                     'role' => 'form',
                     'id' => 'excelExport'
                 );
-                echo form_open('', $attributes);
+                echo form_open('con_pro_attn_mismatch_report/excelExport', $attributes);
                 ?>
                 <input type="hidden" name="hDate" value="<?php
-//                if ($tbl_first_half_log_report)
-//                    echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
-//                else
-//                    echo date('m-d-Y', now());
+                    echo $showDate;
                 ?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php

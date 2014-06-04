@@ -92,7 +92,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         //exit();
         //"select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from tbl_incurrect_access_log as inc inner join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '10115' and inc.datetime between '2014-03-31 00:00:01' and '2014-03-31 23:59:59' group by (inc.CardNo)"
        $quary = $this->db->query("select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from tbl_incurrect_access_log as inc inner join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '".$acard."' and inc.datetime between '".$firstTime."' and '".$lastTime."' group by (inc.CardNo)");        
-       return $quary->result_array();
+       return $quary->result();
     }
      public function view_by_CardNo1($acard) {
         
