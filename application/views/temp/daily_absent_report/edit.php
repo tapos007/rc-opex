@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
-       
+
 
     });
 </script>
@@ -23,7 +23,7 @@
 //        exit();
         foreach ($anEmployeeInfo as $employee) {
             ?>
-            
+
             <div class="form-group">
                 <label for="CardNo" class="col-sm-3 control-label" >Card No</label>
                 <div class="col-sm-9">
@@ -51,27 +51,29 @@
             <?php
 //            $date = date('Y-m-d', strtotime($mismatch['DateTime']));
 //            $time = date('H:i:s', strtotime($mismatch['DateTime']));
-           ?>
+            ?>
             <div class="form-group">
-                <label for="Percentage" class="col-sm-3 control-label" >In Time</label>
+                <label for="InTime" class="col-sm-3 control-label" >In Time</label>
                 <div class="col-sm-9">
-                    <input type="text" name="InTime"  class="form-control" id="InTime" value="<?php
-//                    if (date('H:i:s', strtotime($mismatch['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
-//                        echo date('d-m-Y H:i:s', strtotime($mismatch['DateTime']));
-//                    }
-                    ?>">
+                    <input type="text" name="InTime"  class="form-control" id="InTime" />
                 </div>
             </div>
-            
+            <div class="form-group">
+                <label for="Percentage" class="col-sm-3 control-label" >Out Time</label>
+                <div class="col-sm-9">
+                    <input type="text" name="OutTime"  class="form-control" id="OutTime" />
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
                     <input type="submit" name="update"  class="btn btn-primary" id="update" value="Update">
                 </div>
             </div>
-    <?php
-}
-echo form_close();
-?>
+            <?php
+        }
+        echo form_close();
+        ?>
     </div>
     <div class='col-lg-3'>
     </div>

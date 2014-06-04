@@ -47,19 +47,21 @@
                             </div>
                         </div>
 
-
+                        <?php //if($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59"){ ?>
                         <div class="form-group">
                             <label for="Percentage" class="col-sm-3 control-label" >প্রবেশের সময়</label>
                             <div class="col-sm-9">
-                                <input type="text" name="InTime"  class="form-control" id="InTime" value="">
+                                <input type="text" name="InTime"  class="form-control" id="InTime" value="<?php if($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
                         </div>
+                        <?php //}else{ ?>
                         <div class="form-group">
                             <label for="Percentage" class="col-sm-3 control-label" >বাহিরের সময়</label>
                             <div class="col-sm-9">
-                                <input type="text" name="OutTime"  class="form-control" id="OutTime" value="">
+                                <input type="text" name="OutTime"  class="form-control" id="OutTime" value="<?php if($rec_mismatch_report->DateTime >= date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
                         </div>
+                        <?php// } ?>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <input type="submit" name="update"  class="btn btn-primary" id="update" value="সংশোধন করুন">

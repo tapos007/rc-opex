@@ -104,7 +104,8 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->mod_access_log->insert($Indata);
         $this->mod_access_log->insert($Outdata);
 
-        redirect('con_pro_attn_mismatch_report/edit1/' . $cardno);
+        redirect('con_pro_attn_mismatch_report/index', 'refresh');
+        //redirect('con_pro_attn_mismatch_report/edit1/' . $cardno);
     }
 
     public function index() {
