@@ -433,7 +433,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
                     ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
                     ->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Name'])
                     ->setCellValue('D' . ($index + 2), $first_half_attendance[$index]['Department'])
-					->setCellValue('E' . ($index + 2), $first_half_attendance[$index]['DateTime']);
+					->setCellValue('E' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('d-m-Y g:i:s a', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
         }
 
 
