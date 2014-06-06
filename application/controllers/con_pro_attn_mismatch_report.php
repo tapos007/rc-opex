@@ -1,7 +1,6 @@
 <?php
 
 class Con_pro_attn_mismatch_report extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('mod_pro_attn_mismatch_report');

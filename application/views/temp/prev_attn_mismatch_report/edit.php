@@ -1,9 +1,57 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/bootstrap-timepicker.min.css"/>
+<style>
+    label.error{
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-timepicker.js"></script>
 <script>
     $(document).ready(function() {
-        //$('#InTime').timepicker();
-        //$('#OutTime').timepicker();
+        $("#mismatchCorrectionEditForm").validate({
+            rules: {
+                GradeName: "required",
+                DesignationName: "required",
+                CardNo: {
+                    required: true,
+                    max: 65500,
+                    remote:
+                            {
+                                url: '<?php echo base_url(); ?>con_set_employee_salary/check_cardno_availibility',
+                                type: "post",
+                                data:
+                                        {
+                                            cardno: function()
+                                            {
+                                                return $('#employeeSalaryInsertUpdateForm :input[name="CardNo"]').val();
+                                            }
+                                        }
+                            }
+                },
+                GrossSalary: "required",
+                LastIncrementDate: "required",
+                LastIncrementMoney: "required",
+                PromotionDate: "required",
+                AttendanceBonus: "required",
+                OtherAllowance: "required"
+            },
+            messages: {
+                GradeName: "অনুগ্রহ করে গ্রেডের নাম টাইপ করুন",
+                DesignationName: "অনুগ্রহ করে উপাধির নাম টাইপ করুন",
+                CardNo: {
+                    required: "অনুগ্রহ করে কার্ড নং টাইপ করুন",
+                    remote: "দুঃখিত এই কার্ড নাম্বারটি বর্তমানে ডাটাবেইস এ আছে। দয়া করে অন্য কার্ড নাম্বার দিয়ে চেষ্টা করুন",
+					max: "কার্ড নং অবশ্যই (১-৬৫৫০০) এর মধ্যে হতে হবে"
+                },
+                GrossSalary: "অনুগ্রহ করে মূল বেতন টাইপ করুন",
+                LastIncrementDate: "অনুগ্রহ করে সর্বশেষ বর্ধিত তারিখ নির্বাচন করুন",
+                LastIncrementMoney: "অনুগ্রহ করে সর্বশেষ বর্ধিত টাকা টাইপ করুন",
+                PromotionDate: "অনুগ্রহ করে পদোন্নতির তারিখ নির্বাচন করুন",
+                AttendanceBonus: "অনুগ্রহ করে উপস্থিত বোনাস টাইপ করুন",
+                OtherAllowance: "অনুগ্রহ করে অন্যান্য ভাতা টাইপ করুন"
+            }
+        });
     });
 </script>
 
@@ -22,7 +70,8 @@
                     //$bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
                     $attr = array(
                         'class' => 'form-horizontal',
-                        'role' => 'form'
+                        'role' => 'form',
+                        'id' => 'mismatchCorrectionEditForm'
                     );
                     echo form_open('con_pro_attn_mismatch_report/insert1', $attr);
                     foreach ($tbl_mismatch_report as $rec_mismatch_report) {
@@ -49,14 +98,14 @@
 
                         <?php //if($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59"){ ?>
                         <div class="form-group">
-                            <label for="Percentage" class="col-sm-3 control-label" >প্রবেশের সময়</label>
+                            <label for="InTime" class="col-sm-3 control-label" >প্রবেশের সময়</label>
                             <div class="col-sm-9">
                                 <input type="text" name="InTime"  class="form-control" id="InTime" value="<?php if($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
                         </div>
                         <?php //}else{ ?>
                         <div class="form-group">
-                            <label for="Percentage" class="col-sm-3 control-label" >বাহিরের সময়</label>
+                            <label for="OutTime" class="col-sm-3 control-label" >বাহিরের সময়</label>
                             <div class="col-sm-9">
                                 <input type="text" name="OutTime"  class="form-control" id="OutTime" value="<?php if($rec_mismatch_report->DateTime >= date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
