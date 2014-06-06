@@ -135,23 +135,23 @@
                         <tbody>
                             <?php
                             $count = 1;
-                            foreach ($tbl_work_hour_breakdown as $rec_work_hour_breakdown) {
+                           
                                 ?>
                                 <tr class="success">
                                     <td><?php echo $count++; ?></td>
-                                    <td><?php echo $rec_work_hour_breakdown->WorkHourName; ?> </td>
-                                    <td><?php echo $rec_work_hour_breakdown->StartTime; ?> </td>
-                                    <td><?php echo $rec_work_hour_breakdown->EndTime; ?> </td>
-                                    <td><?php echo date('H:i:s', strtotime($rec_work_hour_breakdown->EndTime)) - date('H:i:s', strtotime($rec_work_hour_breakdown->StartTime)); ?> </td>
+                                    <td><?php echo $tbl_work_hour_breakdown->WorkHourName; ?> </td>
+                                    <td><?php echo $tbl_work_hour_breakdown->StartTime; ?> </td>
+                                    <td><?php echo $tbl_work_hour_breakdown->EndTime; ?> </td>
+                                    <td><?php echo date('H:i:s', strtotime($tbl_work_hour_breakdown->EndTime)) - date('H:i:s', strtotime($tbl_work_hour_breakdown->StartTime)); ?> </td>
                                     <td>
                                         <?php echo form_open('con_set_work_hour_breakdown/edit'); ?>
-                                        <input type="hidden" name="ID" id="ID" value="<?php echo $rec_work_hour_breakdown->ID; ?>"/>
+                                        <input type="hidden" name="ID" id="ID" value="<?php echo $tbl_work_hour_breakdown->ID; ?>"/>
                                         <button class="btn btn-primary btn-xs" name="submit" value="edit"><i class="icon icon-pencil"></i></button>
                                         <button class="btn btn-danger btn-xs" name="submit" value="delete" onclick="return confirm('Are u sure u want to delete')"><i class="icon icon-trash"></i></button>
                                         <?php echo form_close(); ?>
                                     </td>
                                 </tr>
-                            <?php } ?>
+                           
                         </tbody>
                     </table>
                 </div>
