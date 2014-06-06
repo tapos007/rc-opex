@@ -13,7 +13,7 @@ class Mod_access_log extends CI_Model {
     public $ModifiedBy;
     public $ModifiedOn;
 
-    //Insert Query for Course================================================================
+//Insert Query for Course================================================================
     public function insert($data) {
         $this->db->insert('access_log', $data);
     }
@@ -22,8 +22,8 @@ class Mod_access_log extends CI_Model {
         $this->db->insert_batch('access_log', $data);
     }
 
-    //Update Query in Course table ===========================================================
-    //View Course Information ===================================================
+//Update Query in Course table ===========================================================
+//View Course Information ===================================================
     public function view() {
         $this->db->select('*');
         $this->db->from('access_log'); //access_log**
@@ -169,6 +169,18 @@ class Mod_access_log extends CI_Model {
             'CreatedBy' => $this->session->userdata('Email')
         );
         $this->db->insert('access_log', $data);
+    }
+
+    public function dashboard_attendance_data($date) {
+        $query = $this->db->query("SELECT acc.CardNo
+                                FROM access_log as acc
+                                INNER JOIN tbl_employee_profile as emp
+                                ON acc.CardNo=emp.CardNo 
+                                where Date(acc.DateTime) = '" . $date . "' 
+                                and acc.Status = 0 
+                                group by acc.CardNo");
+
+        return $query->num_rows;
     }
 
 }

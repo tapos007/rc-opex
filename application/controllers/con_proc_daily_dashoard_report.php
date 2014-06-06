@@ -14,10 +14,15 @@ class Con_proc_daily_dashoard_report extends CI_Controller {
 
     public function view_dashboard_report() {
         $this->mod_daily_dashoard_report->EmptyTable();
+        //echo 'Truncated<br/>';
         $this->sendDataToDailyDashBoard();
-        $data['tbl_dashboard_report'] = $this->mod_daily_dashoard_report->view();
-        $data['current_attendance'] = $this->mod_daily_dashoard_report->get_daily_log();
+        $data['tbl_dashboard_report'] = $this->mod_daily_dashoard_report->view();         
+        $data['current_attendance'] = $this->mod_daily_dashoard_report->get_daily_log();        
         $data['on_leave'] = $this->mod_daily_dashoard_report->get_on_leave();
+//        echo '<pre>';
+//        print_r($data['on_leave']);
+//        echo '</pre>';
+//        exit();
         $data['container'] = 'temp/deshboard/view';
         $this->load->view('main_page', $data);
     }
@@ -27,13 +32,16 @@ class Con_proc_daily_dashoard_report extends CI_Controller {
         //$dash_board = array();
         $dash_board_report = array();
         $date = date('Y-m-d', now());
+        //$date = '2014-06-07';
         for ($index = 0; $index < 7; $index++) {
             $dash_board['Date'] = $date;
+            //echo $date.'<br/>';
             $dash_board['Total_employee'] = count($this->mod_set_worker_profile->view());
             $dash_board['On_leave'] = count($this->mod_leave_detail->DateSpecificAllLeaves($date));
             if ($index == 0) {
                 //echo $date.'<br/>';
-                $dash_board['Total_present'] = count($this->mod_access_log_raw->getDateSpecificLongData($date));
+                $dash_board['Total_present'] = $this->mod_access_log->dashboard_attendance_data($date);
+                
             } else {
                 //echo $date.'<br/>';
                 $dash_board['Total_present'] = count($this->mod_access_log->getDateSpecificLongData1($date));
