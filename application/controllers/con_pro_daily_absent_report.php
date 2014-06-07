@@ -79,7 +79,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
             }
         }
 
-        $data['showDate'] = date('d-m-Y', strtotime($StartDate));
+        $data['showDate'] = $StartDate;
 
         $data['tbl_absent_report'] = $absent_employee_list;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
@@ -126,7 +126,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
     }
 
     public function PopulateSalarySheet($first_half_attendance) {
-        
+
         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
@@ -199,21 +199,21 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     public function InsertAbsentEmployee() {
         $tbl_access_log = array();
-        
+
         $in_array['CardNo'] = $this->input->post('CardNo');
         $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
         $in_array['Status'] = 'IN';
         $in_array['CreatedBy'] = $this->session->userdata('Email');
         $in_array['DelStatus'] = 'ACT';
         array_push($tbl_access_log, $in_array);
-        
+
         $in_array['CardNo'] = $this->input->post('CardNo');
         $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('OutTime'))));
         $in_array['Status'] = 'OUT';
         $in_array['CreatedBy'] = $this->session->userdata('Email');
         $in_array['DelStatus'] = 'ACT';
         array_push($tbl_access_log, $in_array);
-        
+
 //                echo '<pre>';
 //        print_r($tbl_access_log);
 //        echo '</pre>';
@@ -227,6 +227,17 @@ class Con_pro_daily_absent_report extends CI_Controller {
 //        $accessLogRawData['InTime'] = date('Y-m-d H:i:s', strtotime($inTime));
         $this->mod_access_log->insert_batch_random_data($tbl_access_log);
         redirect('con_pro_daily_absent_report/');
+    }
+
+    function db_backup() {
+        $this->load->dbutil();
+
+        $backup = & $this->dbutil->backup();
+        $this->load->helper('file');
+        write_file('/path/to/sdl1_backup.zip', $backup);
+
+        $this->load->helper('download');
+        force_download('sdl1_backup.zip', $backup);
     }
 
 }
