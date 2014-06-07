@@ -4,8 +4,6 @@
         $('#Date').datepicker({
             format: 'mm-dd-yyyy'
         });
-
-
     });
 
 
@@ -98,10 +96,88 @@
         });
     });
 </script>
+<style>
+    .mychangeerer{
+        margin-bottom: 10px;
+    }
+</style>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.validate.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#add").click(function(e) {
+//Append a new row of code to the "#items" div
+            $("#items").append('<div class="mychangeerer"><div class="form-group">'
+                    + '<label class="sr-only" for="exampleInputEmail2">প্রবেশ টাইম</label>'
+                    + '<input type="text" name="intime[]" class="form-control"  placeholder="প্রবেশ টাইম টাইপ করুন">'
+                    + '</div>'
+                    + '<div class="form-group">'
+                    + '<label class="sr-only" for="exampleInputEmail2">বাহির টাইম</label>'
+                    + '<input type="text" name="outime[]" class="form-control"  placeholder="বাহির টাইম টাইপ করুন">'
+                    + '</div><button  class="delete btn btn-danger">বাতিল করুন</button></div>');
+        });
+        $("body").on("click", ".delete", function(e) {
+            $(this).parent("div").remove();
+        });
+        $("#createsData").submit(function() {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>con_pro_employee_monthly_report/insert1",
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data)
+                {
+                    if (data.success == "true") {
+                        alert("success");
 
+                    }
+
+                }
+            });
+            return  false;
+
+        });
+
+    });
+</script>
+<div class="modal fade" id="createEntry" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="myModalLabel">নতুন এন্ট্রি করুন</h3>
+            </div>
+            <div class="modal-body">
+                <div class='col-lg-12'>
+                    <fieldset>
+                        <button id="add" class="btn btn-success">নতুন যোগ করুন</button>
+                    </fieldset>                
+                    <form class="form-inline" id="createsData" role="form" method="post" action="<?php echo base_url(); ?>con_pro_attn_mismatch_report/edit2">
+                        <div id="items">
+                            <input type="hidden" name="icCard" value="<?php if ($this->input->post('CardNo')) echo $this->input->post('CardNo'); ?>">
+                            <div class="mychangeerer">
+                                <div class="form-group">
+                                    <label class="sr-only" for="exampleInputEmail2">প্রবেশ টাইম</label>
+                                    <input type="text" name="intime[]" class="form-control"  placeholder="প্রবেশ টাইম টাইপ করুন">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="exampleInputEmail2">বাহির টাইম</label>
+                                    <input type="text" name="outime[]" class="form-control"  placeholder="বাহির টাইম টাইপ করুন">
+                                </div>
+                                <button  class="delete btn btn-danger">বাতিল করুন</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="submit"  class="btn btn-success" id="update" value="আপডেট করুন">
+                <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>
+                <?php echo form_close(); ?>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Leave Modal Start -->
 <div class="modal fade" id="InsertLeave" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -185,7 +261,6 @@
                             <div id="genaratedDatepicker">
 
                             </div>
-
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-8">
                                     <button type="submit" name="submit" class="btn btn-primary">সেভ করুন</button>
@@ -195,7 +270,6 @@
                     </section>
                     <div class='col-lg-2'></div>
                 </div>
-
                 <!-- Leave Form End -->
             </div>
             <div class="modal-footer">
@@ -293,10 +367,7 @@
                         <input type="hidden" name="DateTimeOld"  class="form-control" id="id_DateTimeOld" >
                         <input type="hidden" name="Month"  class="form-control" id="id_Month" >
                     </div>
-
                 </div>
-
-
             </div>
             <div class="modal-footer">
                 <input type="submit" name="submit"  class="btn btn-success" id="update" value="Update">
@@ -320,14 +391,15 @@
                             $infoss = 0;
                         }
                         ?>
-                        কার্ড নং এবং মাস দারা অনুসন্ধান করুন        <a href="<?php echo base_url(); ?>con_pro_attn_mismatch_report/edit1/<?php echo $infoss; ?>" class="btn btn-default">New day entry</a>          
+                        কার্ড নং এবং মাস দারা অনুসন্ধান করুন        <button data-toggle="modal" data-target="#createEntry" class="btn btn-primary btn-sm">নতুন দিন এন্ট্রি করুন</button>        
                     </h4>                
                 </header> 
                 <div class="panel-body">
                     <?php
                     $attr = array(
                         'class' => 'form-horizontal',
-                        'role' => 'form'
+                        'role' => 'form',
+                        'id' => 'sformsss'
                     );
                     echo form_open('con_pro_employee_monthly_report/search', $attr);
                     ?>
@@ -363,7 +435,7 @@
                                 <option value="12"<?php check(12, $this->input->post('Month')); ?>>ডিসেম্বর </option>
                             </select>
                         </div>&nbsp;
-                        <input type="submit" name="submit"  class="btn btn-success" id="update" value="Search">
+                        <input type="submit" name="submit"  class="btn btn-success" id="update" value="অনুসন্ধান করুন">
                     </div>
                     <?php
                     echo form_close();
@@ -384,30 +456,35 @@
                     </h4> 
                     <?php
                     $attr = array(
-                        'class' => 'form-horizontal',
+                        'class' => 'form-inline',
                         'role' => 'form'
                     );
                     echo form_open('con_pro_employee_monthly_report/generic_intime', $attr);
                     ?>
-                    Month<input type="text" name="Month" value="">
-                    CardNo<input type="text" name="CardNo" value="">
-                    Intime<input type="text" name="Intime" value="">
-                    <input type="submit" name="submit"  class="btn btn-success" id="update" value="Generate">
+                    <div class="form-group">
+                        মাস<input type="text" name="Month" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        কার্ড নং<input type="text" name="CardNo" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        প্রবেশ সময়<input type="text" name="Intime" class="form-control" value="">
+                    </div>
+                    <input type="submit" name="submit"  class="btn btn-success" style="margin-top: 20px;" id="update" value="জেনারেট করুন">
                     <?php echo form_close();
                     ?>
                 </header> 
-                <table class="table table-striped border-top display" id="daily_log" border="1" style="font-size: 10px;">
+                <table class="table table-striped table-bordered table-condensed" id="daily_log">
                     <thead>                        
-                        <tr style="font-size: 15px;">
+                        <tr>
                             <th><i class="glyphicon glyphicon-edit"></i> তারিখ</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> নাম</th>               
+                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>               
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
-                            <th><i class="glyphicon glyphicon-time"></i> সংশোধন</th>
+                            <th><i class="glyphicon glyphicon-pencil"></i> সংশোধন</th>
                         </tr>
                     </thead>
-
                     <tbody>                        
                         <?php foreach ($tbl_employee_monthly_missmatch_report as $rec_mismatch_report) { ?>
                             <tr style="font-size: 15px;">
@@ -515,11 +592,10 @@
                 dataType: 'json',
                 success: function(data)
                 {
-                    if(data.success=="true"){
-                       
+                    if (data.success == "true") {
+
                         kk.parents('tr').first().remove();
                     }
-
                 }
             });
 
@@ -563,27 +639,18 @@
                     </h4>    
 
                 </header> 
-                <table class="table table-striped border-top" id="daily_log" border="1" style="font-size: 10px;">
+                <table class="table table-striped table-bordered table-condensed" id="daily_log">
                     <thead>
-                        <tr style="font-size: 18px;">                    
+                        <tr>                    
                             <th><i class="glyphicon glyphicon-edit"></i> তারিখ</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> নাম</th>               
+                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>               
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
                             <th><i class="glyphicon glyphicon-trash"></i> মুছুন</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr style="font-size: 18px;">
-<!--                        <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>                                               -->
-                        </tr>
-                    </tfoot>
                     <tbody>
-
                         <?php
                         $iCount = 0;
 //                        echo '<pre>';
@@ -618,7 +685,6 @@
                         } else {
                             $iCount++;
                             ?>
-
                             <td class="edit_td">
                                 <span data-card="<?php echo $rec_employee_monthly_report['CardNo']; ?>" id="first_<?php echo $mm; ?>" class="text"><?php echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_employee_monthly_report['DateTime']))); ?></span>
                                 <input type="text" value="<?php echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_employee_monthly_report['DateTime']))); ?>" class="editbox" id="first_input_<?php echo $mm; ?>">
@@ -666,10 +732,7 @@
                         <input type="hidden" name="DateTimeOld"  class="form-control" id="id_DateTimeOld" >
                         <input type="hidden" name="Month"  class="form-control" id="id_Month" >
                     </div>
-
                 </div>
-
-
             </div>
             <div class="modal-footer">
                 <input type="submit" name="submit"  class="btn btn-success" id="update" value="Update">
@@ -679,7 +742,6 @@
         </div>
     </div>
 </div>
-
 <!-- Leave Related Report-->
 
 <!-- Miss-match Report -->
@@ -693,22 +755,19 @@
                     </h4> 
                     <button class="btn btn-primary btn-xs" data-toggle="modal" name="dd" id="InsertLeaveDetails" data-target="#InsertLeave" >Insert Leave </button>
                 </header> 
-
-                <table class="table table-striped border-top display" id="daily_log" border="1" style="font-size: 10px;">
+                <table class="table table-striped table-condensed table-bordered" id="daily_log">
                     <thead>                        
-                        <tr style="font-size: 15px;">
+                        <tr>
                             <th><i class="glyphicon glyphicon-edit"></i> ক্রমিক নং</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-time"></i> ছুটির ধরণ</th>               
-                            <th><i class="glyphicon glyphicon-time"></i> তারিখ</th>
-                            <th><i class="glyphicon glyphicon-time"></i> নোট </th>
-                            <th><i class="glyphicon glyphicon-time"></i> আবেদন নং</th>
+                            <th><i class="glyphicon glyphicon-edit"></i> ছুটির ধরণ</th>               
+                            <th><i class="glyphicon glyphicon-calender"></i> তারিখ</th>
+                            <th><i class="glyphicon glyphicon-edit"></i> নোট </th>
+                            <th><i class="glyphicon glyphicon-edit"></i> আবেদন নং</th>
                             <th><i class="icon icon-rocket"></i> প্রক্রিয়া</th>
                         </tr>
                     </thead>
-
                     <tbody>    
-
                         <?php
                         $i = 1;
                         foreach ($tbl_employee_monthly_leave_report as $rec_leave_report) {
@@ -732,7 +791,7 @@
                                     <?php echo $rec_leave_report['ApplicationNo']; ?>
                                 </td>
                                 <td>
-    <!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'];        ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
+    <!--                                    <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Edit/<?php //echo $rec_leave_report['CardNo'].'/'.$rec_leave_report['Date'];                 ?>" class="btn btn-info btn-xs" title="সংশোধন করুন"><i class="icon icon-pencil"></i> সংশোধন করুন</a>-->
                                     <a href="<?php echo base_url(); ?>con_pro_employee_monthly_report/Leave_Details_Delete/<?php echo $rec_leave_report['CardNo'] . '/' . $rec_leave_report['Date'] ?>" class="btn btn-danger btn-xs" title="মুছুন" onclick="return confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')"><i class="icon icon-trash"></i> মুছুন</a>
                                 </td>
                             </tr>
@@ -746,7 +805,6 @@
 <script>
     function editDateTime(mytime)
     {
-
         var t = document.getElementById(mytime).value;
         var m = document.getElementById('Month').value;
         var c = document.getElementById('cNo').value;
@@ -754,10 +812,5 @@
         document.getElementById('id_DateTimeOld').value = t;
         document.getElementById('id_CardNo').value = c;
         document.getElementById('id_Month').value = m;
-
-
-
     }
-
-
 </script>

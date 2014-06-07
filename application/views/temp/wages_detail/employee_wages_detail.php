@@ -1,15 +1,36 @@
 <div class="row">
-    <div class="col-lg-12" style="width: 240%;">
+    <div class="col-lg-12" style="width: 280%;">
     <section class="panel panel-body">
         <div class="panel-primary" > 
             <header class="panel-heading">
                 <h3>
                     কর্মচারীগনের বিস্তারিত বেতন তালিকা
                     
-                    <a class="btn btn-default" href="<?php echo base_url(); ?>con_proc_monthly_report_generate/PopulateSalarySheet"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> Excel Export</a>
+<!--                    <a class="btn btn-default" href="<?php //echo base_url(); ?>con_proc_monthly_report_generate/PopulateSalarySheet"><img src="<?php //echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> Excel Export</a>  -->
                 </h3>                
-            </header>             
-            <table class="table table-responsive table-striped border-top display" id="wages" border="1" style="font-size: 10px;">
+            </header>    
+            <div class="text-center">
+                <h5><strong>  কর্মচারীগনের বিস্তারিত বেতন তালিকা  বের করার জন্য বাটনটি চাপুন</strong></h5>
+                <?php
+                $attributes = array(
+                    'class' => 'form-inline',
+                    'role' => 'form',
+                    'id' => 'excelExport'
+                );
+                echo form_open('', $attributes);
+                ?>
+                <input type="hidden" name="hDate" value="<?php
+//                if ($tbl_first_half_log_report)
+//                    echo date('m-d-Y', strtotime($tbl_first_half_log_report[0]['InTime']));
+//                else
+//                    echo date('m-d-Y', now());
+//                ?>"/>
+                <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
+                <?php
+                echo form_close();
+                ?>
+            </div><hr/>         
+            <table class="table table-responsive table-striped table-bordered table-condensed" id="wages">
                 <thead>                    
                     <tr> 
                         <th width="21" class="text-center" >ক্রমিক নং</th>
@@ -79,7 +100,7 @@
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->GrossSalary); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->Basic); ?> </td> 
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->HouseRent); ?> </td>
-                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->TreatmentAllowance); ?> </td>
+                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->MedicalAllowance); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->TravelAllowance); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->FoodAllowance); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->DailyWage); ?> </td>
@@ -92,11 +113,11 @@
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->OverTimeHour + $employee_monthly_wages->AdditionalOverTimeHour + $employee_monthly_wages->NightShiftOverTimeHour); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->HourlyOTWage); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . ($employee_monthly_wages->OverTimeHour + $employee_monthly_wages->AdditionalOverTimeHour + $employee_monthly_wages->NightShiftOverTimeHour)) * $employee_monthly_wages->HourlyOTWage; ?> </td>
-                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->AdditionalAllowance); ?> </td>
+                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->OtherAllowance); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->AttendanceBonus); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->NoOfAOT); ?></td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->NoOfAOT * 20.00); ?> </td>
-                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->HolidayNetPayable + $employee_monthly_wages->TotalAvailableToPay + $employee_monthly_wages->OutStandingDues + (($employee_monthly_wages->OverTimeHour + $employee_monthly_wages->AdditionalOverTimeHour + $employee_monthly_wages->NightShiftOverTimeHour) * $employee_monthly_wages->HourlyOTWage) + $employee_monthly_wages->AdditionalAllowance + $employee_monthly_wages->AttendanceBonus + ($employee_monthly_wages->NoOfAOT * 20.00)); ?> </td>
+                            <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->HolidayNetPayable + $employee_monthly_wages->TotalAvailableToPay + $employee_monthly_wages->OutStandingDues + (($employee_monthly_wages->OverTimeHour + $employee_monthly_wages->AdditionalOverTimeHour + $employee_monthly_wages->NightShiftOverTimeHour) * $employee_monthly_wages->HourlyOTWage) + $employee_monthly_wages->OtherAllowance+ $employee_monthly_wages->AttendanceBonus + ($employee_monthly_wages->NoOfAOT * 20.00)); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '0'); ?> </td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->StampCharge); ?></td>
                             <td><?php echo str_replace(range(0, 9), $bn_digits, '' . $employee_monthly_wages->NetPayable); ?></td>

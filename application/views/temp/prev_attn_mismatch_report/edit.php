@@ -1,9 +1,36 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/bootstrap-timepicker.min.css"/>
+<style>
+    label.error{
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-timepicker.js"></script>
 <script>
     $(document).ready(function() {
-        //$('#InTime').timepicker();
-        //$('#OutTime').timepicker();
+        $("#mismatchCorrectionEditForm").validate({
+            rules: {
+                InTime: {
+                    required: true,
+                    date: true
+                },
+                OutTime: {
+                    required: true,
+                    date: true
+                }
+            },
+            messages: {
+                InTime: {
+                    required: "অনুগ্রহ করে গ্রবেশের সময় নির্বাচন করুন",
+                    date: "অনুগ্রহ করে সঠিক তারিখ এবং সময় নির্বাচন করুন"
+                },
+                OutTime: {
+                    required: "অনুগ্রহ করে বাহিরের সময় নির্বাচন করুন",
+                    date: "অনুগ্রহ করে সঠিক তারিখ এবং সময় নির্বাচন করুন"
+                }
+            }
+        });
     });
 </script>
 
@@ -14,7 +41,7 @@
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4> 
-                      পূর্ববর্তী উপস্থিতি অমিল সংশোধন করুন                
+                        পূর্ববর্তী উপস্থিতি অমিল সংশোধন করুন                
                     </h4>                
                 </header> 
                 <div class="panel-body">  
@@ -22,7 +49,8 @@
                     //$bn_digits=array('০','১','২','৩','৪','৫','৬','৭','৮','৯');
                     $attr = array(
                         'class' => 'form-horizontal',
-                        'role' => 'form'
+                        'role' => 'form',
+                        'id' => 'mismatchCorrectionEditForm'
                     );
                     echo form_open('con_pro_attn_mismatch_report/insert1', $attr);
                     foreach ($tbl_mismatch_report as $rec_mismatch_report) {
@@ -47,19 +75,21 @@
                             </div>
                         </div>
 
-
+                        <?php //if($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime))." 05:59:59"){ ?>
                         <div class="form-group">
-                            <label for="Percentage" class="col-sm-3 control-label" >প্রবেশের সময়</label>
+                            <label for="InTime" class="col-sm-3 control-label" >প্রবেশের সময়</label>
                             <div class="col-sm-9">
-                                <input type="text" name="InTime"  class="form-control" id="InTime" value="">
+                                <input type="text" name="InTime"  class="form-control" id="InTime" value="<?php if ($rec_mismatch_report->DateTime < date('Y-m-d', strtotime($rec_mismatch_report->DateTime)) . " 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
                         </div>
+                        <?php //}else{ ?>
                         <div class="form-group">
-                            <label for="Percentage" class="col-sm-3 control-label" >বাহিরের সময়</label>
+                            <label for="OutTime" class="col-sm-3 control-label" >বাহিরের সময়</label>
                             <div class="col-sm-9">
-                                <input type="text" name="OutTime"  class="form-control" id="OutTime" value="">
+                                <input type="text" name="OutTime"  class="form-control" id="OutTime" value="<?php if ($rec_mismatch_report->DateTime >= date('Y-m-d', strtotime($rec_mismatch_report->DateTime)) . " 05:59:59") echo date('Y-m-d H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report->DateTime))); ?>">
                             </div>
                         </div>
+                        <?php // } ?>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <input type="submit" name="update"  class="btn btn-primary" id="update" value="সংশোধন করুন">

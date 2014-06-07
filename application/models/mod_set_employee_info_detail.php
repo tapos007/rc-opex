@@ -329,5 +329,6 @@ class Mod_set_employee_info_detail extends CI_Model {
         $query = $this->db->get('tbl_section');
         return $query->result();
     }
+    
 
 }

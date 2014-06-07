@@ -140,7 +140,7 @@
                             $("#Search").val('');
                             $("#Search").focus();
                         } else if (data != '') {
-                            $("#GradeName").html('');
+                       	    $("#GradeName").html('');
                             $("#DesignationName").html('');
                             $("#CardNoDiv").hide();
                             $("#CardNoHidden").val(data.CardNo);

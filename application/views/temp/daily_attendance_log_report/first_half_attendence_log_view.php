@@ -117,7 +117,6 @@
 <script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
 <script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
-
     $(document).ready(function() {
         var table = $('#daily_log').DataTable();
         $("#daily_log tfoot th").each(function(i) {

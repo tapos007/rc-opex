@@ -1,7 +1,5 @@
 <?php
-
 class Con_pro_employee_monthly_report extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('mod_pro_employee_monthly_report');
@@ -29,7 +27,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
     }
 
     public function delete_monthly_attandance_record() {
-        $CardNo = $this->input->post('CardNo');
+      $CardNo = $this->input->post('CardNo');
         $Date = $this->input->post('DateTime');
 
         if ($this->mod_pro_employee_monthly_report->delete_monthly_attandance($CardNo, $Date)) {
@@ -37,9 +35,8 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         } else{
              echo json_encode(array("success" => "false"));
         }
-           
     }
-
+    
     public function search_get($CardNo, $Month) {
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
@@ -138,5 +135,52 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->mod_leave_detail->LeaveEntryDelete($cardNo, $date);
         $this->search_get($cardNo, date('m', strtotime($date)));
     }
+     public function insert1() {
+
+        date_default_timezone_set('Asia/Dacca');
+
+        $cardno = $this->input->post("icCard");
+        $myintime = array();
+        $Indata = array();
+        $Outdata = array();
+        $count = 0;
+        $mm = $this->input->post('outime');
+        foreach ($this->input->post('intime') as $value) {
+            $InTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($value)));
+            $OutTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($mm[$count])));
+            if (date('H:i:s', strtotime($InTime)) < date('H:i:s', strtotime('04:59:59'))) {
+                $status = 'IN';
+            } else {
+                $status = 'OUT';
+            }
+            $Indata[] = array(
+                "CardNo" => $cardno,
+                "DateTime" => date('Y-m-d H:i:s', strtotime($InTime)),
+                "Status" => $status,
+                "CreatedBy" => $this->session->userdata('Email'),
+                "DelStatus" => 'ACT'
+            );
+            if (date('H:i:s', strtotime($OutTime)) > date('H:i:s', strtotime('04:59:59'))) {
+                $status = 'OUT';
+            } else {
+                $status = 'IN';
+            }
+            $Outdata[] = array(
+                "CardNo" => $cardno,
+                "DateTime" => date('Y-m-d H:i:s', strtotime($OutTime)),
+                "CreatedBy" => $this->session->userdata('Email'),
+                "Status" => $status,
+                "DelStatus" => 'ACT'
+            );
+            $count++;
+            $myintime[] = $InTime;
+        }
+        $this->mod_pro_employee_monthly_report->UpdateIncurrenctAccessLog11($cardno, $myintime);
+        $this->mod_pro_employee_monthly_report->insert11($Indata);
+        $this->mod_pro_employee_monthly_report->insert11($Outdata);
+
+         echo json_encode(array("success" => "true"));
+    }
+
 
 }

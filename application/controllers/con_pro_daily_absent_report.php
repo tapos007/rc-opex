@@ -79,7 +79,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
             }
         }
 
-        $data['showDate'] = date('d-m-Y', strtotime($StartDate));
+        $data['showDate'] = $StartDate;
 
         $data['tbl_absent_report'] = $absent_employee_list;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
@@ -126,7 +126,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
     }
 
     public function PopulateSalarySheet($first_half_attendance) {
-        
+
         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
@@ -144,9 +144,10 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 ->setCellValue('C1', 'নাম')
                 ->setCellValue('D1', 'বিভাগ');
 
+        
         $limit = count($first_half_attendance) - 1;
         for ($index = 0; $index <= $limit; $index++) {
-
+            
             $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $index + 1))
                     ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
@@ -198,20 +199,46 @@ class Con_pro_daily_absent_report extends CI_Controller {
     }
 
     public function InsertAbsentEmployee() {
-        //$accessLogRawData = array();
-        $accessLogRawData['CardNo'] = $this->input->post('CardNo');
-        $inTime = $this->input->post('InTime');
-        $accessLogRawData['Ip'] = $this->session->userdata('Email');
-        date_default_timezone_get('Asia/Dacca');
-        $date = date('Y-m-d', now());
-        $inTime = $date . ' ' . $inTime;
-        $accessLogRawData['InTime'] = date('Y-m-d H:i:s', strtotime($inTime));
-        $this->mod_access_log_raw->insert($accessLogRawData);
-        redirect('con_pro_daily_absent_report/');
-//        echo '<pre>';
-//        print_r($inTime);
+        $tbl_access_log = array();
+
+        $in_array['CardNo'] = $this->input->post('CardNo');
+        $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
+        $in_array['Status'] = 'IN';
+        $in_array['CreatedBy'] = $this->session->userdata('Email');
+        $in_array['DelStatus'] = 'ACT';
+        array_push($tbl_access_log, $in_array);
+
+        $in_array['CardNo'] = $this->input->post('CardNo');
+        $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('OutTime'))));
+        $in_array['Status'] = 'OUT';
+        $in_array['CreatedBy'] = $this->session->userdata('Email');
+        $in_array['DelStatus'] = 'ACT';
+        array_push($tbl_access_log, $in_array);
+
+//                echo '<pre>';
+//        print_r($tbl_access_log);
 //        echo '</pre>';
 //        exit();
+//        
+//        $inTime = $this->input->post('InTime');
+//        
+//        date_default_timezone_get('Asia/Dacca');
+//        $date = date('Y-m-d', now());
+//        $inTime = $date . ' ' . $inTime;
+//        $accessLogRawData['InTime'] = date('Y-m-d H:i:s', strtotime($inTime));
+        $this->mod_access_log->insert_batch_random_data($tbl_access_log);
+        redirect('con_pro_daily_absent_report/');
+    }
+
+    function db_backup() {
+        $this->load->dbutil();
+
+        $backup = & $this->dbutil->backup();
+        $this->load->helper('file');
+        write_file('/path/to/sdl1_backup.zip', $backup);
+
+        $this->load->helper('download');
+        force_download('sdl1_backup.zip', $backup);
     }
 
 }

@@ -329,20 +329,120 @@ class Con_proc_daily_report_generate extends CI_Controller {
         }
     }
 
-    public function SubTractTime() {
-        $tbl_access_log_raw = $this->mod_access_log_raw->getLongDataArray();
-
+    public function SubTractTime($tbl_access_log_raw) {
         $limit = count($tbl_access_log_raw) - 1;
         for ($index = 0; $index <= $limit; $index++) {
-            $date = new DateTime($tbl_access_log_raw[$index]['InTime']);
+            $date = new DateTime($tbl_access_log_raw[$index]['DateTime']);
             $date->modify("-6 hours");
             $tbl_access_log_raw[$index]['InTime'] = $date->format("Y-m-d H:i:s");
+            $tbl_access_log_raw[$index]['Ip'] = $tbl_access_log_raw[$index]['IP'];
+            unset($tbl_access_log_raw[$index]['DateTime']);
+            unset($tbl_access_log_raw[$index]['IP']);
+        }
+        return $tbl_access_log_raw;
+    }
+
+    public function pull_data_from_access_log($today) {
+        date_default_timezone_set('Asia/Dacca');
+        $yesterday = date('Y-m-d', strtotime('-1 day', strtotime($today)));
+        //echo $today . '<br/>' . $yesterday;
+        $tbl_access_log_raw = $this->mod_access_log->get_floor_specific_access_record($today);
+        echo count($tbl_access_log_raw);
+        if (count($tbl_access_log_raw) > 0) {
+            $tbl_access_log_raw = $this->SubTractTime($tbl_access_log_raw);
+            $this->mod_access_log_raw->insert_batch_random_data($tbl_access_log_raw);
+        }
+        //populate tbl_access_log & tbl_incurrect_access_log
+        $this->seperate_valid_data($yesterday);
+    }
+
+    public function seperate_valid_data($yesterday) {
+        $tbl_access_log_raw = $this->mod_access_log_raw->getDateSpecificLongDataArray($yesterday);
+        if (count($tbl_access_log_raw) > 0) {
+            $tbl_incurrect_access_log = array();
+            $tbl_access_log = array();
+            $limit1 = count($tbl_access_log_raw) - 1;
+            for ($index1 = 0; $index1 <= $limit1; $index1++) {
+                $inTime = $outTime = $tbl_access_log_raw[$index1]['InTime'];
+                while (($index1 != $limit1) && ($tbl_access_log_raw[$index1]['CardNo'] == $tbl_access_log_raw[$index1 + 1]['CardNo'])) {
+                    if (date('Y-m-d H:i:s', strtotime($inTime)) > date('Y-m-d H:i:s', strtotime($tbl_access_log_raw[$index1 + 1]['InTime']))) {
+                        $inTime = $tbl_access_log_raw[$index1 + 1]['InTime'];
+                    }
+                    if (date('Y-m-d H:i:s', strtotime($outTime)) < date('Y-m-d H:i:s', strtotime($tbl_access_log_raw[$index1 + 1]['InTime']))) {
+                        $to_time = strtotime($inTime);
+                        $from_time = strtotime($tbl_access_log_raw[$index1 + 1]['InTime']);
+                        if ((round(abs($to_time - $from_time) / 60, 2)) > 5) {
+                            $outTime = $tbl_access_log_raw[$index1 + 1]['InTime'];
+                        }
+                    }
+                    $index1++;
+                }
+                if ($inTime == $outTime) {
+                    $an_incurrect_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+
+                    $an_incurrect_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
+                    $an_incurrect_access_log['Status'] = 'IN';
+                    $an_incurrect_access_log['CreatedBy'] = 'SYSTEM';
+                    $an_incurrect_access_log['DelStatus'] = 'ACT';
+                    array_push($tbl_incurrect_access_log, $an_incurrect_access_log);
+                    //echo 'Invalid-->' . $tbl_access_log_raw[$index1]['CardNo'] . '<br/>';
+                } else {
+                    $an_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($inTime));
+                    $an_access_log['Status'] = 'IN';
+                    $an_access_log['CreatedBy'] = 'SYSTEM';
+                    $an_access_log['DelStatus'] = 'ACT';
+                    array_push($tbl_access_log, $an_access_log);
+                    //echo 'Valid-->' . $tbl_access_log_raw[$index1]['CardNo'] . '<br/>';
+                    $an_access_log['CardNo'] = $tbl_access_log_raw[$index1]['CardNo'];
+                    $an_access_log['DateTime'] = date('Y-m-d H:i:s', strtotime($outTime));
+                    $an_access_log['Status'] = 'OUT';
+                    $an_access_log['CreatedBy'] = 'SYSTEM';
+                    $an_access_log['DelStatus'] = 'ACT';
+                    array_push($tbl_access_log, $an_access_log);
+                }
+            }
+            if (!empty($tbl_access_log))
+                $this->mod_access_log->insert_batch_random_data($tbl_access_log);
+            if (!empty($tbl_incurrect_access_log))
+                $this->mod_incurrect_access_log->insert_batch_random_data($tbl_incurrect_access_log);
+            echo 'Inserted';
+        }
+    }
+
+    function test_absent() {
+
+        $result_raw = $this->db->query('SELECT distinct(CardNo) from tbl_access_log_raw where intime like "2014-06-03%"');
+
+        $result_profile = $this->db->query('SELECT Name, CardNo from tbl_employee_profile');
+
+//       echo '<pre>';
+//       print_r($result_profile->result());
+//       echo '</pre>';
+        $count = 0;
+        foreach ($result_raw->result() as $info) {
+            foreach ($result_profile->result() as $pro_info) {
+                if ($info->CardNo == $pro_info->CardNo) {
+                    $pro_info->Name = 'Present';
+                }
+            }
         }
 //        echo '<pre>';
-//        print_r($tbl_access_log_raw);
+//        print_r($result_profile->result());
 //        echo '</pre>';
-        $this->mod_access_log_raw->EmptyTable();
-        $this->mod_access_log_raw->insert_batch_random_data($tbl_access_log_raw);
+       echo '<html> <head>
+<meta charset="UTF-8">
+<meta name="description" content="Free Web tutorials">
+<meta name="keywords" content="HTML,CSS,XML,JavaScript">
+<meta name="author" content="Hege Refsnes">
+</head> <body>';
+        foreach ($result_profile->result() as $pro_info) {
+            if ($pro_info->Name != 'Present') {
+                echo $pro_info->CardNo.'<br/>';
+                echo $pro_info->Name.'<br/>';
+            }
+        }
+        echo '</body></html>';
     }
 
     public function SubTracTime() {

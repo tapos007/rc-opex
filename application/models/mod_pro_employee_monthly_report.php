@@ -125,12 +125,23 @@ class Mod_pro_employee_monthly_report extends CI_Model {
     }
     
     public function delete_monthly_attandance($cardno, $date) {
-        $query = $this->db->query("DELETE FROM `tbl_access_log` WHERE CardNo = '".$cardno."' and DateTime like '".$date."%' ");     
+         $query = $this->db->query("DELETE FROM `tbl_access_log` WHERE CardNo = '".$cardno."' and DateTime like '".$date."%' ");     
         if($query){
             return true;
         }else{
             return false;
+        }   
+    }
+     public function UpdateIncurrenctAccessLog11($cardNo, $dateTime) {
+        foreach ($dateTime as $mdateTime) {
+            $dateTime = date('Y-m-d', strtotime($mdateTime));
+            $firstTime = date('Y-m-d H:i:s', strtotime($mdateTime . ' 00:00:01'));
+            $lastTime = date('Y-m-d H:i:s', strtotime($mdateTime . ' 23:59:59'));
+            $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '" . $cardNo . "' and `DateTime` between '" . $firstTime . "' and '" . $lastTime . "' and `DelStatus` = 'ACT'");
         }
     }
-    
+
+    public function insert11($data) {
+        $this->db->insert_batch('tbl_access_log', $data);
+    }
 }

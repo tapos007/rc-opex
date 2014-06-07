@@ -48,8 +48,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $dateTime = date('Y-m-d',strtotime($dateTime));               
         $firstTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 00:00:01'));
         $lastTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 23:59:59'));        
-        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
-        
+        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");       
     }
     public function UpdateIncurrenctAccessLogBatch($all_mismacthes){        
         $limit= count($all_mismacthes)-1;
@@ -92,7 +91,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         //exit();
         //"select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from tbl_incurrect_access_log as inc inner join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '10115' and inc.datetime between '2014-03-31 00:00:01' and '2014-03-31 23:59:59' group by (inc.CardNo)"
        $quary = $this->db->query("select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from tbl_incurrect_access_log as inc inner join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '".$acard."' and inc.datetime between '".$firstTime."' and '".$lastTime."' group by (inc.CardNo)");        
-       return $quary->result_array();
+       return $quary->result();
     }
      public function view_by_CardNo1($acard) {
         
