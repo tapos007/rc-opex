@@ -155,7 +155,7 @@ class Con_proc_daily_report_generate extends CI_Controller {
                         $out = strtotime($current->DateTime);
                         date_default_timezone_set('GMT');
                         $diff = abs($out - $in);
-                        echo '<br/>'.date('H:i:s',$diff) . '<br/>' . $current->CardNo;                        
+                        echo '<br/>' . date('H:i:s', $diff) . '<br/>' . $current->CardNo;
                         $hour_diff = date("H:i:s", $diff);
                         $total_hour_worked+=$hour_diff;
                         $flag = FALSE;
@@ -302,7 +302,6 @@ class Con_proc_daily_report_generate extends CI_Controller {
             //exit();
             $this->mod_daily_attendance_log->insert_batch_daily_report($data_tbl_daily_whole);
         }
-
     }
 
     public function view_by_id() {
@@ -344,6 +343,24 @@ class Con_proc_daily_report_generate extends CI_Controller {
 //        echo '</pre>';
         $this->mod_access_log_raw->EmptyTable();
         $this->mod_access_log_raw->insert_batch_random_data($tbl_access_log_raw);
+    }
+
+    public function SubTracTime() {
+        $tbl_access_log = $this->mod_access_log->GetTbl_access_data();
+
+        $limit = count($tbl_access_log) - 1;
+        for ($index = 0; $index <= $limit; $index++) {
+            $date = new DateTime($tbl_access_log[$index]['DateTime']);
+            $date->modify("-6 hours");
+            $tbl_access_log[$index]['DateTime'] = $date->format("Y-m-d H:i:s");
+        }
+//        echo '<pre>';
+//        print_r($tbl_access_log);
+//        echo '</pre>';
+        
+        $this->mod_access_log->EmptyTable1();
+        $this->mod_access_log->insert_batch_random_data($tbl_access_log);
+        echo 'Updated';
     }
 
 }

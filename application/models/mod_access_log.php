@@ -87,7 +87,13 @@ class Mod_access_log extends CI_Model {
 //        exit();
         return $query->result();
     }
-
+    public function GetTbl_access_data(){
+        $query = $this->db->query('SELECT * FROM `tbl_access_log` where CreatedBy = "SYSTEM" and DateTime like "%-05-%" order by CardNo,DateTime');
+        return $query->result_array();
+    }
+    public function EmptyTable1(){
+        $query = $this->db->query('DELETE FROM `tbl_access_log` where CreatedBy = "SYSTEM" and DateTime like "%-05-%" ');
+    }
     public function GetDateSpecificCardNo($date) {
         $first_date_time = $date . ' 00:00:01';
         $last_date_time = $date . ' 23:59:59';
