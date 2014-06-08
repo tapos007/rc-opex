@@ -2,7 +2,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#Date').datepicker({
-            format: 'mm-dd-yyyy'
+            format: 'dd-mm-yyyy'
         });
     });
 </script>
@@ -27,7 +27,7 @@
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo $showDate;?>"/>
+                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo date('m-d-Y', strtotime($showDate)); ?>" />
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
 <?php echo form_close(); ?>
