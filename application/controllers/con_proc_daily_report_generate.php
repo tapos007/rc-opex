@@ -344,11 +344,8 @@ class Con_proc_daily_report_generate extends CI_Controller {
 
     public function pull_data_from_access_log($today) {
         date_default_timezone_set('Asia/Dacca');
-        //$today = date('Y-m-d', now());
         $yesterday = date('Y-m-d', strtotime('-1 day', strtotime($today)));
-        echo $today . '<br/>' . $yesterday;
-        
-        //populate tbl_access_log
+        //echo $today . '<br/>' . $yesterday;
         $tbl_access_log_raw = $this->mod_access_log->get_floor_specific_access_record($today);
         echo count($tbl_access_log_raw);
         if (count($tbl_access_log_raw) > 0) {
@@ -411,6 +408,41 @@ class Con_proc_daily_report_generate extends CI_Controller {
                 $this->mod_incurrect_access_log->insert_batch_random_data($tbl_incurrect_access_log);
             echo 'Inserted';
         }
+    }
+
+    function test_absent() {
+
+        $result_raw = $this->db->query('SELECT distinct(CardNo) from tbl_access_log_raw where intime like "2014-06-03%"');
+
+        $result_profile = $this->db->query('SELECT Name, CardNo from tbl_employee_profile');
+
+//       echo '<pre>';
+//       print_r($result_profile->result());
+//       echo '</pre>';
+        $count = 0;
+        foreach ($result_raw->result() as $info) {
+            foreach ($result_profile->result() as $pro_info) {
+                if ($info->CardNo == $pro_info->CardNo) {
+                    $pro_info->Name = 'Present';
+                }
+            }
+        }
+//        echo '<pre>';
+//        print_r($result_profile->result());
+//        echo '</pre>';
+       echo '<html> <head>
+<meta charset="UTF-8">
+<meta name="description" content="Free Web tutorials">
+<meta name="keywords" content="HTML,CSS,XML,JavaScript">
+<meta name="author" content="Hege Refsnes">
+</head> <body>';
+        foreach ($result_profile->result() as $pro_info) {
+            if ($pro_info->Name != 'Present') {
+                echo $pro_info->CardNo.'<br/>';
+                echo $pro_info->Name.'<br/>';
+            }
+        }
+        echo '</body></html>';
     }
 
 }

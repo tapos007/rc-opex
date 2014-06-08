@@ -48,8 +48,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $dateTime = date('Y-m-d',strtotime($dateTime));               
         $firstTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 00:00:01'));
         $lastTime = date('Y-m-d H:i:s',  strtotime($dateTime.' 23:59:59'));        
-        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
-        
+        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");       
     }
     public function UpdateIncurrenctAccessLogBatch($all_mismacthes){        
         $limit= count($all_mismacthes)-1;
