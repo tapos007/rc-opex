@@ -144,9 +144,10 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 ->setCellValue('C1', 'নাম')
                 ->setCellValue('D1', 'বিভাগ');
 
+        
         $limit = count($first_half_attendance) - 1;
         for ($index = 0; $index <= $limit; $index++) {
-
+            
             $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $index + 1))
                     ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
