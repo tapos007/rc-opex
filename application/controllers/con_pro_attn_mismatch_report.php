@@ -232,20 +232,14 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 
         $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information_report($BuildingName, $Floor, $DepartmentName, $Line);
         $now = date('Y-m-d', strtotime($Date));
-        //echo $now;
-        //exit();
         $StartDate = $now . ' 00:00:01';
         $EndDate = $now . ' 23:59:59';
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-        //$StartDate = date('Y-m-d H:i:s', strtotime("2014-03-01 00:00:01"));
-        //$EndDate = date('Y-m-d H:i:s', strtotime("2014-03-01 23:59:59"));
-
         $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
 
         $mismatch_information = array();
         $abc = array();
-        //$mismatch_information = $incorrect_access_log;
 
         foreach ($incorrect_access_log as $access_log) {
             $mismatch_information['CardNo'] = $access_log->CardNo;
@@ -262,7 +256,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $data['tbl_mismatch_report'] = $abc;
         $data['container'] = 'temp/prev_attn_mismatch_report/previous_attn_mismatch_report';
         $this->load->view('main_page', $data);
-        //redirect('con_pro_attn_mismatch_report/index', 'refresh');
     }
 
     public function retrieve_employee_information($card_no, $myvalue) {

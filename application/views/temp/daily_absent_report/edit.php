@@ -9,6 +9,18 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-timepicker.js"></script>
 <script>
     $(document).ready(function() {
+        
+//        $('#test').click(function(){
+//             var intime = $('#InTime').val();
+//             var outtime = $('#OutTime').val();
+//             var splitIntime = intime.split(" ")[0];
+//             var splitOutTime = outtime.split(" ")[0];
+//            alert(splitIntime);
+//            alert(splitOutTime);
+//        });
+        
+       
+        
         $("#absentCorrectionEditForm").validate({
             rules: {
                 InTime: {
@@ -92,6 +104,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <input type="submit" name="update"  class="btn btn-primary" id="update" value="সংশোধন করুন">
+                                <!--<input type="button" id="test" class="btn btn-default" value="test"/>-->
                             </div>
                         </div>
                         <?php
