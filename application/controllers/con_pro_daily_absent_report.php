@@ -11,6 +11,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $this->load->model('mod_access_log');
         $this->load->model('mod_buil_sec_other');
         $this->load->model('mod_pro_attn_mismatch_report');
+        $this->load->model('mod_set_leave_catagory');
     }
 
     public function index() {
@@ -43,6 +44,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 array_push($absent_employee_list, $absent_employee);
             }
         }
+        $data['tbl_leave_category'] = $this->mod_set_leave_catagory->view();
         $data['showDate'] = date('d-m-Y', strtotime('-1 day', now()));
         $data['tbl_absent_report'] = $absent_employee_list;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
@@ -239,6 +241,11 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
         $this->load->helper('download');
         force_download('sdl1_backup.zip', $backup);
+    }
+    
+    public function absent_report_new() {
+        $data['container'] = 'temp/daily_absent_report/daily_absent_report';
+        $this->load->view('main_page', $data);
     }
 
 }

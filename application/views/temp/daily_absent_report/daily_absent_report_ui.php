@@ -30,7 +30,7 @@
                         <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo date('m-d-Y', strtotime($showDate)); ?>" />
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
-<?php echo form_close(); ?>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </section>
@@ -50,7 +50,7 @@
                 );
                 echo form_open('con_pro_daily_absent_report/excelExport', $attributes);
                 ?>
-                <input type="hidden" name="hDate" value="<?php echo $showDate;?>"/>
+                <input type="hidden" name="hDate" value="<?php echo $showDate; ?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php
                 echo form_close();
@@ -68,35 +68,46 @@
                         <tr>
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
                             <th><i class="glyphicon glyphicon-edit"></i> নাম</th>
-<!--                                <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>
-                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    -->
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ</th>     
-<!--                                <th><i class="glyphicon glyphicon-edit"></i> লাইন</th> -->
+                            <th><i class="glyphicon glyphicon-edit"></i> প্রস্তাবিত প্রবেশ সময়</th>  
+                            <th><i class="glyphicon glyphicon-edit"></i> ছুটি মঞ্জর</th>     
                             <th><i class="icon icon-pencil"></i> সংশোধন</th>
 
                         </tr>
                     </thead>
-                        <tfoot>
+                    <tfoot>
                         <tr>
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>
                             <th><i class="glyphicon glyphicon-edit"></i> নাম</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> বিভাগ</th>
+                            <!--<th><i class="glyphicon glyphicon-edit"></i> বিভাগ</th>-->
                         </tr>
                     </tfoot>
                     <tbody>
-<?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
+                        <?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
                             <tr>         
                                 <td><?php echo $rec_absent_report['CardNo']; ?></td>
                                 <td><?php echo $rec_absent_report['Name']; ?></td>
-    <!--                                    <td><?php //echo $rec_absent_report['BuildingName'];   ?></td>
-                                <td><?php //echo $rec_absent_report['Floor'];   ?></td>-->
-                                <td><?php echo $rec_absent_report['Department']; ?></td>
-    <!--                                    <td><?php //echo $rec_absent_report['Line'];   ?></td> -->
+                                <td>
+                                    08:15:00 AM &nbsp; 
+                                    <a class="btn btn-xs btn-default"><i class="glyphicon glyphicon-check"></i></a>
+                                    <a class="btn btn-xs btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <?php //echo $rec_absent_report['Department']; ?>
+                                </td>
+                                <td>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="LeaveType" id="LeaveType">
+                                            <option value="">--ছুটির ধরন নির্বাচন করুন--</option>
+                                            <?php foreach ($tbl_leave_category as $rec_leave_catagory){ ?>
+                                            <option value="<?php echo $rec_leave_catagory->Days; ?>"><?php echo $rec_leave_catagory->CatagoryName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <a class="btn btn-xs btn-default"><i class="glyphicon glyphicon-save"></i></a>
+                                </td>
                                 <td>
                                     <a href="<?php echo base_url(); ?>con_pro_daily_absent_report/attendanceRectifaction/<?php echo $rec_absent_report['CardNo']; ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
                                 </td>
                             </tr>
-<?php } ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
