@@ -58,10 +58,10 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
     }
     
     public function incorrect_access_log($startdate, $enddate) {
-       $query = $this->db->query("SELECT CardNo, DateTime FROM tbl_incurrect_access_log WHERE DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and DelStatus = 'ACT' GROUP BY CardNo");        
+       $query = $this->db->query("SELECT CardNo, DateTime FROM access_log WHERE DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and Status = '5' GROUP BY CardNo");        
        return $query->result();
     }
-    
+        
     public function get_line_by_name($building, $floor, $Department) {
         $this->db->distinct();
         $this->db->select('Line');

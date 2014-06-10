@@ -217,17 +217,6 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $in_array['DelStatus'] = 'ACT';
         array_push($tbl_access_log, $in_array);
 
-//                echo '<pre>';
-//        print_r($tbl_access_log);
-//        echo '</pre>';
-//        exit();
-//        
-//        $inTime = $this->input->post('InTime');
-//        
-//        date_default_timezone_get('Asia/Dacca');
-//        $date = date('Y-m-d', now());
-//        $inTime = $date . ' ' . $inTime;
-//        $accessLogRawData['InTime'] = date('Y-m-d H:i:s', strtotime($inTime));
         $this->mod_access_log->insert_batch_random_data($tbl_access_log);
         redirect('con_pro_daily_absent_report/');
     }

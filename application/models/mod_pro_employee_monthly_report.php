@@ -107,11 +107,6 @@ class Mod_pro_employee_monthly_report extends CI_Model {
     }
     
      public function update_in_out_time($CardNo,$DateTime, $DateTimeOld) {
-//       $Q =  "UPDATE tbl_access_log SET DateTime = '".$DateTime."' where CardNo =  '".$CardNo."' and DateTime = '".$DateTimeOld."'";
-//       $quary = $this->db->query($Q);        
-//       return $quary;
-       
-       
         $data = array(
             'DateTime' => $DateTime,
             'CreatedBy' => $this->session->userdata('Email')

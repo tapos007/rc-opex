@@ -2,12 +2,16 @@
 
 class Mod_access_log extends CI_Model {
 
+    public $ID;
     public $CardNo;
     public $DateTime;
+    public $IP;
     public $Status;
     public $CreatedBy;
     public $CreatedOn;
     public $DelStatus;
+    public $ModifiedBy;
+    public $ModifiedOn;
 
     //Insert Query for Course================================================================
     public function insert($data) {
@@ -130,5 +134,7 @@ class Mod_access_log extends CI_Model {
                                 ON access_log.CardNo=tbl_employee_profile.CardNo where DateTime LIKE '".$date."%' order by CardNo,DateTime");
         return $query->result_array();
     }
+    
+    
 
 }

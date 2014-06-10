@@ -86,7 +86,7 @@
                         পূর্ববর্তী উপস্থিতি অমিলের প্রতিবেদন তালিকা                         
                     </h4>                
                 </header>
-                <table class="table table-striped table-advance table-condensed table-bordered" id="daily_log" style="margin-top: 5px;">
+                <table class="table table-striped table-advance table-condensed table-bordered" id="daily_log">
                     <thead>                        
                         <tr>                   
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
@@ -94,7 +94,7 @@
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
-                            <th><i class="glyphicon glyphicon-time"></i> সংশোধন</th>
+                            <th><i class="glyphicon glyphicon-time"></i> ওভার টাইম/ঘন্টা</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -146,14 +146,20 @@
                                         echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
                                     }
                                     ?>" class="editbox" id="last_input_<?php echo $counter; ?>">
-                                </td> 
-                                <td>
-                                    <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
-                                    <input type="hidden" name="CardNo" value="<?php echo $rec_mismatch_report['CardNo']; ?>"/>
-                                    <input type="hidden" name="Date" value="<?php echo $rec_mismatch_report['DateTime']; ?>"/>
-                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
-                                    <?php echo form_close(); ?>
                                 </td>
+                                <td>
+                                    <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="OT" id="OT" min="0" max="18"/>
+                                    </div>
+                                    <a class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-check"></i></a>
+                                </td>
+    <!--                                <td>
+                                <?php //echo form_open('con_pro_attn_mismatch_report/edit'); ?>
+                                    <input type="hidden" name="CardNo" value="<?php //echo $rec_mismatch_report['CardNo'];  ?>"/>
+                                    <input type="hidden" name="Date" value="<?php //echo $rec_mismatch_report['DateTime'];  ?>"/>
+                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
+                                <?php //echo form_close(); ?>
+                                </td>-->
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -173,20 +179,20 @@
         {
             var ID = $(this).attr('id');
             $("#first_" + ID).hide();
-            $("#last_"+ID).hide();
+            $("#last_" + ID).hide();
             $("#first_input_" + ID).show();
-            $("#last_input_"+ID).show();
+            $("#last_input_" + ID).show();
         }).change(function()
         {
             var ID = $(this).attr('id');
             var oldDate = $("#first_" + ID).text();
             var CardNo = $("#first_" + ID).data('card');
             var first = $("#first_input_" + ID).val();
-            var last = $("#last_input_"+ID).val();
+            var last = $("#last_input_" + ID).val();
             var dataString = 'CardNo=' + CardNo + '&DateTime=' + first + '&DateTimeOld=' + oldDate;
             $("#first_" + ID).html('<img src="load.gif" />'); // Loading image
 
-            if (first.length > 0 && last.length > 0)
+            if (first.length > 0 || last.length > 0)
             {
                 $.ajax({
                     type: "POST",
@@ -201,7 +207,7 @@
             }
             else
             {
-                alert('Enter something.');
+                //alert('Enter something.');
             }
 
         });
