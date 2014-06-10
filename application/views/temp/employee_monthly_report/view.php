@@ -487,7 +487,7 @@
                     </thead>
                     <tbody>                        
                         <?php foreach ($tbl_employee_monthly_missmatch_report as $rec_mismatch_report) { ?>
-                            <tr style="font-size: 15px;">
+                            <tr>
                                 <td><?php echo date('d-M-Y', strtotime($rec_mismatch_report['DateTime'])); ?></td>     
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>                                                          
@@ -564,7 +564,6 @@
             {
                 alert('Enter something.');
             }
-
         });
 
 // Edit input box click action
@@ -653,10 +652,6 @@
                     <tbody>
                         <?php
                         $iCount = 0;
-//                        echo '<pre>';
-//                        print_r($tbl_employee_monthly_report);
-//                        echo '</pre>';
-//                        exit();
                         $mm = 0;
                         foreach ($tbl_employee_monthly_report as $rec_employee_monthly_report) {
                             $mm++;

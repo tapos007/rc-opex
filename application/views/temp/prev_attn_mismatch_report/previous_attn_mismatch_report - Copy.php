@@ -1,26 +1,3 @@
-<style>
-    .editbox
-    {
-        display:none
-    }
-    td
-    {
-        padding:5px;
-    }
-    .editbox
-    {
-        font-size:14px;
-        width:270px;
-        background-color:#ffffcc;
-        border:solid 1px #000;
-        padding:4px;
-    }
-    .edit_tr:hover
-    {
-        background:url(<?php echo base_url(); ?>images/edit.png) right no-repeat #80C8E5;
-        cursor:pointer;
-    }
-</style>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
@@ -73,7 +50,7 @@
                 echo form_open('con_pro_attn_mismatch_report/excelExport', $attributes);
                 ?>
                 <input type="hidden" name="hDate" value="<?php
-                echo $showDate;
+                    echo $showDate;
                 ?>"/>
                 <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
                 <?php
@@ -91,7 +68,10 @@
                         <tr>                   
                             <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
                             <th><i class="glyphicon glyphicon-time"></i> নাম</th>     
+<!--                            <th><i class="glyphicon glyphicon-edit"></i> ভবনের নাম</th>     
+                            <th><i class="glyphicon glyphicon-edit"></i> ফ্লোর</th>                    -->
                             <th><i class="glyphicon glyphicon-edit"></i> বিভাগ/সেকশন</th>                    
+<!--                            <th><i class="glyphicon glyphicon-edit"></i> লাইন/ইউনিট</th>           -->
                             <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
                             <th><i class="glyphicon glyphicon-time"></i> সংশোধন</th>
@@ -106,46 +86,34 @@
                     </tfoot>
                     <tbody>                        
                         <?php
-                        $counter = 0;
                         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
                         foreach ($tbl_mismatch_report as $rec_mismatch_report) {
-                            $counter++;
                             ?>
-                            <tr id="<?php echo $counter; ?>" class="edit_tr"> 
+                            <tr>  
                                 <td><?php echo str_replace(range(0, 9), $bn_digits, $rec_mismatch_report['CardNo']); ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>   
-                                <td><?php echo $rec_mismatch_report['Department']; ?></td>                                                       
-                                <td class="edit_td">
-                                    <span data-card="<?php echo $rec_mismatch_report['CardNo']; ?>" id="first_<?php echo $counter; ?>" class="text">
-                                        <?php
-                                        $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
-                                        $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
-                                        if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
-                                            echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
-                                        }
-                                        ?>
-                                    </span>
-                                    <input type="text" value="<?php
+    <!--                                <td><?php //echo $rec_mismatch_report['BuildingName'];   ?></td>
+                                <td><?php //echo $rec_mismatch_report['Floor'];   ?></td>-->
+                                <td><?php echo $rec_mismatch_report['Department']; ?></td>
+    <!--                                <td><?php //echo $rec_mismatch_report['Line'];   ?></td>                                                          -->
+                                <td>
+                                    <?php
+                                    $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
+                                    $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('10:59:59'))) {
+                                        
                                         echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
                                     }
-                                    ?>" class="editbox" id="first_input_<?php echo $counter; ?>">
+                                    ?>
                                 </td> 
-                                <td class="edit_td">
-                                    <span data-card="<?php echo $rec_mismatch_report['CardNo']; ?>" id="last_<?php echo $counter; ?>" class="text">
-                                        <?php
-                                        $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
-                                        $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
-                                        if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
-                                            echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
-                                        }
-                                        ?>
-                                    </span>
-                                    <input type="text" value="<?php
+                                <td>
+                                    <?php
+                                    $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
+                                    $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
                                     if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
                                         echo str_replace(range(0, 9), $bn_digits, date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime']))));
                                     }
-                                    ?>" class="editbox" id="last_input_<?php echo $counter; ?>">
+                                    ?>
                                 </td> 
                                 <td>
                                     <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
@@ -163,62 +131,12 @@
     </div>
 </div>
 
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
-<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
-<script type="text/javascript" src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<script type="text/javascript">
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
+<script src="<?php echo base_url(); ?>js/jquery.dataTables1.js"></script>
+<script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+
     $(document).ready(function() {
-        //For Row Edit Section
-        $(".edit_tr").click(function()
-        {
-            var ID = $(this).attr('id');
-            $("#first_" + ID).hide();
-            $("#last_"+ID).hide();
-            $("#first_input_" + ID).show();
-            $("#last_input_"+ID).show();
-        }).change(function()
-        {
-            var ID = $(this).attr('id');
-            var oldDate = $("#first_" + ID).text();
-            var CardNo = $("#first_" + ID).data('card');
-            var first = $("#first_input_" + ID).val();
-            var last = $("#last_input_"+ID).val();
-            var dataString = 'CardNo=' + CardNo + '&DateTime=' + first + '&DateTimeOld=' + oldDate;
-            $("#first_" + ID).html('<img src="load.gif" />'); // Loading image
-
-            if (first.length > 0 && last.length > 0)
-            {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url(); ?>con_pro_employee_monthly_report/update",
-                    data: dataString,
-                    cache: false,
-                    success: function(html)
-                    {
-                        $("#first_" + ID).html(first);
-                    }
-                });
-            }
-            else
-            {
-                alert('Enter something.');
-            }
-
-        });
-        // Edit input box click action
-        $(".editbox").mouseup(function()
-        {
-            return false;
-        });
-
-// Outside click action
-        $(document).mouseup(function()
-        {
-            $(".editbox").hide();
-            $(".text").show();
-        });
-
-        //For Data Table
         var table = $('#daily_log').DataTable();
         $("#daily_log tfoot th").each(function(i) {
             var select = $('<select><option value=""></option></select>')

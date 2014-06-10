@@ -131,8 +131,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $EndDate = $now . ' 23:59:59';
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-        //$StartDate = date('Y-m-d H:i:s', strtotime("2014-03-03 00:00:01"));
-        //$EndDate = date('Y-m-d H:i:s', strtotime("2014-03-03 23:59:59"));
         $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
         $mismatch_information = array();
         $abc = array();
