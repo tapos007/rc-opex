@@ -15,8 +15,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $cardno = $this->input->post("CardNo");
         $InTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
         $OutTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('OutTime'))));
-        //echo $cardno . '<br/>' . $InTime . '<br/>' . $OutTime;
-        //exit();
         if (date('H:i:s', strtotime($InTime)) < date('H:i:s', strtotime('04:59:59'))) {
             $status = 'IN';
         } else {
@@ -41,16 +39,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             "Status" => $status,
             "DelStatus" => 'ACT'
         );
-//        echo '<pre>';
-//        print_r($Indata);
-//        
-//        echo '</pre>';
-//        echo '<pre>';
-//        print_r($Outdata);
-//        
-//        echo '</pre>';
-        //exit();
-
         $this->mod_pro_attn_mismatch_report->UpdateIncurrenctAccessLog($cardno, $InTime);
         $this->mod_access_log->insert($Indata);
         $this->mod_access_log->insert($Outdata);
@@ -63,8 +51,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $cardno = $this->input->post("CardNo");
         $InTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
         $OutTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('OutTime'))));
-        //echo $cardno . '<br/>' . $InTime . '<br/>' . $OutTime;
-        //exit();
         if (date('H:i:s', strtotime($InTime)) < date('H:i:s', strtotime('04:59:59'))) {
             $status = 'IN';
         } else {
@@ -89,22 +75,11 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             "Status" => $status,
             "DelStatus" => 'ACT'
         );
-//        echo '<pre>';
-//        print_r($Indata);
-//        
-//        echo '</pre>';
-//        echo '<pre>';
-//        print_r($Outdata);
-//        
-//        echo '</pre>';
-//        exit();
-
         $this->mod_pro_attn_mismatch_report->UpdateIncurrenctAccessLog($cardno, $InTime);
         $this->mod_access_log->insert($Indata);
         $this->mod_access_log->insert($Outdata);
 
         redirect('con_pro_attn_mismatch_report/index', 'refresh');
-        //redirect('con_pro_attn_mismatch_report/edit1/' . $cardno);
     }
 
     public function index() {
@@ -125,8 +100,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         } else {
             $now = date('Y-m-d', strtotime('-1 day', now()));
         }
-//        echo $now;
-//        exit();
         $StartDate = $now . ' 00:00:01';
         $EndDate = $now . ' 23:59:59';
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
@@ -134,7 +107,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
         $mismatch_information = array();
         $abc = array();
-        //$mismatch_information = $incorrect_access_log;
 
         foreach ($incorrect_access_log as $access_log) {
             $mismatch_information['CardNo'] = $access_log->CardNo;
@@ -156,60 +128,10 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->load->view('main_page', $data);
     }
 
-//    public function json_encode_result() {
-//        $BuildingName = $this->session->userdata('BuildingName');
-//        $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
-//        $Floor = $this->session->userdata('Floor');
-//        $data['floor'] = $Floor;
-//        $Department = $this->session->userdata('Department');
-//        if ($this->session->userdata('Role') == 'Admin') {
-//            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
-//        } else {
-//            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
-//        }
-//        date_default_timezone_set('Asia/Dacca');
-//        if ($this->input->post('Date')) {
-//            $mydate = $this->input->post('Date');
-//            $now = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
-//        } else {
-//            $now = date('Y-m-d', strtotime('-1 day', now()));
-//        }
-////        echo $now;
-////        exit();
-//        $StartDate = $now . ' 00:00:01';
-//        $EndDate = $now . ' 23:59:59';
-//        $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
-//        $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-//        //$StartDate = date('Y-m-d H:i:s', strtotime("2014-03-03 00:00:01"));
-//        //$EndDate = date('Y-m-d H:i:s', strtotime("2014-03-03 23:59:59"));
-//        $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
-//        $mismatch_information = array();
-//        $abc = array();
-//        //$mismatch_information = $incorrect_access_log;
-//
-//        foreach ($incorrect_access_log as $access_log) {
-//            $mismatch_information['CardNo'] = $access_log->CardNo;
-//            $mismatch_information['DateTime'] = $access_log->DateTime;
-//            $data12 = $this->retrieve_employee_information($access_log->CardNo, $employee_details);
-//
-//            if ($data12 != NULL) {
-//                $mismatch_information['Name'] = $data12['Name'];
-//                $mismatch_information['BuildingName'] = $data12['BuildingName'];
-//                $mismatch_information['Floor'] = $data12['Floor'];
-//                $mismatch_information['Department'] = $data12['Department'];
-//                $mismatch_information['Line'] = $data12['Line'];
-//                array_push($abc, $mismatch_information);
-//            }
-//        }
-//        echo json_encode($abc);
-//        //$data['tbl_mismatch_report'] = $abc;
-//    }
-
     public function get_department_name() {
         $BuildingName = $this->input->post('Building');
         $Floor = $this->input->post('Floor');
         $DepartmentName = $this->mod_monthly_wages_detail->get_department_by_name($BuildingName, $Floor);
-
         echo json_encode($DepartmentName);
     }
 
@@ -235,7 +157,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
         $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
-
         $mismatch_information = array();
         $abc = array();
 
@@ -257,11 +178,8 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
     }
 
     public function retrieve_employee_information($card_no, $myvalue) {
-        //$count = 0;
         $abc = array();
         foreach ($myvalue as $rec_employee_info) {
-            //$count++;
-
             if ($card_no == $rec_employee_info->CardNo) {
                 $abc['Name'] = $rec_employee_info->Name;
                 $abc['BuildingName'] = $rec_employee_info->BuildingName;
@@ -272,18 +190,11 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
                 return $abc;
             }
         }
-//        $abc['Name'] = 'Not Found';
-//        $abc['CardNo'] = 'Not Found';        
-//        $abc['Department'] = 'Not Found';
-//        $abc['Line'] = 'Not Found';        
-//        return $abc;
     }
 
     public function edit() {
         $cardNo = $this->input->post('CardNo');
         $time = $this->input->post('Date');
-        //echo $cardNo.'<br/>'.$time;
-        //exit();
         $data['tbl_mismatch_report'] = $this->mod_pro_attn_mismatch_report->view_by_CardNo($cardNo, $time);
         $data['container'] = 'temp/prev_attn_mismatch_report/edit';
         $this->load->view('main_page', $data);
@@ -291,13 +202,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 
     public function edit1() {
         $cardNo = $this->uri->segment(3);
-        //   echo $cardNo;
-        //echo $cardNo.'<br/>'.$time;
-        //exit();
         $data['tbl_mismatch_report'] = $this->mod_pro_attn_mismatch_report->view_by_CardNo1($cardNo);
-//          echo '<pre>';
-//          print_r($data['tbl_mismatch_report']);
-//          echo '</pre>';
         $data['container'] = 'temp/prev_attn_mismatch_report/edit';
         $this->load->view('main_page', $data);
     }
@@ -305,10 +210,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
     public function systemGeneratedCurrection($Month) {
         $email = 'AUTO';
         $all_mismacthes = $this->mod_incurrect_access_log->getGruoupedData($Month);
-//        echo '<pre>';
-//        print_r($all_mismacthes);
-//        echo '</pre>';
-        //exit();
         $all_currect_data = array();
         $limit = count($all_mismacthes) - 1;
         $currect_data_index = 0;
@@ -367,12 +268,9 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $EndDate = $now . ' 23:59:59';
         $StartDate = date('Y-m-d H:i:s', strtotime($StartDate));
         $EndDate = date('Y-m-d H:i:s', strtotime($EndDate));
-        //$StartDate = date('Y-m-d H:i:s', strtotime("2014-03-03 00:00:01"));
-        //$EndDate = date('Y-m-d H:i:s', strtotime("2014-03-03 23:59:59"));
         $incorrect_access_log = $this->mod_pro_attn_mismatch_report->incorrect_access_log($StartDate, $EndDate);
         $mismatch_information = array();
         $abc = array();
-        //$mismatch_information = $incorrect_access_log;
 
         foreach ($incorrect_access_log as $access_log) {
             $mismatch_information['CardNo'] = $access_log->CardNo;
@@ -392,11 +290,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
     }
 
     public function PopulateSalarySheet($first_half_attendance) {
-//        echo '<pre>';
-//        print_r($first_half_attendance);
-//        echo '</pre>';
-//        exit();
-
         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
