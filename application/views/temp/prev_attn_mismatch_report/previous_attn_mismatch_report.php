@@ -50,7 +50,7 @@
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" value="<?php if ($this->input->post('Date')) echo date('d-m-Y', strtotime(str_replace('-', '/', $this->input->post('Date')))); ?>" class="form-control" placeholder="তারিখ নির্বাচন  করুন"/>
+                        <input type="text" name="Date" id="Date" value="<?php if ($this->input->post('Date')) echo date('m-d-Y', strtotime(str_replace('-', '/', $this->input->post('Date')))); ?>" class="form-control" placeholder="তারিখ নির্বাচন  করুন"/>
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
                     <?php echo form_close(); ?>

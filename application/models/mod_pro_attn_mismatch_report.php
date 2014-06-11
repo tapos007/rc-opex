@@ -22,6 +22,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
+        $this->db->order_by('Department asc, Line asc');
         $query = $this->db->get();
         return $query->result();
     }  
@@ -30,6 +31,8 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
         $this->db->where('Floor', $floor);
+        $this->db->where('Status', 'ACT');
+        $this->db->order_by('Department asc, Line asc');
         $query = $this->db->get();
         return $query->result();
     }  
@@ -58,7 +61,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
     }
     
     public function incorrect_access_log($startdate, $enddate) {
-       $query = $this->db->query("SELECT CardNo, DateTime FROM access_log WHERE DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and Status = '5' GROUP BY CardNo");        
+       $query = $this->db->query("SELECT CardNo, DateTime FROM access_log WHERE DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and Status = '0' GROUP BY CardNo");        
        return $query->result();
     }
         
