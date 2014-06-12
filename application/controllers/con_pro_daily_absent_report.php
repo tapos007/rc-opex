@@ -16,39 +16,39 @@ class Con_pro_daily_absent_report extends CI_Controller {
     }
 
     public function index() {
+        date_default_timezone_set('Asia/Dacca');
+        $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));   
+        //$StartDate = date('Y-m-d', strtotime('-1 day', strtotime($StartDate)));
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
         $data['floor'] = $Floor;
         $Department = $this->session->userdata('Department');
         if ($this->session->userdata('Role') == 'Admin') {
-            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
+            $employee_details_for_absent_report = $this->mod_pro_attn_mismatch_report->employee_information_for_absent_report_admin($BuildingName, $StartDate);
         } else {
-            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
+            $employee_details_for_absent_report = $this->mod_pro_attn_mismatch_report->employee_information_for_absent_report_operators($BuildingName, $Floor, $StartDate);
         }
-        //714        
-        date_default_timezone_set('Asia/Dacca');
-        $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));   
-        $StartDate = date('Y-m-d', strtotime('-1 day', strtotime($StartDate)));
-        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
+        //714                
+        //$attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
 
-        $limit1 = count($employee_details) - 1;
-        $absent_employee_list = array();
-        foreach ($employee_details as $an_employee_details) {
-            $absent_employee['CardNo'] = $an_employee_details->CardNo;
-            $absent_employee['Name'] = $an_employee_details->Name;
-            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
-            $absent_employee['Floor'] = $an_employee_details->Floor;
-            $absent_employee['Department'] = $an_employee_details->Department;
-            $absent_employee['Line'] = $an_employee_details->Line;
-            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
-                array_push($absent_employee_list, $absent_employee);
-            }
-        }
+//        $limit1 = count($employee_details) - 1;
+//        $absent_employee_list = array();
+//        foreach ($employee_details as $an_employee_details) {
+//            $absent_employee['CardNo'] = $an_employee_details->CardNo;
+//            $absent_employee['Name'] = $an_employee_details->Name;
+//            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
+//            $absent_employee['Floor'] = $an_employee_details->Floor;
+//            $absent_employee['Department'] = $an_employee_details->Department;
+//            $absent_employee['Line'] = $an_employee_details->Line;
+//            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
+//                array_push($absent_employee_list, $absent_employee);
+//            }
+//        }
         $data['tbl_leave_category'] = $this->mod_leave_detail->get_leave_type_names();
         $data['tbl_work_hour_breakdown'] = $this->mod_set_work_hour_breakdown->view1();
         $data['showDate'] = date('d-m-Y', strtotime('-1 day', now()));
-        $data['tbl_absent_report'] = $absent_employee_list;
+        $data['tbl_absent_report'] = $employee_details_for_absent_report;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
         $this->load->view('main_page', $data);
     }

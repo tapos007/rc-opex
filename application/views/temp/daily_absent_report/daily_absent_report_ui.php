@@ -83,21 +83,21 @@
                     <tbody>
                         <?php foreach ($tbl_absent_report as $rec_absent_report) { ?>
                             <tr>         
-                                <td><?php echo $rec_absent_report['CardNo']; ?></td>
-                                <td><?php echo $rec_absent_report['Name']; ?></td>
+                                <td><?php echo $rec_absent_report->CardNo; ?></td>
+                                <td><?php echo $rec_absent_report->Name; ?></td>
                                 <td>
-                                    <?php foreach ($tbl_work_hour_breakdown as $rec_work_hour_breakdown) { ?>
-                                        <label class="label label-primary"><?php echo $rec_work_hour_breakdown->StartTime; ?></label> &nbsp; 
-                                    <?php } ?>
+                                    <div class="col-sm-8">
+                                        <?php foreach ($tbl_work_hour_breakdown as $rec_work_hour_breakdown) { ?>
+                                            <input type="text" class="form-control" name="in_time" id="in_time" value="<?php echo $rec_work_hour_breakdown->StartTime; ?>"/> &nbsp; 
+                                        <?php } ?>                                    
+                                    </div>
                                     <a class="btn btn-xs btn-success"><i class="glyphicon glyphicon-check"></i></a>
-                                    <!--<a class="btn btn-xs btn-default"><i class="glyphicon glyphicon-remove"></i></a>-->
-                                    <?php //echo $rec_absent_report['Department']; ?>
                                 </td>
                                 <td>
                                     <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#InsertLeave"><i class="glyphicon glyphicon-save"></i> ছুটি মঞ্জরের করুন</button>
                                 </td>
                                 <td>
-                                    <a href="<?php echo base_url(); ?>con_pro_daily_absent_report/attendanceRectifaction/<?php echo $rec_absent_report['CardNo']; ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
+                                    <a href="<?php echo base_url(); ?>con_pro_daily_absent_report/attendanceRectifaction/<?php echo $rec_absent_report->CardNo; ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
                                 </td>
                             </tr>
                         <?php } ?>

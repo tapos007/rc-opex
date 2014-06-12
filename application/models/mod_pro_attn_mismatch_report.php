@@ -39,6 +39,23 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+    
+    public function employee_information_for_absent_report_admin($BuildingName, $DateTime) {        
+        $this->db->select('CardNo, Name')->from('tbl_employee_profile');
+        $this->db->where('CardNo NOT IN (Select CardNo FROM access_log WHERE DateTime LIKE "'.$DateTime.'%")', NULL, FALSE);
+        $this->db->where('BuildingName', $BuildingName);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function employee_information_for_absent_report_operators($BuildingName, $Floor, $DateTime) {        
+        $this->db->select('CardNo, Name')->from('tbl_employee_profile');
+        $this->db->where('CardNo NOT IN (Select CardNo FROM access_log WHERE DateTime LIKE "'.$DateTime.'%")', NULL, FALSE);
+        $this->db->where('BuildingName', $BuildingName);
+        $this->db->where('Floor', $Floor);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function specific_employee_information_report($buildingName, $floor, $department, $line) {
         $this->db->select('*');
