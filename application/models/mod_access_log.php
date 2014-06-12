@@ -101,7 +101,7 @@ class Mod_access_log extends CI_Model {
     public function GetDateSpecificCardNo($date) {
         $first_date_time = $date . ' 00:00:01';
         $last_date_time = $date . ' 23:59:59';
-        $query = $this->db->query("SELECT CardNo,DateTime FROM `tbl_access_log` where DateTime between '" . $first_date_time . "' and '" . $last_date_time . "' group by CardNo order by CardNo");
+        $query = $this->db->query("SELECT CardNo,DateTime FROM `access_log` where DateTime between '" . $first_date_time . "' and '" . $last_date_time . "' group by CardNo order by CardNo");
 //        echo count($query->result_array());
 //        exit();
         return $query->result_array();

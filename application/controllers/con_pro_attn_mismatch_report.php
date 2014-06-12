@@ -1,6 +1,7 @@
 <?php
 
 class Con_pro_attn_mismatch_report extends CI_Controller {
+
     public function __construct() {
         parent::__construct();
         $this->load->model('mod_pro_attn_mismatch_report');
@@ -300,7 +301,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
             $mismatch_information['CardNo'] = $access_log->CardNo;
             $mismatch_information['DateTime'] = $access_log->DateTime;
             $data12 = $this->retrieve_employee_information($access_log->CardNo, $employee_details);
-
             if ($data12 != NULL) {
                 $mismatch_information['Name'] = $data12['Name'];
                 $mismatch_information['BuildingName'] = $data12['BuildingName'];
@@ -313,40 +313,245 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->PopulateSalarySheet($abc);
     }
 
-    public function PopulateSalarySheet($first_half_attendance) {
+    public function aasort(&$array, $key) {
+        $sorter = array();
+        $ret = array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $sorter[$ii] = $va[$key];
+        }
+        asort($sorter);
+        foreach ($sorter as $ii => $va) {
+            $ret[$ii] = $array[$ii];
+        }
+        $array = $ret;
+    }
+
+    public function test_excel($first_half_attendance) {
+        $date = date('d M, Y', strtotime($first_half_attendance[0]['DateTime']));
+        $total = count($first_half_attendance);
+
+
         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+        require_once APPPATH . "/third_party/PHPExcel.php";
+        date_default_timezone_set('Asia/Dacca');
+        error_reporting(E_ALL);
+        ini_set('display_errors', TRUE);
+        ini_set('display_startup_errors', TRUE);
+
+        define('EOL', (PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
+
+
+
+        /** Include PHPExcel */
+// Create new PHPExcel object
+        echo date('H:i:s'), " Create new PHPExcel object", EOL;
+        $objPHPExcel = new PHPExcel();
+
+//set margin
+        $sheet = $objPHPExcel->getActiveSheet();
+        $pageMargins = $sheet->getPageMargins();
+
+// margin is set in inches (0.5cm)
+
+
+        $pageMargins->setTop(1.397058824);
+        $pageMargins->setBottom(1.166666667);
+
+//set border style
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => 'FF000000'),
+                ),
+            ),
+        );
+
+
+// Set print headers
+        $objPHPExcel->getActiveSheet()
+                ->getHeaderFooter()->setOddHeader("&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nMISSMATCH REPORT(" . $date . ") TOTAL MISSMATCH : " . $total);
+        $objPHPExcel->getActiveSheet()
+                ->getHeaderFooter()->setEvenHeader('&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nMISSMATCH REPORT(".$date.") TOTAL MISSMATCH : ".$total');
+
+// Set print footers
+        $objPHPExcel->getActiveSheet()
+                ->getHeaderFooter()->setOddFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+        $objPHPExcel->getActiveSheet()
+                ->getHeaderFooter()->setEvenFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1:G' . $total)->applyFromArray($styleArray);
+        //wrap context
+        $objPHPExcel->getActiveSheet()->getStyle('A1:G' . $total)->getAlignment()->setWrapText(true);
+// Set document properties
+        echo date('H:i:s'), " Set document properties", EOL;
+        $objPHPExcel->getProperties()->setCreator("RCIS")
+                ->setLastModifiedBy("RCIS")
+                ->setTitle("MISSMATCH REPORT SDL1")
+                ->setSubject("MISSMATCH REPORT SDL1")
+                ->setDescription("MISSMATCH REPORT SDL1")
+                ->setKeywords("MISSMATCH REPORT SDL1")
+                ->setCategory("MISSMATCH REPORT SDL1");
+
+
+// Create a first sheet
+        //echo date('H:i:s'), " Add data and page breaks", EOL;
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()
+                ->setCellValue('A1', 'কার্ড নং')
+                ->setCellValue('B1', 'নাম')
+                ->setCellValue('C1', 'বিভাগ')
+                ->setCellValue('D1', 'প্রবেশ সময়')
+                ->setCellValue('E1', 'বাহির সময় ')
+                ->setCellValue('F1', 'মন্তব্য')
+                ->setCellValue('G1', 'স্বাক্ষর');
+
+
+// Add data
+        for ($index = 0; $index < $total; $index++) {
+            if ($first_half_attendance[$index]['Department'] == $first_half_attendance[$index - 1]['Department']) {
+                $objPHPExcel->getActiveSheet()->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']));
+                $objPHPExcel->getActiveSheet()->setCellValue('B' . ($index + 2), $first_half_attendance[$index]['Name']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Department']);
+                $objPHPExcel->getActiveSheet()->setCellValue('D' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('g:i:s', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
+                $objPHPExcel->getActiveSheet()->setCellValue('E' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('g:i:s', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
+            } else {
+                $objPHPExcel->getActiveSheet()->setBreak('A' . $index + 2, PHPExcel_Worksheet::BREAK_ROW);
+                $objPHPExcel->getActiveSheet()->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']));
+                $objPHPExcel->getActiveSheet()->setCellValue('B' . ($index + 2), $first_half_attendance[$index]['Name']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Department']);
+                $objPHPExcel->getActiveSheet()->setCellValue('D' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('g:i:s', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
+                $objPHPExcel->getActiveSheet()->setCellValue('E' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('g:i:s', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
+            }
+        }
+
+        $objPHPExcel->setActiveSheetIndex(0);
+
+
+        date_default_timezone_set('Asia/Dacca');
+        header('Content-Type: application/vnd.ms-excel');
+        $fileName = date('d-m-Y_g:i_a', now());
+
+        header("Content-Disposition: attachment;filename=Mismactch_Report_" . $fileName . ".xls ");
+        header('Cache-Control: max-age=0');
+// If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+// If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save(str_replace('.php', '.xlsx', __FILE__));
+
+        $this->load->helper('download');
+        $data = file_get_contents(base_url() . 'application/controller/con_pro_attn_mismatch_report.xlsx'); // Read the file's contents
+        $name = 'mismatch.xlsx';
+//
+        force_download($name, $data);
+
+        //echo __FILE__;
+    }
+
+    public function PopulateSalarySheet($first_half_attendance) {
+        $this->aasort($first_half_attendance, "Department");
+         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("RCIS")
                 ->setLastModifiedBy("RCIS")
                 ->setTitle("Mismatch Report")
                 ->setSubject("CopyRight RCIS")
-                ->setDescription("Absent Report")
-                ->setKeywords("Absent Report")
-                ->setCategory("Absent Report");
+                ->setDescription("Mismatch Report")
+                ->setKeywords("Mismatch Report")
+                ->setCategory("Mismatch Report");
 // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A1', 'ক্রমিক নং')
-                ->setCellValue('B1', 'কার্ড নং')
-                ->setCellValue('C1', 'নাম')
-                ->setCellValue('D1', 'বিভাগ')
-				->setCellValue('E1', 'প্রবেশ/বাহির সময় ');
+                ->setCellValue('A1', 'কার্ড নং')
+                ->setCellValue('B1', 'নাম')
+                ->setCellValue('C1', 'বিভাগ')
+                ->setCellValue('D1', 'প্রবেশ সময়')
+                ->setCellValue('E1', 'বাহির সময় ')
+                ->setCellValue('F1', 'মন্তব্য')
+                ->setCellValue('G1', 'স্বাক্ষর');
+        //set margin
+        $sheet = $objPHPExcel->getActiveSheet(0);
+        $pageMargins = $sheet->getPageMargins();
 
-        $limit = count($first_half_attendance) - 1;
-        for ($index = 0; $index <= $limit; $index++) {
+// margin is set in inches (0.5cm)
 
+
+        $pageMargins->setTop(1.397058824);
+        $pageMargins->setBottom(1.166666667);
+
+
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => 'FF000000'),
+                ),
+            ),
+        );
+        $date = date('d M, Y', strtotime($first_half_attendance[0]['DateTime']));
+        $total = count($first_half_attendance);
+        
+//        //wrap context
+        //$objPHPExcel->getActiveSheet(0)->getStyle('B1:B' . ($total + 1))->getAlignment()->setWrapText(true);
+
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setOddHeader("&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nMISSMATCH REPORT(" . $date . ") TOTAL MISSMATCH : " . $total);
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setEvenHeader("&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nMISSMATCH REPORT(" . $date . ") TOTAL MISSMATCH : " . $total);
+
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setOddFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setEvenFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToPage(true);
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToHeight(0);
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToWidth(1);
+        $index = 2;
+        $flag = 0;
+        foreach ($first_half_attendance as $a) {
+            if($flag==0){
+                $temp = $a;
+                $flag=1;
+            }
+            
+            if ($a['Department'] != $temp['Department']) {
+                $objPHPExcel->getActiveSheet()->setBreak( 'A' . ($index-1), PHPExcel_Worksheet::BREAK_ROW );
+                $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, 'কার্ড নং')
+                ->setCellValue('B'.$index, 'নাম')
+                ->setCellValue('C'.$index, 'বিভাগ')
+                ->setCellValue('D'.$index, 'প্রবেশ সময়')
+                ->setCellValue('E'.$index, 'বাহির সময় ')
+                ->setCellValue('F'.$index, 'মন্তব্য')
+                ->setCellValue('G'.$index, 'স্বাক্ষর');
+                $temp = $a;
+                $index++;
+                $total++;
+            } 
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $index + 1))
-                    ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
-                    ->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Name'])
-                    ->setCellValue('D' . ($index + 2), $first_half_attendance[$index]['Department'])
-					->setCellValue('E' . ($index + 2), str_replace(range(0, 9), $bn_digits, date('d-m-Y g:i:s a', strtotime('+6 hours', strtotime($first_half_attendance[$index]['DateTime'])))));
+                    ->setCellValue('A' . $index, $a['CardNo'])
+                    ->setCellValue('B' . $index, $a['Name'])
+                    ->setCellValue('C' . $index, str_replace(range(0, 9), $bn_digits, $a['Department']));
+            if (date('H:i:s', strtotime('+6 hours', strtotime($a['DateTime']))) < 11) {
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $index, str_replace(range(0, 9), $bn_digits, date('H:i:s', strtotime('+6 hours', strtotime($a['DateTime'])))));
+            } else {
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $index, str_replace(range(0, 9), $bn_digits, date('H:i:s', strtotime('+6 hours', strtotime($a['DateTime'])))));
+            }
+            $index++;
         }
-
-
+        $objPHPExcel->getActiveSheet(0)->getStyle('A1:G' . ($total + 1))->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet(0)->setAutoFilter('C1:C' . ($total + 1));
         $objPHPExcel->setActiveSheetIndex(0);
-
-
+        //$objPHPExcel->getActiveSheet(0)->setAutoFilter('C1:C' . ($total + 1));
 // Redirect output to a client’s web browser (Excel5)
         date_default_timezone_set('Asia/Dacca');
         header('Content-Type: application/vnd.ms-excel');

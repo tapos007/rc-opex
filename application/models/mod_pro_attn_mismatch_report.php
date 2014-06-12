@@ -24,6 +24,7 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
+        $this->db->order_by('Department asc, Line asc');
         $query = $this->db->get();
         return $query->result();
     }
@@ -33,6 +34,8 @@ class Mod_pro_attn_mismatch_report extends CI_Model {
         $this->db->from('tbl_employee_profile');
         $this->db->where('BuildingName', $buildingName);
         $this->db->where('Floor', $floor);
+        $this->db->where('Status', 'ACT');
+        $this->db->order_by('Department asc, Line asc');
         $query = $this->db->get();
         return $query->result();
     }

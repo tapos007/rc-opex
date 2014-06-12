@@ -55,7 +55,10 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     public function Search() {
         $mydate = $this->input->post('Date');
-        $StartDate = date('Y-m-d', strtotime(str_replace('-', '/', $mydate)));
+//        echo $mydate.'<br/>';
+        $StartDate = date('Y-m-d', strtotime($mydate));
+//        echo $StartDate.'<br/>';
+//        exit();
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
@@ -103,6 +106,8 @@ class Con_pro_daily_absent_report extends CI_Controller {
     public function excelExport() {
         date_default_timezone_set('Asia/Dacca');
         $now = date('Y-m-d', strtotime($this->input->post('hDate')));
+//        echo $now.'<br/>';
+//        exit();
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
@@ -127,11 +132,26 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 array_push($absent_employee_list, $absent_employee);
             }
         }
-        $this->PopulateSalarySheet($absent_employee_list);
+
+        $this->PopulateSalarySheet($absent_employee_list, $now);
     }
 
-    public function PopulateSalarySheet($first_half_attendance) {
+    public function aasort(&$array, $key) {
+        $sorter = array();
+        $ret = array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $sorter[$ii] = $va[$key];
+        }
+        asort($sorter);
+        foreach ($sorter as $ii => $va) {
+            $ret[$ii] = $array[$ii];
+        }
+        $array = $ret;
+    }
 
+    public function PopulateSalarySheet($first_half_attendance, $date) {
+        $this->aasort($first_half_attendance, "Department");
         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
@@ -144,25 +164,79 @@ class Con_pro_daily_absent_report extends CI_Controller {
                 ->setCategory("Absent Report");
 // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A1', 'ক্রমিক নং')
-                ->setCellValue('B1', 'কার্ড নং')
-                ->setCellValue('C1', 'নাম')
-                ->setCellValue('D1', 'বিভাগ');
+                ->setCellValue('A1', 'কার্ড নং')
+                ->setCellValue('B1', 'নাম')
+                ->setCellValue('C1', 'বিভাগ')
+                ->setCellValue('D1', 'মন্তব্য')
+                ->setCellValue('E1', 'স্বাক্ষর');
+        //set margin
+        $sheet = $objPHPExcel->getActiveSheet(0);
+        $pageMargins = $sheet->getPageMargins();
 
-        
-        $limit = count($first_half_attendance) - 1;
-        for ($index = 0; $index <= $limit; $index++) {
-            
+// margin is set in inches (0.5cm)
+
+
+        $pageMargins->setTop(1.397058824);
+        $pageMargins->setBottom(1.166666667);
+
+
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => 'FF000000'),
+                ),
+            ),
+        );
+        $date = date('d M, Y', strtotime($date));
+        $total = count($first_half_attendance);
+        $objPHPExcel->getActiveSheet(0)->getStyle('A1:E' . ($total + 1))->applyFromArray($styleArray);
+//        //wrap context
+        //$objPHPExcel->getActiveSheet(0)->getStyle('B1:B' . ($total + 1))->getAlignment()->setWrapText(true);
+
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setOddHeader("&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nABSENT REPORT(" . $date . ") TOTAL ABSENT : " . $total);
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setEvenHeader("&C&18&K000000&B&UOPEX GROUP, BUILDING NAME : WG4, FLOOR : SDL1\nABSENT REPORT(" . $date . ") TOTAL ABSENT : " . $total);
+
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setOddFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+        $objPHPExcel->getActiveSheet(0)
+                ->getHeaderFooter()->setEvenFooter("&ROIC\nName : .............\nSIGNATURE : .............\nDATE & TIME : ............. &CHREX\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............&LTIMEKEEPER\nName : .............\nSIGNATURE : .............\nDATE & TIME : .............");
+
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToPage(true);
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToHeight(0);
+        $objPHPExcel->getActiveSheet(0)->getPageSetup()->setFitToWidth(1);
+
+        $index = 2;
+        $flag = 0;
+        foreach ($first_half_attendance as $a) {
+            if ($flag == 0) {
+                $temp = $a;
+                $flag = 1;
+            }
+            if ($a['Department'] != $temp['Department']) {
+                $objPHPExcel->getActiveSheet()->setBreak('A' . ($index - 1), PHPExcel_Worksheet::BREAK_ROW);
+                $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, 'কার্ড নং')
+                ->setCellValue('B'.$index, 'নাম')
+                ->setCellValue('C'.$index, 'বিভাগ')
+                ->setCellValue('D'.$index, 'মন্তব্য')
+                ->setCellValue('E'.$index, 'স্বাক্ষর');
+                $index++;
+                $total++;
+                $temp = $a;
+            }
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A' . ($index + 2), str_replace(range(0, 9), $bn_digits, $index + 1))
-                    ->setCellValue('B' . ($index + 2), str_replace(range(0, 9), $bn_digits, $first_half_attendance[$index]['CardNo']))
-                    ->setCellValue('C' . ($index + 2), $first_half_attendance[$index]['Name'])
-                    ->setCellValue('D' . ($index + 2), $first_half_attendance[$index]['Department']);
+                    ->setCellValue('A' . $index, $a['CardNo'])
+                    ->setCellValue('B' . $index, $a['Name'])
+                    ->setCellValue('C' . $index, str_replace(range(0, 9), $bn_digits, $a['Department']));
+            $index++;
         }
-
+         $objPHPExcel->getActiveSheet(0)->getStyle('A1:E' . ($total + 1))->applyFromArray($styleArray);
 
         $objPHPExcel->setActiveSheetIndex(0);
-
+        $objPHPExcel->getActiveSheet(0)->setAutoFilter('C1:C' . ($total + 1));
 
 // Redirect output to a client’s web browser (Excel5)
         date_default_timezone_set('Asia/Dacca');
@@ -234,7 +308,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $this->load->helper('download');
         force_download('sdl1_backup.zip', $backup);
     }
-    
+
     public function absent_report_new() {
         $data['container'] = 'temp/daily_absent_report/daily_absent_report';
         $this->load->view('main_page', $data);
