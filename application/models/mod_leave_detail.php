@@ -33,7 +33,7 @@ class Mod_leave_detail extends CI_Model {
     }
 
     public function get_leave_type_names() {
-        $this->db->select('CatagoryName');
+        $this->db->select('*');
         $this->db->from('tbl_leave_catagory');
         $query = $this->db->get();
         return $query->result();

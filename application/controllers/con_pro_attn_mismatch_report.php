@@ -8,6 +8,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->load->model('mod_incurrect_access_log');
         $this->load->model('mod_monthly_wages_detail');
         $this->load->model('mod_buil_sec_other');
+        $this->load->model('mod_set_work_hour_breakdown');
     }
 
     public function insert() {
@@ -108,9 +109,13 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $mismatch_information = array();
         $abc = array();
 
-        foreach ($incorrect_access_log as $access_log) {
+        foreach ($incorrect_access_log as $access_log) 
+        {
+            $mismatch_information['PID'] = $access_log->ID;
             $mismatch_information['CardNo'] = $access_log->CardNo;
             $mismatch_information['DateTime'] = $access_log->DateTime;
+            $mismatch_information['IP'] = $access_log->IP;
+            $mismatch_information['Status'] = $access_log->Status;
             $data12 = $this->retrieve_employee_information($access_log->CardNo, $employee_details);
 
             if ($data12 != NULL) {
@@ -122,10 +127,30 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
                 array_push($abc, $mismatch_information);
             }
         }
+//                echo '<pre>';
+//        print_r($incorrect_access_log);
+//        echo '</pre>';
+//        exit();
+        $data['tbl_work_hour_breakdown'] = $this->mod_set_work_hour_breakdown->view1();
         $data['showDate'] = $now;
         $data['tbl_mismatch_report'] = $abc;
         $data['container'] = 'temp/prev_attn_mismatch_report/previous_attn_mismatch_report';
         $this->load->view('main_page', $data);
+    }
+    
+    public function update_in_time() {
+        $ID = $this->input->post('ID');
+        $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime')))); 
+        $this->mod_pro_attn_mismatch_report->update_in_time($ID, $DateTime);
+    }
+    
+    public function insert_out_time() {
+        $CardNo = $this->input->post('CardNo');
+        $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
+        $IP = $this->input->post('IP');
+        $this->mod_pro_attn_mismatch_report->insert_out_time($CardNo, $DateTime, $IP);
+        $value = array('myinfo' => 'true');
+        echo json_encode($value);
     }
 
     public function get_department_name() {
@@ -171,7 +196,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
                 array_push($abc, $mismatch_information);
             }
         }
-
         $data['tbl_mismatch_report'] = $abc;
         $data['container'] = 'temp/prev_attn_mismatch_report/previous_attn_mismatch_report';
         $this->load->view('main_page', $data);

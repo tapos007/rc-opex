@@ -50,8 +50,6 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $CardNo = $this->input->post('CardNo');
         $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
         $DateTimeOld = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTimeOld'))));
-
-
         $this->mod_pro_employee_monthly_report->update_in_out_time($CardNo, $DateTime, $DateTimeOld);
     }
 
