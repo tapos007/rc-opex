@@ -92,7 +92,9 @@ class Mod_pro_employee_monthly_report extends CI_Model {
        $LikeDate = '2014-'.$Month."-1 00:00:00";
        $Month = (int)$Month + 1;
        $LikeDateEnd = '2014-'.$Month."-1 00:00:00";
-       $Q =  "select inc.CardNo, inc.DateTime,inc.CreatedBy, emp.Name, emp.Line, emp.Department from tbl_access_log as inc left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' order by DateTime";
+       $Q =  "select inc.CardNo,Date(DateTime), min(inc.DateTime),max(inc.DateTime),inc.CreatedBy, emp.Name, emp.Line, emp.Department from access_log as inc 
+              left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo =
+              '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' and inc.Status = 1 group by Date(DateTIme) order by Date(DateTime)";
        $quary = $this->db->query($Q);        
        return $quary->result_array();
     }
