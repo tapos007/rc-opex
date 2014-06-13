@@ -112,7 +112,7 @@ class Con_set_employee_info_detail extends CI_Controller {
         );
 
         $this->table->set_template($tmpl);
-        $this->table->set_heading('ক্রমিক নং', 'ভবনের নাম ', 'ফ্লোর', 'বিভাগ/সেকশন', 'লাইন', 'নাম ', 'পদবি', 'যোগদানের তারিখ', 'কার্ড নং', 'গ্রেড', 'বর্তমান বেতন', 'শেষ বর্ধিত তারিখ', 'শেষ বর্ধিত টাকা', 'মোবাইল নং', 'জাতীয় পরিচয় পত্র নং', 'পদোন্নতির তারিখ', 'পিতা/স্বামীর নাম', 'গ্রাম', 'ডাকঘর', 'থানা', 'জেলা', 'গ্রাম', 'ডাকঘর', 'থানা ', 'জেলা', 'রেফারেন্স', 'শিক্ষাগত যোগ্যতা', 'মন্তব্য');
+        $this->table->set_heading('ক্রমিক নং', 'ভবনের নাম ', 'ফ্লোর', 'বিভাগ/সেকশন', 'লাইন', 'নাম ', 'পদবি', 'যোগদানের তারিখ', 'কার্ড নং', 'গ্রেড', 'বর্তমান বেতন', 'শেষ বর্ধিত তারিখ', 'শেষ বর্ধিত টাকা', 'মোবাইল নং', 'জাতীয় পরিচয় পত্র নং', 'পদোন্নতির তারিখ', 'পিতা/স্বামীর নাম', 'গ্রাম', 'ডাকঘর', 'থানা', 'জেলা', 'গ্রাম', 'ডাকঘর', 'থানা ', 'জেলা', 'রেফারেন্স', 'শিক্ষাগত যোগ্যতা', 'মন্তব্য');
         $html = $this->table->generate($this->mod_set_employee_info_detail->search_employee_info_details_all_records($Department, $EmployeeName, $CardNo, $ContactNo, $FromGrossSalary, $ToGrossSalary, $NID, $limit, $offset)) . $this->jquery_pagination->create_links();
 
         echo $html;
@@ -218,7 +218,7 @@ class Con_set_employee_info_detail extends CI_Controller {
     }
 
     public function test() {
-        $query = $this->mod_set_employee_info_detail->search_employee_info_details_all_records('', 'মোঃ শাখাওয়াত ইসলাম', '', '', '', '', '', '', '');
+        $query = $this->mod_set_employee_info_detail->search_employee_info_details_all_records('', 'মোঃ শাখাওয়াত ইসলাম', '', '', '', '', '', '', '');
         echo $query->num_rows;
         echo '<br />';
         print_r($query->result());
@@ -232,8 +232,8 @@ class Con_set_employee_info_detail extends CI_Controller {
 ////                echo '</br>';
 //                $this->mod_access_log->CardNo = '' . $id;
 //                $this->mod_access_log->DateTime = date("Y-m-d ", strtotime($date));
-//                $data['tbl_access_log'] = $this->mod_access_log->view_by_id();
-//                $m = count($data['tbl_access_log']);
+//                $data['access_log'] = $this->mod_access_log->view_by_id();
+//                $m = count($data['access_log']);
 //            }
 //        }
 //        exit();
@@ -246,8 +246,8 @@ class Con_set_employee_info_detail extends CI_Controller {
 //        if ($this->input->post('submit') == 'Search') {
 //            $this->mod_access_log->CardNo = $this->input->post('CardNo');
 //            $this->mod_access_log->DateTime = date("Y-m-d ", strtotime($this->input->post('DateTime')));
-//            $data['tbl_access_log'] = $this->mod_access_log->view_by_id();
-//            $m = count($data['tbl_access_log']);
+//            $data['access_log'] = $this->mod_access_log->view_by_id();
+//            $m = count($data['access_log']);
 //            if (!($m % 2) == 0)
 //                $data['msg'] = 'This User has some problems with access';
 //            $data['container'] = 'temp/daily_report_generate/view';

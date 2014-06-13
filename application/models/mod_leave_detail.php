@@ -90,7 +90,8 @@ class Mod_leave_detail extends CI_Model {
 //    public function getLongData() {
 //        
 //        $this->db->select('*');
-//        $this->db->from('tbl_access_log');
+//        $this->db->from('access_log'); //access_log**
+//$this->db->where('Status', 1);
 //        $this->db->order_by('cardno asc, datetime asc'); 
 //        $query = $this->db->get();
 //        return $query->result();

@@ -7,21 +7,24 @@ class Mod_access_log_raw extends CI_Model {
     public $Ip;
 
     public function insert_batch_random_data($data) {
-        $this->db->insert_batch('tbl_access_log_raw', $data);
+        $this->db->insert_batch('access_log', $data);
     }
 
     //Update Query in Course table ===========================================================
     //View Course Information ===================================================
     public function view() {
         $this->db->select('*');
-        $this->db->from('tbl_access_log_raw');
+        $this->db->from('access_log');
+		$this->db->where('Status', 0);
+		$this->db->where('Status', 1);
         $query = $this->db->get();
         return $query->result();
     }
 
     public function view_by_id() {
         $this->db->select('*');
-        $this->db->from('tbl_access_log_raw');
+        $this->db->from('access_log'); //access_log_raw**
+		$this->db->where('Status', 0);
         $this->db->where('CardNo', $this->CardNo);
         $this->db->where('InTime BETWEEN ' . '"' . date("Y-m-d H:i:s", strtotime($this->DateTime . ' 00:00:01')) . '"' . ' AND ' . '"' . date("Y-m-d H:i:s", strtotime($this->DateTime . ' 23:59:59')) . '"', NULL, FALSE);
         $query = $this->db->get();
@@ -45,7 +48,8 @@ class Mod_access_log_raw extends CI_Model {
     public function getLongData() {
 
         $this->db->select('*');
-        $this->db->from('tbl_access_log_raw');
+        $this->db->from('access_log'); //access_log_raw**
+		$this->db->where('Status', 0);
         $this->db->order_by('CardNo asc, InTime asc');
         $query = $this->db->get();
         return $query->result();
@@ -58,20 +62,21 @@ class Mod_access_log_raw extends CI_Model {
     public function getLongDataArray() {
 
         $this->db->select('*');
-        $this->db->from('tbl_access_log_raw');
+        $this->db->from('access_log'); //access_log_raw**
+		$this->db->where('Status', 0);
         $this->db->order_by('CardNo asc, InTime asc');
         $query = $this->db->get();
         return $query->result_array();
     }
 
     public function TruncateInvalidData() {
-        $this->db->query("DELETE FROM  `tbl_access_log_raw` WHERE  `InTime` =  '0000-00-00'");
+        $this->db->query("DELETE FROM tbl_access_log_raw WHERE  `InTime` =  '0000-00-00'");
     }
 
     public function GetDistinctDates($Month) {
 
         $query = $this->db->query("SELECT DATE(  `InTime` ) 
-                                    FROM tbl_access_log_raw WHERE InTime LIKE  '%-" . $Month . "-%'
+                                    FROM access_log WHERE STATUS = 0 and  InTime LIKE  '%-" . $Month . "-%'
                                     GROUP BY DATE(  `InTime` ) ");
         return $query->result_array();
     }
@@ -84,8 +89,7 @@ class Mod_access_log_raw extends CI_Model {
         $lastDateTime = $lastDate . ' 23:59:59';
         //echo $firstDateTime.'<br/>'.$lastDateTime;
         //exit();
-        $query = $this->db->query("SELECT DATE(  `InTime` ) FROM tbl_access_log_raw 
-                                    where Intime between '" . $firstDateTime . "' and '" . $lastDateTime .
+        $query = $this->db->query("SELECT DATE(  `InTime` ) FROM access_log WHERE STATUS = 0 and  Intime between '" . $firstDateTime . "' and '" . $lastDateTime .
                 "' GROUP BY DATE(  `InTime` )");
         return $query->result_array();
     }
@@ -93,9 +97,9 @@ class Mod_access_log_raw extends CI_Model {
     public function getDateSpecificLongData($date) {
         $first_date_time = $date . ' 00:00:01';
         $last_date_time = $date . ' 23:59:59';
-        $query = $this->db->query("SELECT * FROM `tbl_access_log_raw` WHERE intime between '" . $first_date_time . "' and '" . $last_date_time . "' group by CardNo order by CardNo asc");
+        $query = $this->db->query("SELECT * FROM access_log WHERE Status = 0 intime between '" . $first_date_time . "' and '" . $last_date_time . "' group by CardNo order by CardNo asc");
 //        echo '<pre>';
-//        print_r("SELECT distinct(cardno) FROM `tbl_access_log_raw` WHERE intime between '".$first_date_time."' and '".$last_date_time."' order by CardNo asc");
+//        print_r("SELECT distinct(cardno) FROM tbl_access_log_raw WHERE intime between '".$first_date_time."' and '".$last_date_time."' order by CardNo asc");
 //        echo '</pre>';
 //        exit();
         return $query->result_array();
@@ -107,7 +111,8 @@ class Mod_access_log_raw extends CI_Model {
         $this->db->select('*');
         $this->db->where('InTime >=', date('Y-m-d H:i:s', strtotime($first_date_time)));
         $this->db->where('InTime <=', date('Y-m-d H:i:s', strtotime($last_date_time)));
-        $this->db->from('tbl_access_log_raw');
+        $this->db->from('access_log'); //access_log_raw**
+		$this->db->where('Status', 0);
         $this->db->order_by('cardno asc, InTime asc');
         $query = $this->db->get();
 //        echo '<pre>';

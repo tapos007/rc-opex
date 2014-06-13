@@ -303,7 +303,7 @@ class Mod_set_employee_info_detail extends CI_Model {
     }
 
     public function attendance_log($DateTime) {
-        $query = $this->db->query("SELECT CardNo FROM tbl_access_log WHERE DateTime like '%" . $DateTime . "%' group by CardNo");
+        $query = $this->db->query("SELECT CardNo FROM  access_log WHERE status = 1 and DateTime like '%" . $DateTime . "%' group by CardNo");
 
         return $query->result();
     }

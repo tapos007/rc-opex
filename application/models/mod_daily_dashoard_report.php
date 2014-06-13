@@ -15,13 +15,13 @@ class Mod_daily_dashoard_report extends CI_Model {
 
     public function view() {
         $this->db->where("Date >= DATE_ADD(CURDATE(), INTERVAL '-7' DAY) limit 7");
-        $query = $this->db->get('tbl_dashboard_report');    
+        $query = $this->db->get('access_log');    
         return $query->result();
     }
     
     public function get_daily_log(){
         $this->db->where('date', 'CURDATE()', FALSE);
-        $query = $this->db->get('tbl_dashboard_report');
+        $query = $this->db->get('access_log');
         return $query->result();
     }
     

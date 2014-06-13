@@ -1,7 +1,7 @@
 <?php
 class Mod_pro_employee_access_log extends CI_Model {    
     public function search_record_count($searchterm) {
-        $sql = "SELECT COUNT(*) As cnt FROM tbl_access_log WHERE CardNo LIKE '%" . $searchterm . "%'";
+        $sql = "SELECT COUNT(*) As cnt FROM  access_log WHERE status = 1 and CardNo LIKE '%" . $searchterm . "%'";
         $q = $this->db->query($sql);
         $row = $q->row();
         return $row->cnt;
@@ -12,7 +12,7 @@ class Mod_pro_employee_access_log extends CI_Model {
         $start = $limit;
         $end = 20;
         if($searchterm){
-        $sql = "SELECT * FROM tbl_access_log  WHERE CardNo = '".$searchterm."' ORDER BY CardNo limit ".$start.", ".$end; 
+        $sql = "SELECT * FROM  access_log WHERE status = 1 and CardNo = '".$searchterm."' ORDER BY CardNo limit ".$start.", ".$end; 
         return $this->db->query($sql)->result();
         }else {
             $sql = "SELECT * FROM tbl_access_log ORDER BY CardNo limit ".$start.", ".$end; 
@@ -22,7 +22,7 @@ class Mod_pro_employee_access_log extends CI_Model {
     
     public function all_record_count($searchterm) {
         if($searchterm){
-        $sql = "SELECT * FROM tbl_access_log WHERE CardNo='".$searchterm."'" ; 
+        $sql = "SELECT * FROM  access_log WHERE status = 1 and CardNo='".$searchterm."'" ; 
         }else {
             $sql = "SELECT * FROM tbl_access_log" ; 
         }
@@ -37,7 +37,7 @@ class Mod_pro_employee_access_log extends CI_Model {
     }
 
     public function search($searchterm, $limit) {
-        $sql = "SELECT * FROM tbl_access_log WHERE CardNo LIKE '%" . $searchterm . "%' LIMIT " . $limit . ",20";
+        $sql = "SELECT * FROM  access_log WHERE status = 1 and CardNo LIKE '%" . $searchterm . "%' LIMIT " . $limit . ",20";
         $q = $this->db->query($sql);
         if ($q->num_rows() > 0) {
             foreach ($q->result() as $row) {

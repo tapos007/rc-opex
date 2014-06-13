@@ -47,7 +47,7 @@ class mod_set_work_hour_breakdown extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_work_hour_breakdown');        
         $query = $this->db->get();
-        return $query->result();
+        return $query->row();
     }
     
     public function view_by_id() {

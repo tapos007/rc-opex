@@ -145,11 +145,12 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $this->mod_pro_attn_mismatch_report->update_in_time($ID, $DateTime);
     }
     
-    public function insert_out_time() {
+    public function insert_in_time() {
         $CardNo = $this->input->post('CardNo');
         $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
         $IP = $this->input->post('IP');
-        $this->mod_pro_attn_mismatch_report->insert_out_time($CardNo, $DateTime, $IP);
+        $ID = $this->input->post('ID');
+        $this->mod_pro_attn_mismatch_report->insert_in_time($CardNo, $DateTime, $IP, $ID);
         $value = array('myinfo' => 'true');
         echo json_encode($value);
     }

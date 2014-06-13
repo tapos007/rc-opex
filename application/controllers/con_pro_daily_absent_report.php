@@ -17,8 +17,8 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     public function index() {
         date_default_timezone_set('Asia/Dacca');
-        $StartDate = date('Y-m-d', now()); //date('Y-m-d', strtotime(now()));   
-        //$StartDate = date('Y-m-d', strtotime('-1 day', strtotime($StartDate)));
+        $StartDate1 = date('Y-m-d', now()); 
+        $StartDate = date('Y-m-d', strtotime('-1 day', strtotime($StartDate1)));
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
@@ -65,35 +65,55 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $data['floor'] = $Floor;
         $Department = $this->session->userdata('Department');
         if ($this->session->userdata('Role') == 'Admin') {
-            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information1($BuildingName);
+            $employee_details = $this->mod_pro_attn_mismatch_report->employee_information_for_absent_report_admin($BuildingName, $StartDate);
         } else {
-            $employee_details = $this->mod_pro_attn_mismatch_report->specific_employee_information2($BuildingName, $Floor);
+            $employee_details = $this->mod_pro_attn_mismatch_report->employee_information_for_absent_report_operators($BuildingName, $Floor, $StartDate);
         }
 
-        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
-
-        $limit1 = count($employee_details) - 1;
-        $absent_employee_list = array();
-        foreach ($employee_details as $an_employee_details) {
-            $absent_employee['CardNo'] = $an_employee_details->CardNo;
-            $absent_employee['Name'] = $an_employee_details->Name;
-            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
-            $absent_employee['Floor'] = $an_employee_details->Floor;
-            $absent_employee['Department'] = $an_employee_details->Department;
-            $absent_employee['Line'] = $an_employee_details->Line;
-            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
-                array_push($absent_employee_list, $absent_employee);
-            }
-        }
+//        $attendance_list = $this->mod_access_log->GetDateSpecificCardNo($StartDate);
+//
+//        $limit1 = count($employee_details) - 1;
+//        $absent_employee_list = array();
+//        foreach ($employee_details as $an_employee_details) {
+//            $absent_employee['CardNo'] = $an_employee_details->CardNo;
+//            $absent_employee['Name'] = $an_employee_details->Name;
+//            $absent_employee['BuildingName'] = $an_employee_details->BuildingName;
+//            $absent_employee['Floor'] = $an_employee_details->Floor;
+//            $absent_employee['Department'] = $an_employee_details->Department;
+//            $absent_employee['Line'] = $an_employee_details->Line;
+//            if (!($this->CheckAttendance($an_employee_details->CardNo, $attendance_list))) {
+//                array_push($absent_employee_list, $absent_employee);
+//            }
+//        }
 
         $data['showDate'] = $StartDate;
         $data['tbl_leave_category'] = $this->mod_leave_detail->get_leave_type_names();
         $data['tbl_work_hour_breakdown'] = $this->mod_set_work_hour_breakdown->view1();
-        $data['tbl_absent_report'] = $absent_employee_list;
+        $data['tbl_absent_report'] = $employee_details_for_absent_report;
         $data['container'] = 'temp/daily_absent_report/daily_absent_report_ui';
         $this->load->view('main_page', $data);
     }
-
+    
+    public function insert_into_access_log_for_mismatch() {
+        $CardNo = $this->input->post('CardNo');
+        $Time = date('H:i:s', strtotime('-6 hours', strtotime($this->input->post('Time'))));
+        $Date = date('Y-m-d', strtotime($this->input->post('Date')));
+        $DateTime = $Date.' '.$Time;
+//        
+//        $value = array('myvalue' => $DateTime);
+//        echo json_encode($value);
+//        exit();
+        
+        if($this->mod_pro_attn_mismatch_report->insert_absent_data_into_access_log($CardNo, $DateTime)){
+            $myvalue = array("success"=>"true");
+        }else{
+            $myvalue = array("success"=>"false");
+        }
+        echo json_encode($myvalue);
+        
+        
+    }
+//
     public function CheckAttendance($card_no, $attendance_list) {
         $limit = count($attendance_list) - 1;
         for ($index = 0; $index <= $limit; $index++) {
@@ -278,23 +298,23 @@ class Con_pro_daily_absent_report extends CI_Controller {
     }
 
     public function InsertAbsentEmployee() {
-        $tbl_access_log = array();
+        $access_log = array();
 
         $in_array['CardNo'] = $this->input->post('CardNo');
         $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
         $in_array['Status'] = 'IN';
         $in_array['CreatedBy'] = $this->session->userdata('Email');
         $in_array['DelStatus'] = 'ACT';
-        array_push($tbl_access_log, $in_array);
+        array_push($access_log, $in_array);
 
         $in_array['CardNo'] = $this->input->post('CardNo');
         $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('OutTime'))));
         $in_array['Status'] = 'OUT';
         $in_array['CreatedBy'] = $this->session->userdata('Email');
         $in_array['DelStatus'] = 'ACT';
-        array_push($tbl_access_log, $in_array);
+        array_push($access_log, $in_array);
 
-        $this->mod_access_log->insert_batch_random_data($tbl_access_log);
+        $this->mod_access_log->insert_batch_random_data($access_log);
         redirect('con_pro_daily_absent_report/');
     }
 

@@ -69,7 +69,7 @@
                             <th><i class="glyphicon glyphicon-edit"></i> নাম</th>
                             <th><i class="glyphicon glyphicon-edit"></i> প্রস্তাবিত প্রবেশ সময়</th>  
                             <th><i class="glyphicon glyphicon-edit"></i> ছুটি মঞ্জর</th>     
-                            <th><i class="icon icon-pencil"></i> সংশোধন</th>
+                            <!--<th><i class="icon icon-pencil"></i> সংশোধন</th>-->
 
                         </tr>
                     </thead>
@@ -87,18 +87,16 @@
                                 <td><?php echo $rec_absent_report->Name; ?></td>
                                 <td>
                                     <div class="col-sm-8">
-                                        <?php foreach ($tbl_work_hour_breakdown as $rec_work_hour_breakdown) { ?>
-                                            <input type="text" class="form-control" name="in_time" id="in_time" value="<?php echo $rec_work_hour_breakdown->StartTime; ?>"/> &nbsp; 
-                                        <?php } ?>                                    
+                                        <input type="text" class="form-control InTime" name="in_time" id="in_time_<?php echo $rec_absent_report->CardNo; ?>" value="<?php echo $tbl_work_hour_breakdown->StartTime; ?>"/> &nbsp;                                                                         
                                     </div>
-                                    <a class="btn btn-xs btn-success"><i class="glyphicon glyphicon-check"></i></a>
+                                    <button id="<?php echo $rec_absent_report->CardNo; ?>" data-cnumber="<?php echo $rec_absent_report->CardNo; ?>" class="btn btn-xs btn-success mymy"><i class="glyphicon glyphicon-check"></i></button>
                                 </td>
                                 <td>
                                     <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#InsertLeave"><i class="glyphicon glyphicon-save"></i> ছুটি মঞ্জরের করুন</button>
                                 </td>
-                                <td>
-                                    <a href="<?php echo base_url(); ?>con_pro_daily_absent_report/attendanceRectifaction/<?php echo $rec_absent_report->CardNo; ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
-                                </td>
+    <!--                                <td>
+                                    <a href="<?php //echo base_url();     ?>con_pro_daily_absent_report/attendanceRectifaction/<?php //echo $rec_absent_report->CardNo;     ?>" class="btn btn-info btn-xs" title="সংশোধন"><strong><i class="icon icon-pencil"></i> সংশোধন</strong></a>
+                                </td>-->
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -303,6 +301,33 @@
                 }
             }
         });
+
+        //Insert absent data into access log
+        $('.mymy').click(function() {
+        var kkkk = $(this);
+            var ID = $(this).attr('id');
+            var absent_time = $("#in_time_" + ID).val();
+            var mdate = $("#Date").val();
+            var dataString = 'CardNo=' + ID + '&Time=' + absent_time + '&Date=' + mdate;
+            //alert(dataString);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>con_pro_daily_absent_report/insert_into_access_log_for_mismatch",
+                data: dataString,
+                dataType: 'json',
+                success: function(data)
+                {
+                    if (data.success == "true") {
+                         
+                         $(kkkk).closest("tr").hide();
+                    } else {
+                        alert('Successfully not Inserted');
+                    }
+                   
+                }
+            });
+        });
+
 
         //For Data Table
         var table = $('#daily_log').DataTable();
