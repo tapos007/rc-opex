@@ -111,14 +111,11 @@ class Mod_pro_employee_monthly_report extends CI_Model {
      public function update_in_out_time($CardNo,$DateTime, $DateTimeOld) {
         $data = array(
             'DateTime' => $DateTime,
-            'CreatedBy' => $this->session->userdata('Email')
+            'ModifiedBy' => $this->session->userdata('Email')
         );
         $this->db->where('CardNo', $CardNo);
         $this->db->where('DateTime', $DateTimeOld);
-        if ($this->db->update('tbl_access_log', $data)) {
-            return TRUE;
-        }
-        return false;
+        $this->db->update('tbl_access_log', $data);
     }
     
     public function delete_monthly_attandance($cardno, $date) {

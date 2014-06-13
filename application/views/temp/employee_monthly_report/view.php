@@ -132,10 +132,9 @@
                         alert("success");
 
                     }
-
                 }
             });
-            return  false;
+            return false;
 
         });
 
