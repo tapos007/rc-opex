@@ -55,10 +55,7 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     public function Search() {
         $mydate = $this->input->post('Date');
-//        echo $mydate.'<br/>';
         $StartDate = date('Y-m-d', strtotime($mydate));
-//        echo $StartDate.'<br/>';
-//        exit();
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
@@ -99,11 +96,6 @@ class Con_pro_daily_absent_report extends CI_Controller {
         $Time = date('H:i:s', strtotime('-6 hours', strtotime($this->input->post('Time'))));
         $Date = date('Y-m-d', strtotime($this->input->post('Date')));
         $DateTime = $Date.' '.$Time;
-//        
-//        $value = array('myvalue' => $DateTime);
-//        echo json_encode($value);
-//        exit();
-        
         if($this->mod_pro_attn_mismatch_report->insert_absent_data_into_access_log($CardNo, $DateTime)){
             $myvalue = array("success"=>"true");
         }else{
@@ -113,7 +105,6 @@ class Con_pro_daily_absent_report extends CI_Controller {
         
         
     }
-//
     public function CheckAttendance($card_no, $attendance_list) {
         $limit = count($attendance_list) - 1;
         for ($index = 0; $index <= $limit; $index++) {
@@ -126,8 +117,6 @@ class Con_pro_daily_absent_report extends CI_Controller {
     public function excelExport() {
         date_default_timezone_set('Asia/Dacca');
         $now = date('Y-m-d', strtotime($this->input->post('hDate')));
-//        echo $now.'<br/>';
-//        exit();
         $BuildingName = $this->session->userdata('BuildingName');
         $data['floorInfo'] = $this->mod_buil_sec_other->getFloor($BuildingName);
         $Floor = $this->session->userdata('Floor');
@@ -289,17 +278,12 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     public function attendanceRectifaction($cardNo) {
         $data['anEmployeeInfo'] = $this->mod_set_employee_info_detail->view_by_cardno_array($cardNo);
-//        echo '<pre>';
-//        print_r($anEmployeeInfo);
-//        echo '</pre>';
-
         $data['container'] = 'temp/daily_absent_report/edit';
         $this->load->view('main_page', $data);
     }
 
     public function InsertAbsentEmployee() {
         $access_log = array();
-
         $in_array['CardNo'] = $this->input->post('CardNo');
         $in_array['DateTime'] = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('InTime'))));
         $in_array['Status'] = 'IN';
@@ -320,11 +304,9 @@ class Con_pro_daily_absent_report extends CI_Controller {
 
     function db_backup() {
         $this->load->dbutil();
-
         $backup = & $this->dbutil->backup();
         $this->load->helper('file');
         write_file('/path/to/sdl1_backup.zip', $backup);
-
         $this->load->helper('download');
         force_download('sdl1_backup.zip', $backup);
     }

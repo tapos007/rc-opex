@@ -26,15 +26,10 @@ class Con_proc_leave_type_allocation extends CI_Controller {
     public function insert() {
         $tbl_leave_detail = array();
         $mydate = $this->input->post("mydate");
-       
         $year = date('Y', strtotime($mydate[0]));
-//        echo $year;
-//        exit();
         $count = $this->input->post('NumberOfDays');
         $cardNo = $this->input->post('CardNo');
         foreach ($mydate as $amydate) {
-
-            //echo $amydate." <br>";
             $data = array(
                 'CardNo' => $this->input->post('CardNo'),
                 'Date' => date('Y-m-d',strtotime($amydate)),
@@ -65,13 +60,7 @@ class Con_proc_leave_type_allocation extends CI_Controller {
     }
     
     public function edit_leave_allocation($cardNo) {
-        
-        //echo $cardNo.'<br/>';
         $aCardSpecificLeaves = $this->mod_leave_type_allocation->CardSpecificLeaveAllocation($cardNo);
-//        echo '<pre>';
-//        print_r($aCardSpecificLeaves);
-//        echo '</pre>';
-//        exit();
         $data['tbl_leave_allocation_edit'] = $aCardSpecificLeaves;
         $data['container'] = 'temp/leave_type_allocation/edit1';
         $this->load->view('main_page', $data);
@@ -176,10 +165,6 @@ class Con_proc_leave_type_allocation extends CI_Controller {
             }
             array_push($leave_details_list, $a_leave_details_list);
         }
-//        echo '<pre>';
-//        print_r($leave_details_list);
-//        echo '</pre>';
-//        exit();
         $data['tbl_leave_allocation_edit'] = $leave_details_list;
         $data['container'] = 'temp/leave_type_allocation/view';
         $this->load->view('main_page', $data);

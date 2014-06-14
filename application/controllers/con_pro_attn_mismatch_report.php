@@ -127,10 +127,6 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
                 array_push($abc, $mismatch_information);
             }
         }
-//                echo '<pre>';
-//        print_r($incorrect_access_log);
-//        echo '</pre>';
-//        exit();
         $data['tbl_work_hour_breakdown'] = $this->mod_set_work_hour_breakdown->view1();
         $data['showDate'] = $now;
         $data['tbl_mismatch_report'] = $abc;
