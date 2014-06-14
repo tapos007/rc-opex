@@ -1,7 +1,5 @@
 <?php
-
 class Con_pro_employee_monthly_report extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('mod_pro_employee_monthly_report');
@@ -9,7 +7,6 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->load->model('mod_leave_detail');
         $this->load->model('mod_pro_attn_mismatch_report');
         $this->load->model('mod_leave_type_allocation');
-        $this->load->model('mod_set_holiday_catagory');
         $this->load->helper('date');
     }
 
@@ -21,8 +18,6 @@ class Con_pro_employee_monthly_report extends CI_Controller {
     public function search() {
         $CardNo = $this->input->post('CardNo');
         $Month = $this->input->post('Month');
-        $data['CardNo'] = $CardNo;
-        $data['Month'] = $Month;
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
         $data['tbl_employee_monthly_leave_report'] = $this->mod_leave_detail->view_by_CardNo($CardNo, $Month);
@@ -32,16 +27,16 @@ class Con_pro_employee_monthly_report extends CI_Controller {
     }
 
     public function delete_monthly_attandance_record() {
-        $CardNo = $this->input->post('CardNo');
+      $CardNo = $this->input->post('CardNo');
         $Date = $this->input->post('DateTime');
 
         if ($this->mod_pro_employee_monthly_report->delete_monthly_attandance($CardNo, $Date)) {
             echo json_encode(array("success" => "true"));
-        } else {
-            echo json_encode(array("success" => "false"));
+        } else{
+             echo json_encode(array("success" => "false"));
         }
     }
-
+    
     public function search_get($CardNo, $Month) {
         $data['tbl_employee_monthly_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo($CardNo, $Month);
         $data['tbl_employee_monthly_missmatch_report'] = $this->mod_pro_employee_monthly_report->view_by_CardNo_missmatch($CardNo, $Month);
@@ -138,9 +133,10 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->mod_leave_detail->LeaveEntryDelete($cardNo, $date);
         $this->search_get($cardNo, date('m', strtotime($date)));
     }
+     public function insert1() {
 
-    public function insert1() {
         date_default_timezone_set('Asia/Dacca');
+
         $cardno = $this->input->post("icCard");
         $myintime = array();
         $Indata = array();
@@ -181,7 +177,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
         $this->mod_pro_employee_monthly_report->insert11($Indata);
         $this->mod_pro_employee_monthly_report->insert11($Outdata);
 
-        echo json_encode(array("success" => "true"));
+         echo json_encode(array("success" => "true"));
     }
 
     public function aasort(&$array, $key) {

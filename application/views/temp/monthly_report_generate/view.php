@@ -20,7 +20,7 @@
             <tbody>
                 <?php
                 $count = 1;
-                foreach ($tbl_access_log as $rec_access_log) {
+                foreach ($access_log as $rec_access_log) {
                     ?>
                     <tr>
                         <td><?php echo $count++; ?></td>                        
