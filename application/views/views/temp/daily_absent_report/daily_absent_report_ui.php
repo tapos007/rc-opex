@@ -318,6 +318,7 @@
                 success: function(data)
                 {
                     if (data.success == "true") {
+                         
                          $(kkkk).closest("tr").hide();
                     } else {
                         alert('Successfully not Inserted');
