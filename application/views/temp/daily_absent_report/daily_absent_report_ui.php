@@ -26,7 +26,7 @@
                     ?>
                     <div class="form-group">
                         <label for="Date"></label>
-                        <input type="text" name="Date" id="Date" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo date('d-m-Y', strtotime($showDate)); ?>" />
+                        <input type="text" name="Date" id="SearchDate" class="form-control" placeholder="তারিখ নির্বাচন  করুন" value="<?php echo date('d-m-Y', strtotime($showDate)); ?>" />
                     </div>                 
                     <button class="btn btn-success" type="submit" style="margin-top: 18px;"><i class="glyphicon glyphicon-search"></i> অনুসন্ধান করুন</button>                                    
                     <?php echo form_close(); ?>
@@ -211,7 +211,7 @@
     $(document).ready(function() {
 
         //For Date Picker
-        $('#Date').datepicker({
+        $('#SearchDate').datepicker({
             format: 'dd-mm-yyyy'
         });
 
