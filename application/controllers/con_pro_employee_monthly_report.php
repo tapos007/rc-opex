@@ -201,6 +201,10 @@ class Con_pro_employee_monthly_report extends CI_Controller {
     public function excelExport($card_no, $month) {
         $tbl_employee_monthly_report = $this->mod_pro_employee_monthly_report->view_by_CardNo($card_no, $month);
 //        $total_present = count($tbl_employee_monthly_report);
+        echo '<pre>';
+        print_r($tbl_employee_monthly_report);
+        echo '</pre>';
+        exit();
 
 
         $tbl_employee_monthly_leave_report = $this->mod_leave_detail->view_by_CardNo($card_no, $month);
@@ -370,6 +374,7 @@ class Con_pro_employee_monthly_report extends CI_Controller {
                         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . ($index + 1), round(date('H', strtotime($hour_diff)), 0));
                         $total_ot += round(date('H', strtotime($hour_diff)), 0);
                         $total_holiday_work++;
+                        cellColor('A'.$index.':D'.$index, 'FF0000');
                     } else {
                         //general day
                         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . ($index + 1), round(date('H', strtotime($hour_diff)), 0) - 9);
