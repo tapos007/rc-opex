@@ -17,7 +17,7 @@ class Mod_access_log extends CI_Model {
     public function insert($data) {
         $this->db->insert('access_log', $data);
     }
-    
+
     public function insert_batch_random_data($data) {
         $this->db->insert_batch('access_log', $data);
     }
@@ -27,7 +27,7 @@ class Mod_access_log extends CI_Model {
     public function view() {
         $this->db->select('*');
         $this->db->from('access_log'); //access_log**
-$this->db->where('Status', 1);
+        $this->db->where('Status', 1);
         $query = $this->db->get();
         return $query->result();
     }
@@ -35,7 +35,7 @@ $this->db->where('Status', 1);
     public function view_by_id() {
         $this->db->select('*');
         $this->db->from('access_log'); //access_log**
-$this->db->where('Status', 1);
+        $this->db->where('Status', 1);
         $this->db->where('CardNo', $this->CardNo);
         $this->db->where('DateTime BETWEEN ' . '"' . date("Y-m-d H:i:s", strtotime($this->DateTime . ' 00:00:01')) . '"' . ' AND ' . '"' . date("Y-m-d H:i:s", strtotime($this->DateTime . ' 23:59:59')) . '"', NULL, FALSE);
         $query = $this->db->get();
@@ -60,7 +60,7 @@ $this->db->where('Status', 1);
     public function getLongData() {
         $this->db->select('*');
         $this->db->from('access_log'); //access_log**
-$this->db->where('Status', 1);
+        $this->db->where('Status', 1);
         $this->db->order_by('cardno asc, datetime asc');
         $query = $this->db->get();
         return $query->result();
@@ -86,7 +86,7 @@ $this->db->where('Status', 1);
         $this->db->where('DateTime >=', date('Y-m-d H:i:s', strtotime($first_date_time)));
         $this->db->where('DateTime <=', date('Y-m-d H:i:s', strtotime($last_date_time)));
         $this->db->from('access_log'); //access_log**
-$this->db->where('Status', 1);
+        $this->db->where('Status', 1);
         $this->db->order_by('cardno asc, datetime asc');
         $query = $this->db->get();
 //        echo '<pre>';
@@ -95,13 +95,16 @@ $this->db->where('Status', 1);
 //        exit();
         return $query->result();
     }
-    public function GetTbl_access_data(){
+
+    public function GetTbl_access_data() {
         $query = $this->db->query('SELECT * FROM `access_log` where Status = 1 and CreatedBy = "SYSTEM" and DateTime like "%-05-%" order by CardNo,DateTime');
         return $query->result_array();
     }
-    public function EmptyTable1(){
+
+    public function EmptyTable1() {
         $query = $this->db->query('DELETE FROM `access_log` where Status = 1 and  CreatedBy = "SYSTEM" and DateTime like "%-05-%" ');
     }
+
     public function GetDateSpecificCardNo($date) {
         $first_date_time = $date . ' 00:00:01';
         $last_date_time = $date . ' 23:59:59';
@@ -119,7 +122,7 @@ $this->db->where('Status', 1);
 
         $this->db->select('*');
         $this->db->from('access_log'); //access_log**
-$this->db->where('Status', 1);
+        $this->db->where('Status', 1);
         $this->db->order_by('cardno asc, datetime asc');
         $query = $this->db->get();
         return $query->result_array();
@@ -132,14 +135,40 @@ $this->db->where('Status', 1);
                                     GROUP  BY DATE(`DateTime`)");
         return $query->result_array();
     }
-    public function get_floor_specific_access_record($date){
+
+    public function get_floor_specific_access_record($date) {
         $query = $this->db->query("SELECT access_log.CardNo, access_log.DateTime, access_log.IP
                                 FROM access_log
                                 INNER JOIN tbl_employee_profile
-                                ON access_log.CardNo=tbl_employee_profile.CardNo where access_log.status = 1 and  DateTime LIKE '".$date."%' order by CardNo,DateTime");
+                                ON access_log.CardNo=tbl_employee_profile.CardNo where access_log.status = 1 and  DateTime LIKE '" . $date . "%' order by CardNo,DateTime");
         return $query->result_array();
     }
-    
-    
+
+    public function updateStarttime($cardNo, $date) {
+        $modified_on = date('Y-m-d H:i:s', now()); 
+        $query = $this->db->query("select b.ID from access_log b where b.CardNo = " . $cardNo . " and b.Status = 0 and b.DateTime =
+(select min(a.DateTime) from access_log a WHERE a.CardNo = " . $cardNo . "  and Date(a.datetime) = '" . $date . "' and a.Status = 0 )");
+        $res = $query->row();
+        $cardID = $res->ID;
+        $data = array(
+            'Status' => 1,
+            'ModifiedBy' => $this->session->userdata('Email'),
+            'ModifiedOn' => $modified_on
+        );
+
+        $this->db->where('ID', $cardID);
+        $this->db->update('access_log', $data);
+    }
+
+    public function insertOutTime($cardNo, $dateTime, $ip) {
+        $data = array(
+            'CardNo' => $cardNo,
+            'DateTime' => $dateTime,
+            'IP'=>$ip,
+            'Status'=>1,
+            'CreatedBy' => $this->session->userdata('Email')
+        );
+        $this->db->insert('access_log', $data);
+    }
 
 }

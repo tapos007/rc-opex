@@ -115,7 +115,7 @@
                                 <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
                                 <td><?php echo $rec_mismatch_report['Name']; ?></td>   
                                 <td><?php echo $rec_mismatch_report['Department']; ?></td> 
-                                
+
                                 <td class="edit_td0" data-ip="<?php echo $rec_mismatch_report['IP']; ?>" data-cmcard="<?php echo $rec_mismatch_report['CardNo']; ?>" id="<?php echo $rec_mismatch_report['PID']; ?>">
                                     <span  id="first_<?php echo $rec_mismatch_report['PID']; ?>" class="text">
                                         <?php
@@ -142,23 +142,23 @@
                                     ?>
 
                                     <td class="edit_td"  data-pnid="<?php echo $rec_mismatch_report['PID']; ?>" id="<?php echo $counter; ?>">
-                                       
-                                            <?php
-                                            $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
-                                            $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
-                                            if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
-                                                echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime'])));
-                                            }
-                                            ?>
-                                       
-                                        
+
+                                        <?php
+                                        $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
+                                        $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
+                                        if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('10:59:59'))) {
+                                            echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime'])));
+                                        }
+                                        ?>
+
+
                                     </td>
 
                                     <td>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control edit_td1" id="msc_gsc_<?php echo $counter; ?>" name="OT" />
                                         </div>
-                                        <a data-ip="<?php echo $rec_mismatch_report['IP'];?>" data-dropcard="<?php echo $rec_mismatch_report['CardNo'];?>" id="<?php echo $counter; ?>"  class="btn btn-primary btn-xs uuu"><i class="glyphicon glyphicon-check"></i></a>
+                                        <a data-ip="<?php echo $rec_mismatch_report['IP']; ?>" data-dropcard="<?php echo $rec_mismatch_report['CardNo']; ?>" id="<?php echo $counter; ?>"  class="btn btn-primary btn-xs uuu"><i class="glyphicon glyphicon-check"></i></a>
                                     </td>
                                 <?php } ?>
                             </tr>
@@ -175,40 +175,46 @@
 <script type="text/javascript" src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".uuu").click(function(){
-             var ID = $(this).attr('id');
-             var cardno = $(this).data('dropcard');
-             var datetime = $(this).closest('td').prev('td').text();
-             var ip = $(this).data('ip');
-             var textboxvalue = $(this).closest('tr').find('.edit_td1').val();;
-            var dataString = 'CardNo=' + cardno + '&DateTime=' + datetime + '&IP=' + ip + '&txtvalue='+ textboxvalue;
+        $(".uuu").click(function() {
+            var kk = $(this);
+            var ID = $(this).attr('id');
+            var cardno = $(this).data('dropcard');
+            var datetime = $(this).closest('td').prev('td').text();
+            var checkdate = $("#Date").val();
+            var ip = $(this).data('ip');
+            var textboxvalue = $(this).closest('tr').find('.edit_td1').val();
+            ;
+            var dataString = 'CardNo=' + cardno + '&DateTime=' + datetime + '&IP=' + ip + '&txtvalue=' + textboxvalue + "&incomeTime=" + checkdate;
             $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url(); ?>con_pro_attn_mismatch_report/insegfgfgrt_in_time",
-                    data: dataString,
-                    dataType: 'json',
-                    success: function(data)
-                    {
-                        
+                type: "POST",
+                url: "<?php echo base_url(); ?>con_pro_attn_mismatch_report/editOuttimes",
+                data: dataString,
+                dataType: 'json',
+                success: function(data)
+                {
+                    if (data.myinfo == "true") {
+                        $(kk).closest("tr").hide();
                     }
-                });i
-             
+                }
+            });
+            i
+
         });
-       $(".edit_td1").keyup(function(){
-           var ID = $(this).val();
-           if(!ID){
-               ID = 0;
-           }
+        $(".edit_td1").keyup(function() {
+            var ID = $(this).val();
+            if (!ID) {
+                ID = 0;
+            }
             var myId = parseInt(ID);
             var mdadsf = $("#Date").val();
-             var res = mdadsf.split("-");
-            var d = new Date(res[2],res[0],res[1],17,15,00);
-            d.setHours ( d.getHours() + myId );
-            var mytimes = ("0" + (d.getDate())).slice(-2) +"-"+ ("0" + (d.getMonth())).slice(-2)+"-"+ d.getFullYear() + " "+ d.getHours()+ ":"+ d.getMinutes()+":"+ ("0" + (d.getSeconds())).slice(-2);
+            var res = mdadsf.split("-");
+            var d = new Date(res[2], res[0], res[1], 17, 15, 00);
+            d.setHours(d.getHours() + myId);
+            var mytimes = ("0" + (d.getDate())).slice(-2) + "-" + ("0" + (d.getMonth())).slice(-2) + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + ("0" + (d.getSeconds())).slice(-2);
             var outprimary = $(this).closest('td').prev('td').text(mytimes);
-           
-       });
-       
+
+        });
+
         $(".editbox").hide();
         $(".edit_td0").click(function()
         {
@@ -228,8 +234,8 @@
                 var lastcardNo = $(kk).data('cmcard');
                 var ipnumber = $(kk).data('ip');
                 var datetime = $("#first_input_" + ID).val();
-                
-                var dataString = 'CardNo='+ lastcardNo + '&DateTime='+ datetime + '&IP=' + ipnumber + '&ID=' + outprimary;
+
+                var dataString = 'CardNo=' + lastcardNo + '&DateTime=' + datetime + '&IP=' + ipnumber + '&ID=' + outprimary;
                 //alert(dataString);
                 $.ajax({
                     type: "POST",
@@ -239,7 +245,7 @@
                     success: function(data)
                     {
                         if (data.myinfo == "true") {
-                             $(kk).closest("tr").hide();
+                            $(kk).closest("tr").hide();
                         }
                     }
                 });

@@ -110,8 +110,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $mismatch_information = array();
         $abc = array();
 
-        foreach ($incorrect_access_log as $access_log) 
-        {
+        foreach ($incorrect_access_log as $access_log) {
             $mismatch_information['PID'] = $access_log->ID;
             $mismatch_information['CardNo'] = $access_log->CardNo;
             $mismatch_information['DateTime'] = $access_log->DateTime;
@@ -138,13 +137,38 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $data['container'] = 'temp/prev_attn_mismatch_report/previous_attn_mismatch_report';
         $this->load->view('main_page', $data);
     }
-    
+
     public function update_in_time() {
         $ID = $this->input->post('ID');
-        $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime')))); 
+        $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
         $this->mod_pro_attn_mismatch_report->update_in_time($ID, $DateTime);
     }
-    
+
+    public function editOuttimes() {
+        $cardNo = $this->input->post('CardNo');
+        $outtime = $this->input->post('DateTime');
+        $totalOvertimeHour = $this->input->post('txtvalue');
+        $checkDate = $this->input->post('incomeTime');
+        $checkDate = date('Y-m-d', strtotime(str_replace('-', '/', $checkDate)));
+        $IP = $this->input->post('IP');
+        $this->load->model("mod_set_holiday_catagory");
+        $accurateStartTime = $checkDate . " " . $this->session->userdata('ctime');
+        $accurateEndTime = $checkDate . " " . $this->session->userdata('otime');
+        $date = date('Y-m-d', strtotime(str_replace('-', '/', $checkDate)));
+        if ($this->mod_set_holiday_catagory->checkThisDayHoliday($date)) {
+            $DateTime = date('Y-m-d H:i:s', strtotime($totalOvertimeHour . ' hours', strtotime($accurateStartTime)));
+        } else {
+            $DateTime = date('Y-m-d H:i:s', strtotime($totalOvertimeHour . ' hours', strtotime($accurateEndTime)));
+        }
+
+        $finalAccourateTIme = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($DateTime)));
+
+        $this->mod_access_log->insertOutTime($cardNo, $finalAccourateTIme, $IP);
+        $this->mod_access_log->updateStarttime($cardNo, $date);
+        $value = array('myinfo' => 'true');
+        echo json_encode($value);
+    }
+
     public function insert_in_time() {
         $CardNo = $this->input->post('CardNo');
         $DateTime = date('Y-m-d H:i:s', strtotime('-6 hours', strtotime($this->input->post('DateTime'))));
@@ -459,7 +483,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
 
     public function PopulateSalarySheet($first_half_attendance) {
         $this->aasort($first_half_attendance, "Department");
-         $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+        $bn_digits = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         require_once APPPATH . "/third_party/PHPExcel.php";
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("RCIS")
@@ -499,7 +523,7 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         );
         $date = date('d M, Y', strtotime($first_half_attendance[0]['DateTime']));
         $total = count($first_half_attendance);
-        
+
 //        //wrap context
         //$objPHPExcel->getActiveSheet(0)->getStyle('B1:B' . ($total + 1))->getAlignment()->setWrapText(true);
 
@@ -519,25 +543,25 @@ class Con_pro_attn_mismatch_report extends CI_Controller {
         $index = 2;
         $flag = 0;
         foreach ($first_half_attendance as $a) {
-            if($flag==0){
+            if ($flag == 0) {
                 $temp = $a;
-                $flag=1;
+                $flag = 1;
             }
-            
+
             if ($a['Department'] != $temp['Department']) {
-                $objPHPExcel->getActiveSheet()->setBreak( 'A' . ($index-1), PHPExcel_Worksheet::BREAK_ROW );
+                $objPHPExcel->getActiveSheet()->setBreak('A' . ($index - 1), PHPExcel_Worksheet::BREAK_ROW);
                 $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A'.$index, 'কার্ড নং')
-                ->setCellValue('B'.$index, 'নাম')
-                ->setCellValue('C'.$index, 'বিভাগ')
-                ->setCellValue('D'.$index, 'প্রবেশ সময়')
-                ->setCellValue('E'.$index, 'বাহির সময় ')
-                ->setCellValue('F'.$index, 'মন্তব্য')
-                ->setCellValue('G'.$index, 'স্বাক্ষর');
+                        ->setCellValue('A' . $index, 'কার্ড নং')
+                        ->setCellValue('B' . $index, 'নাম')
+                        ->setCellValue('C' . $index, 'বিভাগ')
+                        ->setCellValue('D' . $index, 'প্রবেশ সময়')
+                        ->setCellValue('E' . $index, 'বাহির সময় ')
+                        ->setCellValue('F' . $index, 'মন্তব্য')
+                        ->setCellValue('G' . $index, 'স্বাক্ষর');
                 $temp = $a;
                 $index++;
                 $total++;
-            } 
+            }
             $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A' . $index, $a['CardNo'])
                     ->setCellValue('B' . $index, $a['Name'])

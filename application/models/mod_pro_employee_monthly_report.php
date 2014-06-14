@@ -57,12 +57,12 @@ class Mod_pro_employee_monthly_report extends CI_Model {
         //echo ";
         //echo "UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'";
         //exit();
-        $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
+        $query = $this->db->query("UPDATE `access_log` SET `Status`= 1 WHERE `CardNo` = '".$cardNo. "' and `DateTime` between '".$firstTime."' and '".$lastTime."' and `DelStatus` = 'ACT'");        
         
     }
     
     public function incorrect_access_log($startdate, $enddate) {
-       $query = $this->db->query("SELECT CardNo, DateTime FROM tbl_incurrect_access_log WHERE DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and DelStatus = 'ACT' GROUP BY CardNo");        
+       $query = $this->db->query("SELECT CardNo, DateTime FROM access_log where STATUS = 0 and  DateTime BETWEEN '". $startdate. "' and '" .$enddate. "'and DelStatus = 'ACT' GROUP BY CardNo");        
        return $query->result();
     }
     
@@ -92,9 +92,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
        $LikeDate = '2014-'.$Month."-1 00:00:00";
        $Month = (int)$Month + 1;
        $LikeDateEnd = '2014-'.$Month."-1 00:00:00";
-       $Q =  "select inc.CardNo,Date(DateTime), min(inc.DateTime),max(inc.DateTime),inc.CreatedBy, emp.Name, emp.Line, emp.Department from access_log as inc 
-              left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo =
-              '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' and inc.Status = 1 group by Date(DateTIme) order by Date(DateTime)";
+       $Q =  "select inc.CardNo, inc.DateTime,inc.CreatedBy, emp.Name, emp.Line, emp.Department from tbl_access_log as inc left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.CardNo = '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' order by DateTime";
        $quary = $this->db->query($Q);        
        return $quary->result_array();
     }
@@ -103,7 +101,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
        $LikeDate = '2014-'.$Month."-1 00:00:00";
        $Month = (int)$Month + 1;
        $LikeDateEnd = '2014-'.$Month."-1 00:00:00";
-       $Q =  "select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from tbl_incurrect_access_log as inc left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where DelStatus = 'ACT' AND inc.CardNo = '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' order by DateTime";
+       $Q =  "select inc.CardNo, inc.DateTime, emp.Name, emp.Line, emp.Department from access_log as inc left join tbl_employee_profile as emp on inc.CardNo = emp.CardNo where inc.Status = 0 AND inc.CardNo = '".$CardNo."' and inc.datetime between '".$LikeDate."' and '".$LikeDateEnd."' order by DateTime";
        $quary = $this->db->query($Q);        
        return $quary->result_array();
     }
@@ -119,7 +117,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
     }
     
     public function delete_monthly_attandance($cardno, $date) {
-         $query = $this->db->query("DELETE FROM `tbl_access_log` WHERE CardNo = '".$cardno."' and DateTime like '".$date."%' ");     
+         $query = $this->db->query("DELETE FROM `access_log` where Status = 1 and  CardNo = '".$cardno."' and DateTime like '".$date."%' ");     
         if($query){
             return true;
         }else{
@@ -131,7 +129,7 @@ class Mod_pro_employee_monthly_report extends CI_Model {
             $dateTime = date('Y-m-d', strtotime($mdateTime));
             $firstTime = date('Y-m-d H:i:s', strtotime($mdateTime . ' 00:00:01'));
             $lastTime = date('Y-m-d H:i:s', strtotime($mdateTime . ' 23:59:59'));
-            $query = $this->db->query("UPDATE `tbl_incurrect_access_log` SET `DelStatus`='DEL' WHERE `CardNo` = '" . $cardNo . "' and `DateTime` between '" . $firstTime . "' and '" . $lastTime . "' and `DelStatus` = 'ACT'");
+            $query = $this->db->query("UPDATE `access_log` SET `Status`= 1 WHERE `CardNo` = '" . $cardNo . "' and `DateTime` between '" . $firstTime . "' and '" . $lastTime . "' ");
         }
     }
 

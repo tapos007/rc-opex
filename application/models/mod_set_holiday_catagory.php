@@ -64,14 +64,15 @@ class Mod_set_holiday_catagory extends CI_Model {
         $this->db->insert_batch('tbl_holidays', $data);
     }
     
-    public function get_all_month_specific_holidays($month){
-        $this->db->select('*');
-        $this->db->from('tbl_holidays');
-        $this->db->where('month(HolidayDate)', $month);
-        $this->db->order_by('HolidayDate', 'asc');
-        $query = $this->db->get();
-        return $query->result_array();
-        
+    public function checkThisDayHoliday($date){
+       $this->db->where('HolidayDate', $date);  
+       $query = $this->db->get('tbl_holidays');
+       if($query->num_rows() > 0){
+           return true;
+       }
+       else{
+           return false;
+       }
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-class mod_set_work_hour_breakdown extends CI_Model {
+class Mod_set_work_hour_breakdown extends CI_Model {
     public $ID;
     public $WorkHourName;
     public $StartTime;
