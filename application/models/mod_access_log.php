@@ -145,7 +145,7 @@ class Mod_access_log extends CI_Model {
     }
 
     public function updateStarttime($cardNo, $date) {
-        $modified_on = date('Y-m-d H:i:s', now()); 
+        $modified_on = date('Y-m-d H:i:s', now());
         $query = $this->db->query("select b.ID from access_log b where b.CardNo = " . $cardNo . " and b.Status = 0 and b.DateTime =
 (select min(a.DateTime) from access_log a WHERE a.CardNo = " . $cardNo . "  and Date(a.datetime) = '" . $date . "' and a.Status = 0 )");
         $res = $query->row();
@@ -164,8 +164,8 @@ class Mod_access_log extends CI_Model {
         $data = array(
             'CardNo' => $cardNo,
             'DateTime' => $dateTime,
-            'IP'=>$ip,
-            'Status'=>1,
+            'IP' => $ip,
+            'Status' => 1,
             'CreatedBy' => $this->session->userdata('Email')
         );
         $this->db->insert('access_log', $data);
