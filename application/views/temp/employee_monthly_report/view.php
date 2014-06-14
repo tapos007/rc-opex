@@ -445,84 +445,7 @@
     </div>    
 </div>
 <!-- Miss-match Report -->
-<div class="row"> 
-    <div class="col-lg-12">
-        <section class="panel panel-body">
-            <div class="panel-primary" > 
-                <header class="panel-heading">
-                    <h4>
-                        শ্রমিক এবং কর্মচারীগণের মাসিক উপস্থিতি অমিলের প্রতিবেদন তালিকা
-                    </h4> 
-                    <?php
-                    $attr = array(
-                        'class' => 'form-inline',
-                        'role' => 'form'
-                    );
-                    echo form_open('con_pro_employee_monthly_report/generic_intime', $attr);
-                    ?>
-                    <div class="form-group">
-                        মাস<input type="text" name="Month" class="form-control" value="">
-                    </div>
-                    <div class="form-group">
-                        কার্ড নং<input type="text" name="CardNo" class="form-control" value="">
-                    </div>
-                    <div class="form-group">
-                        প্রবেশ সময়<input type="text" name="Intime" class="form-control" value="">
-                    </div>
-                    <input type="submit" name="submit"  class="btn btn-success" style="margin-top: 20px;" id="update" value="জেনারেট করুন">
-                    <?php echo form_close();
-                    ?>
-                </header> 
-                <table class="table table-striped table-bordered table-condensed" id="daily_log">
-                    <thead>                        
-                        <tr>
-                            <th><i class="glyphicon glyphicon-edit"></i> তারিখ</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> কার্ড নং</th>                    
-                            <th><i class="glyphicon glyphicon-edit"></i> নাম</th>               
-                            <th><i class="glyphicon glyphicon-time"></i> প্রবেশ সময়</th>
-                            <th><i class="glyphicon glyphicon-time"></i> বাহির সময়</th>
-                            <th><i class="glyphicon glyphicon-pencil"></i> সংশোধন</th>
-                        </tr>
-                    </thead>
-                    <tbody>                        
-                        <?php foreach ($tbl_employee_monthly_missmatch_report as $rec_mismatch_report) { ?>
-                            <tr>
-                                <td><?php echo date('d-M-Y', strtotime($rec_mismatch_report['DateTime'])); ?></td>     
-                                <td><?php echo $rec_mismatch_report['CardNo']; ?></td>
-                                <td><?php echo $rec_mismatch_report['Name']; ?></td>                                                          
-                                <td>
-                                    <?php
-                                    $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
-                                    $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
-                                    if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) < date('H:i:s', strtotime('06:59:59'))) {
-                                        echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime'])));
-                                    }
-                                    ?>
-                                </td> 
-                                <td>
-                                    <?php
-                                    $date = date('Y-m-d', strtotime($rec_mismatch_report['DateTime']));
-                                    $time = date('H:i:s', strtotime($rec_mismatch_report['DateTime']));
-                                    if (date('H:i:s', strtotime($rec_mismatch_report['DateTime'])) > date('H:i:s', strtotime('06:59:59'))) {
-                                        echo date('d-m-Y H:i:s', strtotime('+6 hours', strtotime($rec_mismatch_report['DateTime'])));
-                                    }
-                                    ?>
-                                </td> 
-                                <td>
-                                    <?php echo form_open('con_pro_attn_mismatch_report/edit'); ?>
-                                    <input type="hidden" name="CardNo" value="<?php echo $rec_mismatch_report['CardNo']; ?>"/>
-                                    <input type="hidden" name="Date" value="<?php echo $rec_mismatch_report['DateTime']; ?>"/>
-                                    <button class="btn btn-primary btn-xs" name="submit" value="edit" id="mismatchLogEditButton"><i class="glyphicon glyphicon-pencil"></i> সংশোধন</button>
-                                    <?php echo form_close(); ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-</div>
+
 
 
 <script type="text/javascript">
@@ -630,6 +553,27 @@
 <div class="row"> 
     <div class="col-lg-12">
         <section class="panel panel-body">
+            <div class="text-center">
+                <h5><strong>  পূর্ববর্তী উপস্থিতির রিপোর্ট  বের করার জন্য বাটনটি চাপুন</strong></h5>
+                <?php
+                $attributes = array(
+                    'class' => 'form-inline',
+                    'role' => 'form',
+                    'id' => 'excelExport'
+                );
+                echo form_open('con_pro_employee_monthly_report/excelExport', $attributes);
+                ?>
+                <input type="hidden" name="hCardNo" value="<?php
+                echo $CardNo;
+                ?>"/>
+                <input type="hidden" name="hMonth" value="<?php
+                echo $Month;
+                ?>"/>
+                <button class="btn btn-info" type="submit" name="xlexport"><img src="<?php echo base_url(); ?>images/Excel-icon.png" alt="Excel Export" width="16" height="16"/> এক্সেল  এক্সপোর্ট করুন</button>
+                <?php
+                echo form_close();
+                ?>
+            </div><hr/>
             <div class="panel-primary" > 
                 <header class="panel-heading">
                     <h4>
